@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.shots"
+    namespace = "com.example.espressoshots"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -13,7 +13,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.shots"
+        applicationId = "com.example.espressoshots"
         minSdk = 36
         targetSdk = 36
         versionCode = 1

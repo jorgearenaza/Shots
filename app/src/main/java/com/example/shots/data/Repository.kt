@@ -10,7 +10,7 @@ class ShotsRepository(
 ) {
     fun observeShots(): Flow<List<Shot>> = shotDao.observeAll()
 
-    suspend fun insertShot(shot: Shot) {
-        shotDao.insert(shot)
+    suspend fun insertShot(shot: Shot): Long {
+        return shotDao.insert(shot)
     }
 }

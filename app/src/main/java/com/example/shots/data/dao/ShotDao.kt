@@ -12,5 +12,5 @@ interface ShotDao {
     fun observeAll(): Flow<List<Shot>>
 
     @Insert
-    suspend fun insert(shot: Shot)
+    suspend fun insert(shot: Shot): Long
 }

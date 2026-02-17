@@ -1,4 +1,4 @@
-package com.example.shots.ui.theme
+package com.example.espressoshots.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

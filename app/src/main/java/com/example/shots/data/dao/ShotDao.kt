@@ -27,7 +27,7 @@ interface ShotDao {
     fun observeAll(): Flow<List<ShotDetails>>
 
     @Query("SELECT * FROM shots WHERE id = :id")
-    suspend fun getById(id: Long): ShotEntity?
+    fun getById(id: Long): ShotEntity?
 
     @Insert
     fun insert(shot: ShotEntity): Long

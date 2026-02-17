@@ -7,6 +7,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,7 +34,7 @@ fun DropdownField(
             label = { Text(label) },
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value) },
-            modifier = Modifier.menuAnchor()
+            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true)
         )
         ExposedDropdownMenu(
             expanded = expanded.value,

@@ -16,7 +16,7 @@ interface BeanDao {
     fun observeAll(): Flow<List<BeanEntity>>
 
     @Query("SELECT * FROM beans WHERE id = :id")
-    suspend fun getById(id: Long): BeanEntity?
+    fun getById(id: Long): BeanEntity?
 
     @Insert
     fun insert(bean: BeanEntity): Long

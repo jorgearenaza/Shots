@@ -4,7 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.FloatingActionButton
@@ -52,7 +52,7 @@ fun AppNavHost(repository: ShotsRepository) {
 
     val topRoutes = listOf(
         TopLevelRoute("shots", "Shots") { Icon(Icons.Default.Home, contentDescription = null) },
-        TopLevelRoute("beans", "Granos") { Icon(Icons.Default.List, contentDescription = null) },
+        TopLevelRoute("beans", "Granos") { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) },
         TopLevelRoute("grinders", "Molinos") { Icon(Icons.Default.Build, contentDescription = null) },
         TopLevelRoute("profiles", "Perfiles") { Icon(Icons.Default.Person, contentDescription = null) },
         TopLevelRoute("options", "Opciones") { Icon(Icons.Default.Settings, contentDescription = null) }

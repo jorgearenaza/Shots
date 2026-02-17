@@ -16,7 +16,7 @@ interface ProfileDao {
     fun observeAll(): Flow<List<ProfileEntity>>
 
     @Query("SELECT * FROM profiles WHERE id = :id")
-    suspend fun getById(id: Long): ProfileEntity?
+    fun getById(id: Long): ProfileEntity?
 
     @Insert
     fun insert(profile: ProfileEntity): Long

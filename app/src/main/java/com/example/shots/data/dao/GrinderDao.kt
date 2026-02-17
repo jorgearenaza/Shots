@@ -16,7 +16,7 @@ interface GrinderDao {
     fun observeAll(): Flow<List<GrinderEntity>>
 
     @Query("SELECT * FROM grinders WHERE id = :id")
-    suspend fun getById(id: Long): GrinderEntity?
+    fun getById(id: Long): GrinderEntity?
 
     @Insert
     fun insert(grinder: GrinderEntity): Long

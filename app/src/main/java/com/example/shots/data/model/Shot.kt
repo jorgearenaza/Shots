@@ -1,15 +1,53 @@
 package com.example.espressoshots.data.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "shots")
-data class Shot(
+@Entity(
+    tableName = "shots",
+    foreignKeys = [
+        ForeignKey(
+            entity = BeanEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["bean_id"],
+            onDelete = ForeignKey.RESTRICT
+        ),
+        ForeignKey(
+            entity = GrinderEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["grinder_id"],
+            onDelete = ForeignKey.SET_NULL
+        ),
+        ForeignKey(
+            entity = ProfileEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["profile_id"],
+            onDelete = ForeignKey.SET_NULL
+        )
+    ],
+    indices = [
+        Index("bean_id"),
+        Index("grinder_id"),
+        Index("profile_id")
+    ]
+)
+data class ShotEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val beanName: String,
-    val grinder: String,
-    val dose: Float,
-    val yield: Float,
-    val timeSeconds: Int,
-    val timestamp: Long = System.currentTimeMillis()
+    val fecha: Long,
+    @ColumnInfo(name = "bean_id") val beanId: Long,
+    @ColumnInfo(name = "grinder_id") val molinoId: Long?,
+    @ColumnInfo(name = "profile_id") val perfilId: Long?,
+    val dosisG: Double,
+    val rendimientoG: Double,
+    val ratio: Double,
+    val tiempoSeg: Int?,
+    val temperaturaC: Double?,
+    val ajusteMolienda: String?,
+    val notas: String?,
+    val calificacion: Int?,
+    val createdAt: Long,
+    val updatedAt: Long
 )

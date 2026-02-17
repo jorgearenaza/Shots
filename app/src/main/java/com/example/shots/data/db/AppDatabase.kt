@@ -4,12 +4,25 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.espressoshots.data.dao.BeanDao
+import com.example.espressoshots.data.dao.GrinderDao
+import com.example.espressoshots.data.dao.ProfileDao
 import com.example.espressoshots.data.dao.ShotDao
-import com.example.espressoshots.data.model.Shot
+import com.example.espressoshots.data.model.BeanEntity
+import com.example.espressoshots.data.model.GrinderEntity
+import com.example.espressoshots.data.model.ProfileEntity
+import com.example.espressoshots.data.model.ShotEntity
 
-@Database(entities = [Shot::class], version = 1, exportSchema = false)
+@Database(
+    entities = [ShotEntity::class, BeanEntity::class, GrinderEntity::class, ProfileEntity::class],
+    version = 2,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun shotDao(): ShotDao
+    abstract fun beanDao(): BeanDao
+    abstract fun grinderDao(): GrinderDao
+    abstract fun profileDao(): ProfileDao
 
     companion object {
         @Volatile

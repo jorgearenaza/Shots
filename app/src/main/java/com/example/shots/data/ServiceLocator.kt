@@ -11,7 +11,13 @@ object ServiceLocator {
             return repository ?: run {
                 val db = AppDatabase.getInstance(context.applicationContext)
                 val ds = DataStoreManager.create(context.applicationContext)
-                val repo = ShotsRepository(db.shotDao(), ds)
+                val repo = ShotsRepository(
+                    shotDao = db.shotDao(),
+                    beanDao = db.beanDao(),
+                    grinderDao = db.grinderDao(),
+                    profileDao = db.profileDao(),
+                    dataStore = ds
+                )
                 repository = repo
                 repo
             }

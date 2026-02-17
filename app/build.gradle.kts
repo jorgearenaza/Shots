@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -55,7 +55,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     // Room
     implementation("androidx.room:room-runtime:2.6.1")
-    add("kapt", "androidx.room:room-compiler:2.6.1")
+    add("ksp", "androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.1.0")
@@ -70,8 +70,4 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-}
-
-kapt {
-    correctErrorTypes = true
 }

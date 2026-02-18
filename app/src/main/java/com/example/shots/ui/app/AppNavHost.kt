@@ -78,31 +78,30 @@ fun AppNavHost(repository: ShotsRepository) {
 
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
-
-    Scaffold(
-        bottomBar = if (isLandscape) {
-            null
-        } else {
-            {
-                NavigationBar {
-                    topRoutes.forEach { item ->
-                        val selected = backStackEntry?.destination?.hierarchy?.any { it.route == item.route } == true
-                        NavigationBarItem(
-                            selected = selected,
-                            onClick = {
-                                nav.navigate(item.route) {
-                                    launchSingleTop = true
-                                    restoreState = true
-                                    popUpTo(nav.graph.startDestinationId) { saveState = true }
-                                }
-                            },
-                            icon = item.icon,
-                            label = { androidx.compose.material3.Text(item.label) }
-                        )
-                    }
+    val bottomBarContent: @Composable () -> Unit = {
+        if (!isLandscape) {
+            NavigationBar {
+                topRoutes.forEach { item ->
+                    val selected = backStackEntry?.destination?.hierarchy?.any { it.route == item.route } == true
+                    NavigationBarItem(
+                        selected = selected,
+                        onClick = {
+                            nav.navigate(item.route) {
+                                launchSingleTop = true
+                                restoreState = true
+                                popUpTo(nav.graph.startDestinationId) { saveState = true }
+                            }
+                        },
+                        icon = item.icon,
+                        label = { androidx.compose.material3.Text(item.label) }
+                    )
                 }
             }
-        },
+        }
+    }
+
+    Scaffold(
+        bottomBar = bottomBarContent,
         floatingActionButton = {
             if (fabRoute != null) {
                 FloatingActionButton(

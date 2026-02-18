@@ -7,18 +7,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-                } else if (shotId == null) {
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -27,7 +28,6 @@ import androidx.navigation.NavController
 import com.example.espressoshots.ui.components.AjusteMoliendaControl
 import com.example.espressoshots.ui.components.DateField
 import com.example.espressoshots.ui.components.DropdownField
-                            nextShotNotes = nextShotNotes.ifBlank { null },
 import com.example.espressoshots.ui.components.EmptyState
 import com.example.espressoshots.ui.components.RatingStars
 import com.example.espressoshots.viewmodel.MainViewModel
@@ -72,43 +72,42 @@ fun ShotFormScreen(
     var createdAt by remember { mutableStateOf<Long?>(null) }
 
     LaunchedEffect(shotId) {
-                if (shotId == null) {
-                    vm.addShot(
-                        fecha = fechaMillis,
-                        beanId = beanId,
-                        molinoId = grinderId,
-                        perfilId = profileId,
-                        dosisG = d,
-                        rendimientoG = y,
-                        tiempoSeg = tiempo,
-                        temperaturaC = temp,
-                        ajusteMolienda = ajuste.ifBlank { null },
-                        notas = notas.ifBlank { null },
-                        nextShotNotes = nextShotNotes.ifBlank { null },
-                        calificacion = rating
-                    )
-                } else {
-                    vm.updateShot(
-                        com.example.espressoshots.data.model.ShotEntity(
-                            id = shotId,
-                            fecha = fechaMillis,
-                            beanId = beanId,
-                            molinoId = grinderId,
-                            perfilId = profileId,
-                            dosisG = d,
-                            rendimientoG = y,
-                            ratio = if (d == 0.0) 0.0 else y / d,
-                            tiempoSeg = tiempo,
-                            temperaturaC = temp,
-                            ajusteMolienda = ajuste.ifBlank { null },
-                            notas = notas.ifBlank { null },
-                            nextShotNotes = nextShotNotes.ifBlank { null },
-                            calificacion = rating,
-                            createdAt = createdAt ?: System.currentTimeMillis(),
-                            updatedAt = System.currentTimeMillis()
-                        )
-                    )
-                }
+        if (shotId != null && !loaded) {
+            val shot = vm.getShot(shotId)
+            if (shot != null) {
+                fechaMillis = shot.fecha
+                beanIndex = beans.value.indexOfFirst { it.id == shot.beanId }.coerceAtLeast(0)
+                grinderIndex = grinders.value.indexOfFirst { it.id == shot.molinoId }.takeIf { it >= 0 }
+                profileIndex = profiles.value.indexOfFirst { it.id == shot.perfilId }.takeIf { it >= 0 }
+                dosis = shot.dosisG.toString()
+                rendimiento = shot.rendimientoG.toString()
+                tiempoSeg = shot.tiempoSeg?.toString() ?: ""
+                temperatura = shot.temperaturaC?.toString() ?: ""
+                ajuste = shot.ajusteMolienda ?: ""
+                notas = shot.notas ?: ""
+                nextShotNotes = shot.nextShotNotes ?: ""
+                calificacion = shot.calificacion?.toString() ?: ""
+                createdAt = shot.createdAt
+            }
+            loaded = true
+        } else if (shotId == null && !loaded) {
+            if (settings.value.autofillShots) {
+                dosis = settings.value.defaultDoseG.toString()
+                rendimiento = settings.value.defaultYieldG.toString()
+            }
+            loaded = true
+        }
+    }
+
+    val beanLabels = beans.value.map { "${it.tostador} - ${it.cafe}" }
+    val grinderLabels = listOf("Sin molino") + grinders.value.map { it.nombre }
+    val profileLabels = listOf("Sin perfil") + profiles.value.map { it.nombre }
+
+    val ratioValue = run {
+        val d = dosis.toDoubleOrNull() ?: 0.0
+        val y = rendimiento.toDoubleOrNull() ?: 0.0
+        if (d == 0.0) 0.0 else y / d
+    }
 
     Column(
         modifier = Modifier

@@ -8,6 +8,7 @@ import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun RatingStars(
@@ -15,7 +16,7 @@ fun RatingStars(
     max: Int = 10,
     onRatingChange: (Int) -> Unit
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(4)) {
+    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
         for (i in 1..max) {
             val filled = i <= rating
             IconButton(onClick = { onRatingChange(i) }) {

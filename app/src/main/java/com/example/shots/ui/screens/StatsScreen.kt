@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.espressoshots.ui.components.AverageMetricsCard
 import com.example.espressoshots.ui.components.EmptyState
+import com.example.espressoshots.ui.components.InsightsCard
 import com.example.espressoshots.ui.components.RatingsStatsCard
 import com.example.espressoshots.ui.components.ShotsPerBeanChart
 import com.example.espressoshots.viewmodel.MainViewModel
@@ -46,9 +47,14 @@ fun StatsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
         item {
             Text(
                 text = "📈 Estadísticas y Analytics",
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = "Análisis de tus ${shots.value.size} shots",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
@@ -62,6 +68,10 @@ fun StatsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
 
         item {
             ShotsPerBeanChart(shots.value)
+        }
+        
+        item {
+            InsightsCard(shots.value)
         }
     }
 }

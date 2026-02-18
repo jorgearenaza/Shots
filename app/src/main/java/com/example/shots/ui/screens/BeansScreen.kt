@@ -17,6 +17,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,6 +40,7 @@ fun BeansScreen(navController: NavController, vm: MainViewModel, padding: Paddin
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     var searchQuery by remember { mutableStateOf("") }
+    var beanToDelete by remember { mutableStateOf<Long?>(null) }
 
     if (beans.value.isEmpty()) {
         EmptyState(
@@ -96,7 +99,7 @@ fun BeansScreen(navController: NavController, vm: MainViewModel, padding: Paddin
                     BeanCard(
                         bean = bean,
                         onEdit = { navController.navigate("beans/edit/${bean.id}") },
-                        onDelete = { /* TODO: implementar eliminación */ },
+                        onDelete = { beanToDelete = bean.id },
                         onFreshnessUpdate = { newDate ->
                             vm.updateBeanEntity(bean.copy(fechaCompra = newDate))
                             scope.launch { snackbarHostState.showSnackbar("Frescura actualizada") }
@@ -105,5 +108,29 @@ fun BeansScreen(navController: NavController, vm: MainViewModel, padding: Paddin
                 }
             }
         }
+    }
+
+    // Diálogo de confirmación para eliminar
+    if (beanToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { beanToDelete = null },
+            title = { Text("Eliminar grano") },
+            text = { Text("¿Estás seguro de que quieres eliminar este grano? Esta acción no se puede deshacer.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        beanToDelete?.let { vm.deleteBean(it) }
+                        beanToDelete = null
+                    }
+                ) {
+                    Text("Eliminar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { beanToDelete = null }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }

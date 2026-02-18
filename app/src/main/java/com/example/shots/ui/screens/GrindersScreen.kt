@@ -15,6 +15,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,6 +34,7 @@ import com.example.espressoshots.viewmodel.MainViewModel
 fun GrindersScreen(navController: NavController, vm: MainViewModel, padding: PaddingValues) {
     val grinders = vm.grinders.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
+    var grinderToDelete by remember { mutableStateOf<Long?>(null) }
 
     if (grinders.value.isEmpty()) {
         EmptyState(
@@ -84,10 +87,34 @@ fun GrindersScreen(navController: NavController, vm: MainViewModel, padding: Pad
                     GrinderCard(
                         grinder = grinder,
                         onEdit = { navController.navigate("grinders/edit/${grinder.id}") },
-                        onDelete = { /* TODO: implementar eliminación */ }
+                        onDelete = { grinderToDelete = grinder.id }
                     )
                 }
             }
         }
+    }
+
+    // Diálogo de confirmación para eliminar
+    if (grinderToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { grinderToDelete = null },
+            title = { Text("Eliminar molino") },
+            text = { Text("¿Estás seguro de que quieres eliminar este molino? Esta acción no se puede deshacer.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        grinderToDelete?.let { vm.deleteGrinder(it) }
+                        grinderToDelete = null
+                    }
+                ) {
+                    Text("Eliminar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { grinderToDelete = null }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }

@@ -15,6 +15,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -33,6 +35,7 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
     val shots = vm.shots.collectAsState()
     val beans = vm.beans.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
+    var shotToDelete by remember { mutableStateOf<Long?>(null) }
 
     if (shots.value.isEmpty()) {
         EmptyState(
@@ -101,10 +104,34 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
                         shot = shot,
                         beanLabel = beanLabel,
                         onEdit = { navController.navigate("shots/edit/${shot.shot.id}") },
-                        onDelete = { /* TODO: implementar eliminación */ }
+                        onDelete = { shotToDelete = shot.shot.id }
                     )
                 }
             }
         }
+    }
+
+    // Diálogo de confirmación para eliminar
+    if (shotToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { shotToDelete = null },
+            title = { Text("Eliminar shot") },
+            text = { Text("¿Estás seguro de que quieres eliminar este shot? Esta acción no se puede deshacer.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        shotToDelete?.let { vm.deleteShot(it) }
+                        shotToDelete = null
+                    }
+                ) {
+                    Text("Eliminar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { shotToDelete = null }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }

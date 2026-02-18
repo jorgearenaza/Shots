@@ -15,6 +15,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,6 +34,7 @@ import com.example.espressoshots.viewmodel.MainViewModel
 fun ProfilesScreen(navController: NavController, vm: MainViewModel, padding: PaddingValues) {
     val profiles = vm.profiles.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
+    var profileToDelete by remember { mutableStateOf<Long?>(null) }
 
     if (profiles.value.isEmpty()) {
         EmptyState(
@@ -84,10 +87,34 @@ fun ProfilesScreen(navController: NavController, vm: MainViewModel, padding: Pad
                     ProfileCard(
                         profile = profile,
                         onEdit = { navController.navigate("profiles/edit/${profile.id}") },
-                        onDelete = { /* TODO: implementar eliminación */ }
+                        onDelete = { profileToDelete = profile.id }
                     )
                 }
             }
         }
+    }
+
+    // Diálogo de confirmación para eliminar
+    if (profileToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { profileToDelete = null },
+            title = { Text("Eliminar perfil") },
+            text = { Text("¿Estás seguro de que quieres eliminar este perfil? Esta acción no se puede deshacer.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        profileToDelete?.let { vm.deleteProfile(it) }
+                        profileToDelete = null
+                    }
+                ) {
+                    Text("Eliminar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { profileToDelete = null }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }

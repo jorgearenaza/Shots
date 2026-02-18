@@ -75,6 +75,12 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
         }
     }
 
+    fun deleteShot(id: Long) {
+        viewModelScope.launch {
+            repo.deleteShot(id)
+        }
+    }
+
     suspend fun getShot(id: Long): ShotEntity? = repo.getShot(id)
 
     fun saveBean(
@@ -111,6 +117,10 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
         viewModelScope.launch { repo.deactivateBean(id) }
     }
 
+    fun deleteBean(id: Long) {
+        viewModelScope.launch { repo.deactivateBean(id) }
+    }
+
     suspend fun getBean(id: Long): BeanEntity? = repo.getBean(id)
 
     fun saveGrinder(id: Long?, nombre: String, ajusteDefault: String?, notas: String?) {
@@ -138,6 +148,10 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
         viewModelScope.launch { repo.deactivateGrinder(id) }
     }
 
+    fun deleteGrinder(id: Long) {
+        viewModelScope.launch { repo.deactivateGrinder(id) }
+    }
+
     suspend fun getGrinder(id: Long): GrinderEntity? = repo.getGrinder(id)
 
     fun saveProfile(id: Long?, nombre: String, descripcion: String?, parametros: String?) {
@@ -162,6 +176,10 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
     }
 
     fun deactivateProfile(id: Long) {
+        viewModelScope.launch { repo.deactivateProfile(id) }
+    }
+
+    fun deleteProfile(id: Long) {
         viewModelScope.launch { repo.deactivateProfile(id) }
     }
 

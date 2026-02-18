@@ -34,4 +34,7 @@ interface ShotDao {
 
     @Update
     fun update(shot: ShotEntity)
+
+    @Query("DELETE FROM shots WHERE id = :id")
+    fun delete(id: Long)
 }

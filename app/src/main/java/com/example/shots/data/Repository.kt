@@ -37,6 +37,12 @@ class ShotsRepository(
         }
     }
 
+    suspend fun deleteShot(id: Long) {
+        withContext(Dispatchers.IO) {
+            shotDao.delete(id)
+        }
+    }
+
     suspend fun getShot(id: Long): ShotEntity? = withContext(Dispatchers.IO) {
         shotDao.getById(id)
     }

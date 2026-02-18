@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -43,6 +44,7 @@ import com.example.espressoshots.ui.screens.ProfileFormScreen
 import com.example.espressoshots.ui.screens.ProfilesScreen
 import com.example.espressoshots.ui.screens.ShotFormScreen
 import com.example.espressoshots.ui.screens.ShotsScreen
+import com.example.espressoshots.ui.screens.StatsScreen
 import com.example.espressoshots.viewmodel.MainViewModel
 
 private data class TopLevelRoute(
@@ -67,6 +69,7 @@ fun AppNavHost(repository: ShotsRepository) {
         TopLevelRoute("beans", "Granos") { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) },
         TopLevelRoute("grinders", "Molinos") { Icon(Icons.Default.Build, contentDescription = null) },
         TopLevelRoute("profiles", "Perfiles") { Icon(Icons.Default.Person, contentDescription = null) },
+        TopLevelRoute("stats", "Stats") { Icon(Icons.Default.BarChart, contentDescription = null) },
         TopLevelRoute("options", "Opciones") { Icon(Icons.Default.Settings, contentDescription = null) }
     )
 
@@ -95,6 +98,7 @@ fun AppNavHost(repository: ShotsRepository) {
         "profiles" -> "Perfiles"
         "profiles/new" -> "Nuevo perfil"
         "profiles/edit/{id}" -> "Editar perfil"
+        "stats" -> "Estadísticas"
         "options" -> "Opciones"
         else -> "EspressoShots"
     }
@@ -185,6 +189,7 @@ fun AppNavHost(repository: ShotsRepository) {
                     }
 
                     composable("options") { OptionsScreen(navController = nav, vm = vm, padding = contentPadding) }
+                    composable("stats") { StatsScreen(navController = nav, vm = vm, padding = contentPadding) }
                 }
             }
         } else {
@@ -217,8 +222,7 @@ fun AppNavHost(repository: ShotsRepository) {
                     ProfileFormScreen(navController = nav, vm = vm, profileId = id, padding = contentPadding)
                 }
 
-                composable("options") { OptionsScreen(navController = nav, vm = vm, padding = contentPadding) }
-            }
+                composable("options") { OptionsScreen(navController = nav, vm = vm, padding = contentPadding) }                composable(\"stats\") { StatsScreen(navController = nav, vm = vm, padding = contentPadding) }            }
         }
     }
 }

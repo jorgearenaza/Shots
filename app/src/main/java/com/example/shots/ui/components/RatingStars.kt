@@ -2,7 +2,6 @@ package com.example.shots.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -25,11 +24,10 @@ fun RatingStars(
     ) {
         Slider(
             value = rating.toFloat(),
-            onValueChange = { onRatingChange(it.toInt()) },
+            onValueChange = { newValue -> onRatingChange(newValue.toInt()) },
             valueRange = 0f..max.toFloat(),
             steps = max - 1,
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text(rating.toString()) }
+            modifier = Modifier.fillMaxWidth()
         )
         Text(
             text = "$rating / $max",

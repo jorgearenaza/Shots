@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Shots">
         <activity
-            android:name="com.example.espressoshots.MainActivity"
+            android:name="com.example.shots.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Shots">

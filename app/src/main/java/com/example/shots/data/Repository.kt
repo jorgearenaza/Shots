@@ -1,14 +1,14 @@
-package com.example.espressoshots.data
+package com.example.shots.data
 
-import com.example.espressoshots.data.dao.BeanDao
-import com.example.espressoshots.data.dao.GrinderDao
-import com.example.espressoshots.data.dao.ProfileDao
-import com.example.espressoshots.data.dao.ShotDao
-import com.example.espressoshots.data.model.BeanEntity
-import com.example.espressoshots.data.model.GrinderEntity
-import com.example.espressoshots.data.model.ProfileEntity
-import com.example.espressoshots.data.model.ShotDetails
-import com.example.espressoshots.data.model.ShotEntity
+import com.example.shots.data.dao.BeanDao
+import com.example.shots.data.dao.GrinderDao
+import com.example.shots.data.dao.ProfileDao
+import com.example.shots.data.dao.ShotDao
+import com.example.shots.data.model.BeanEntity
+import com.example.shots.data.model.GrinderEntity
+import com.example.shots.data.model.ProfileEntity
+import com.example.shots.data.model.ShotDetails
+import com.example.shots.data.model.ShotEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

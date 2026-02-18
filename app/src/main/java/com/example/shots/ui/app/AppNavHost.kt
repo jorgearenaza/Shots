@@ -1,4 +1,4 @@
-package com.example.espressoshots.ui.app
+package com.example.shots.ui.app
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -34,18 +34,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.espressoshots.data.ShotsRepository
-import com.example.espressoshots.ui.screens.BeanFormScreen
-import com.example.espressoshots.ui.screens.BeansScreen
-import com.example.espressoshots.ui.screens.GrinderFormScreen
-import com.example.espressoshots.ui.screens.GrindersScreen
-import com.example.espressoshots.ui.screens.OptionsScreen
-import com.example.espressoshots.ui.screens.ProfileFormScreen
-import com.example.espressoshots.ui.screens.ProfilesScreen
-import com.example.espressoshots.ui.screens.ShotFormScreen
-import com.example.espressoshots.ui.screens.ShotsScreen
-import com.example.espressoshots.ui.screens.StatsScreen
-import com.example.espressoshots.viewmodel.MainViewModel
+import com.example.shots.data.ShotsRepository
+import com.example.shots.ui.screens.BeanFormScreen
+import com.example.shots.ui.screens.BeansScreen
+import com.example.shots.ui.screens.GrinderFormScreen
+import com.example.shots.ui.screens.GrindersScreen
+import com.example.shots.ui.screens.OptionsScreen
+import com.example.shots.ui.screens.ProfileFormScreen
+import com.example.shots.ui.screens.ProfilesScreen
+import com.example.shots.ui.screens.ShotFormScreen
+import com.example.shots.ui.screens.ShotsScreen
+import com.example.shots.ui.screens.StatsScreen
+import com.example.shots.viewmodel.MainViewModel
 
 private data class TopLevelRoute(
     val route: String,

@@ -1,4 +1,4 @@
-package com.example.espressoshots.ui.components
+package com.example.shots.ui.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.espressoshots.data.model.ShotDetails
+import com.example.shots.data.model.ShotDetails
 import kotlin.math.roundToInt
 
 @Composable

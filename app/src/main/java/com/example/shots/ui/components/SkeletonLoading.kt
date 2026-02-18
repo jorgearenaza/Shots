@@ -1,4 +1,4 @@
-package com.example.espressoshots.ui.components
+package com.example.shots.ui.components
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState

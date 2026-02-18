@@ -1,10 +1,10 @@
-package com.example.espressoshots.data.dao
+package com.example.shots.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.espressoshots.data.model.BeanEntity
+import com.example.shots.data.model.BeanEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

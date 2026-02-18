@@ -1,4 +1,4 @@
-package com.example.espressoshots.ui.screens
+package com.example.shots.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,8 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.espressoshots.data.model.GrinderEntity
-import com.example.espressoshots.viewmodel.MainViewModel
+import com.example.shots.data.model.GrinderEntity
+import com.example.shots.viewmodel.MainViewModel
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
 

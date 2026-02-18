@@ -1,4 +1,4 @@
-package com.example.espressoshots.ui.screens
+package com.example.shots.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,9 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.espressoshots.data.SettingsState
-import com.example.espressoshots.ui.components.DropdownField
-import com.example.espressoshots.viewmodel.MainViewModel
+import com.example.shots.data.SettingsState
+import com.example.shots.ui.components.DropdownField
+import com.example.shots.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
 @Composable

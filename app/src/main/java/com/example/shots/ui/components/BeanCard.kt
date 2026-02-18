@@ -1,4 +1,4 @@
-package com.example.espressoshots.ui.components
+package com.example.shots.ui.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -28,7 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.espressoshots.data.model.BeanEntity
+import com.example.shots.data.model.BeanEntity
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId

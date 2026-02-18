@@ -1,4 +1,4 @@
-package com.example.espressoshots.ui.theme
+package com.example.shots.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

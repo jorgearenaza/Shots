@@ -1,4 +1,4 @@
-package com.example.espressoshots.ui.components
+package com.example.shots.ui.components
 
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults

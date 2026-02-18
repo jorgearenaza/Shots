@@ -1,4 +1,4 @@
-package com.example.espressoshots.ui.theme
+package com.example.shots.ui.theme
 
 import androidx.compose.ui.unit.dp
 

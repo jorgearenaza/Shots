@@ -1,7 +1,7 @@
-package com.example.espressoshots.data
+package com.example.shots.data
 
 import android.content.Context
-import com.example.espressoshots.data.db.AppDatabase
+import com.example.shots.data.db.AppDatabase
 
 object ServiceLocator {
     private var repository: ShotsRepository? = null

@@ -1,4 +1,4 @@
-package com.example.espressoshots.ui.screens
+package com.example.shots.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,12 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.espressoshots.ui.components.AverageMetricsCard
-import com.example.espressoshots.ui.components.EmptyState
-import com.example.espressoshots.ui.components.InsightsCard
-import com.example.espressoshots.ui.components.RatingsStatsCard
-import com.example.espressoshots.ui.components.ShotsPerBeanChart
-import com.example.espressoshots.viewmodel.MainViewModel
+import com.example.shots.ui.components.AverageMetricsCard
+import com.example.shots.ui.components.EmptyState
+import com.example.shots.ui.components.InsightsCard
+import com.example.shots.ui.components.RatingsStatsCard
+import com.example.shots.ui.components.ShotsPerBeanChart
+import com.example.shots.viewmodel.MainViewModel
 
 @Composable
 fun StatsScreen(navController: NavController, vm: MainViewModel, padding: PaddingValues) {

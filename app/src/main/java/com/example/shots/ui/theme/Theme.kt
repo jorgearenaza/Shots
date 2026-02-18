@@ -1,4 +1,4 @@
-package com.example.espressoshots.ui.theme
+package com.example.shots.ui.theme
 
 import android.app.Activity
 import android.os.Build

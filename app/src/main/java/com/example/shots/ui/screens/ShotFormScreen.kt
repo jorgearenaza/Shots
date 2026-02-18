@@ -1,4 +1,4 @@
-package com.example.espressoshots.ui.screens
+package com.example.shots.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,14 +26,14 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.espressoshots.ui.components.AjusteMoliendaControl
-import com.example.espressoshots.ui.components.DateField
-import com.example.espressoshots.ui.components.DropdownField
-import com.example.espressoshots.ui.components.EmptyState
-import com.example.espressoshots.ui.components.RatingStars
-import com.example.espressoshots.ui.components.SectionHeaderCompact
-import com.example.espressoshots.ui.theme.AppSpacing
-import com.example.espressoshots.viewmodel.MainViewModel
+import com.example.shots.ui.components.AjusteMoliendaControl
+import com.example.shots.ui.components.DateField
+import com.example.shots.ui.components.DropdownField
+import com.example.shots.ui.components.EmptyState
+import com.example.shots.ui.components.RatingStars
+import com.example.shots.ui.components.SectionHeaderCompact
+import com.example.shots.ui.theme.AppSpacing
+import com.example.shots.viewmodel.MainViewModel
 
 @Composable
 fun ShotFormScreen(
@@ -522,7 +522,7 @@ fun ShotFormScreen(
                     )
                 } else {
                     vm.updateShot(
-                        com.example.espressoshots.data.model.ShotEntity(
+                        com.example.shots.data.model.ShotEntity(
                             id = shotId,
                             fecha = fechaMillis,
                             beanId = beanId,

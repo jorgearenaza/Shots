@@ -1,4 +1,4 @@
-package com.example.espressoshots.ui.screens
+package com.example.shots.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,10 +26,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.espressoshots.ui.components.EmptyState
-import com.example.espressoshots.ui.components.ProfileCard
-import com.example.espressoshots.ui.theme.AppSpacing
-import com.example.espressoshots.viewmodel.MainViewModel
+import com.example.shots.ui.components.EmptyState
+import com.example.shots.ui.components.ProfileCard
+import com.example.shots.ui.theme.AppSpacing
+import com.example.shots.viewmodel.MainViewModel
 
 @Composable
 fun ProfilesScreen(navController: NavController, vm: MainViewModel, padding: PaddingValues) {

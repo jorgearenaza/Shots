@@ -1,4 +1,4 @@
-package com.example.espressoshots.data
+package com.example.shots.data
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey

@@ -1,4 +1,4 @@
-package com.example.espressoshots.ui.components
+package com.example.shots.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

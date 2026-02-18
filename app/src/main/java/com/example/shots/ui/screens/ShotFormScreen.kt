@@ -505,11 +505,11 @@ fun ShotFormScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 10.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
                     horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
                 ) {
-                    Text("Calificación", style = MaterialTheme.typography.labelSmall)
+                    Text("Calificación", style = MaterialTheme.typography.titleSmall)
                     RatingStars(
                         rating = calificacion.toIntOrNull() ?: 0,
                         max = 10,

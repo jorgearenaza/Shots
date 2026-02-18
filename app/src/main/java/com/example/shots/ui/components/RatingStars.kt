@@ -1,17 +1,16 @@
 package com.example.shots.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.StarBorder
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun RatingStars(
@@ -19,23 +18,22 @@ fun RatingStars(
     max: Int = 10,
     onRatingChange: (Int) -> Unit
 ) {
-    Row(
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(0.dp),
-        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        for (i in 1..max) {
-            val filled = i <= rating
-            IconButton(
-                onClick = { onRatingChange(i) },
-                modifier = Modifier.size(24.dp)
-            ) {
-                Icon(
-                    imageVector = if (filled) Icons.Filled.Star else Icons.Outlined.StarBorder,
-                    contentDescription = null,
-                    modifier = Modifier.size(14.dp)
-                )
-            }
-        }
+        Slider(
+            value = rating.toFloat(),
+            onValueChange = { onRatingChange(it.toInt()) },
+            valueRange = 0f..max.toFloat(),
+            steps = max - 1,
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(rating.toString()) }
+        )
+        Text(
+            text = "$rating / $max",
+            style = MaterialTheme.typography.labelLarge
+        )
     }
 }

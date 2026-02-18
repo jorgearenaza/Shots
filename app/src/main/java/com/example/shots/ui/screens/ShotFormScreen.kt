@@ -228,15 +228,15 @@ fun ShotFormScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text("🔌 Molino", style = MaterialTheme.typography.labelLarge)
+                    Text("🔌 Molino", style = MaterialTheme.typography.titleSmall)
                     if (grinders.value.isEmpty()) {
-                        Text("Sin molinos", style = MaterialTheme.typography.bodySmall)
+                        Text("Agrega un molino", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.outline)
                     } else {
                         DropdownField(
-                            label = "Molino",
+                            label = "Selecciona molino",
                             value = grinderIndex?.let { grinderLabels.getOrNull(it + 1) } ?: "Sin molino",
                             options = grinderLabels,
                             onSelect = { idx -> grinderIndex = if (idx == 0) null else idx - 1 }
@@ -256,15 +256,15 @@ fun ShotFormScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text("📋 Perfil", style = MaterialTheme.typography.labelLarge)
+                    Text("📋 Perfil", style = MaterialTheme.typography.titleSmall)
                     if (profiles.value.isEmpty()) {
-                        Text("Sin perfiles", style = MaterialTheme.typography.bodySmall)
+                        Text("Agrega un perfil", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.outline)
                     } else {
                         DropdownField(
-                            label = "Perfil",
+                            label = "Selecciona perfil",
                             value = profileIndex?.let { profileLabels.getOrNull(it + 1) } ?: "Sin perfil",
                             options = profileLabels,
                             onSelect = { idx -> profileIndex = if (idx == 0) null else idx - 1 }
@@ -290,14 +290,14 @@ fun ShotFormScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text("⚖️ Dosis", style = MaterialTheme.typography.labelLarge)
+                    Text("⚖️ Dosis", style = MaterialTheme.typography.titleSmall)
                     OutlinedTextField(
                         value = dosis,
                         onValueChange = { dosis = it },
-                        label = { Text("g") },
+                        label = { Text("Gramos") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true
@@ -316,21 +316,21 @@ fun ShotFormScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text("📊 Ratio", style = MaterialTheme.typography.labelLarge)
+                    Text("📊 Ratio", style = MaterialTheme.typography.titleSmall)
                     OutlinedTextField(
                         value = rendimiento,
                         onValueChange = { rendimiento = it },
-                        label = { Text("g") },
+                        label = { Text("Rendimiento (g)") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true
                     )
                     Text(
-                        text = "${"%.2f".format(ratioValue)}x",
-                        style = MaterialTheme.typography.labelSmall,
+                        text = "Ratio: ${"%.2f".format(ratioValue)}x",
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -347,18 +347,18 @@ fun ShotFormScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text("☕ Tiempo", style = MaterialTheme.typography.labelLarge)
+                    Text("☕ Extracción", style = MaterialTheme.typography.titleSmall)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         OutlinedTextField(
                             value = tiempoSeg,
                             onValueChange = { tiempoSeg = it },
-                            label = { Text("s") },
+                            label = { Text("Tiempo (s)") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             modifier = Modifier.weight(1f),
                             singleLine = true
@@ -366,7 +366,7 @@ fun ShotFormScreen(
                         OutlinedTextField(
                             value = temperatura,
                             onValueChange = { temperatura = it },
-                            label = { Text("°C") },
+                            label = { Text("Temp (°C)") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                             modifier = Modifier.weight(1f),
                             singleLine = true
@@ -385,12 +385,12 @@ fun ShotFormScreen(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 OutlinedTextField(
                     value = preinfusionTiempo,
                     onValueChange = { preinfusionTiempo = it },
-                    label = { Text("Tiempo (s)") },
+                    label = { Text("Tiempo (segundos)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.weight(1f),
                     singleLine = true
@@ -415,11 +415,11 @@ fun ShotFormScreen(
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     DropdownField(
                         label = "Aroma",
@@ -438,7 +438,7 @@ fun ShotFormScreen(
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     DropdownField(
                         label = "Cuerpo",
@@ -480,14 +480,14 @@ fun ShotFormScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text("📝 Notas", style = MaterialTheme.typography.labelLarge)
+                    Text("📝 Notas", style = MaterialTheme.typography.titleSmall)
                     OutlinedTextField(
                         value = notas,
                         onValueChange = { notas = it },
-                        label = { Text("Notas") },
+                        label = { Text("Observaciones") },
                         modifier = Modifier.fillMaxWidth(),
                         minLines = 2
                     )
@@ -505,11 +505,11 @@ fun ShotFormScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
                     horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
                 ) {
-                    Text("⭐ Rating", style = MaterialTheme.typography.labelLarge)
+                    Text("⭐ Calificación", style = MaterialTheme.typography.titleSmall)
                     RatingStars(
                         rating = calificacion.toIntOrNull() ?: 0,
                         max = 10,
@@ -544,7 +544,7 @@ fun ShotFormScreen(
                 Text(
                     text = error ?: "",
                     color = MaterialTheme.colorScheme.onErrorContainer,
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(12.dp),
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -555,11 +555,11 @@ fun ShotFormScreen(
                 val d = dosis.toDoubleOrNull()
                 val y = rendimiento.toDoubleOrNull()
                 if (d == null || y == null) {
-                    error = "Dosis y rendimiento son obligatorios."
+                    error = "⚠️ Dosis y rendimiento son obligatorios"
                     return@Button
                 }
                 if (beanIndex !in beans.value.indices) {
-                    error = "Selecciona un grano valido."
+                    error = "⚠️ Selecciona un grano válido"
                     return@Button
                 }
                 val beanId = beans.value[beanIndex].id
@@ -624,13 +624,13 @@ fun ShotFormScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
+                .padding(vertical = 12.dp),
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             )
         ) {
-            Text(if (shotId == null) "Registrar" else "Actualizar", modifier = Modifier.padding(4.dp), style = MaterialTheme.typography.labelMedium)
+            Text(if (shotId == null) "📸 Registrar" else "✏️ Actualizar", modifier = Modifier.padding(6.dp), style = MaterialTheme.typography.labelLarge)
         }
     }
 }
@@ -651,10 +651,10 @@ private fun SectionCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Text("$icon $title", style = MaterialTheme.typography.labelLarge)
+            Text("$icon $title", style = MaterialTheme.typography.titleSmall)
             content()
         }
     }
@@ -678,21 +678,16 @@ private fun ExpandableSection(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(AppSpacing.medium),
+                    .padding(horizontal = 12.dp, vertical = 10.dp),
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(
-                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(AppSpacing.small)
-                ) {
-                    Text(icon, style = MaterialTheme.typography.headlineSmall)
-                    Text(title, style = MaterialTheme.typography.titleMedium)
-                }
-                IconButton(onClick = { onExpandChange(!expanded) }) {
+                Text("$icon $title", style = MaterialTheme.typography.titleSmall)
+                IconButton(onClick = { onExpandChange(!expanded) }, modifier = Modifier.padding(0.dp)) {
                     Icon(
                         imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                        contentDescription = if (expanded) "Colapsar" else "Expandir"
+                        contentDescription = if (expanded) "Colapsar" else "Expandir",
+                        modifier = Modifier.padding(0.dp)
                     )
                 }
             }
@@ -700,9 +695,9 @@ private fun ExpandableSection(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = AppSpacing.medium)
-                        .padding(bottom = AppSpacing.medium),
-                    verticalArrangement = Arrangement.spacedBy(AppSpacing.small)
+                        .padding(horizontal = 12.dp)
+                        .padding(bottom = 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     content()
                 }

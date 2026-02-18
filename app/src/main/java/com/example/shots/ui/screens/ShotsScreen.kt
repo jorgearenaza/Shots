@@ -235,7 +235,7 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 16.dp),
-                contentPadding = PaddingValues(vertical = 12.dp),
+                contentPadding = PaddingValues(top = 12.dp, bottom = 88.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 items(filteredShots.sortedByDescending { it.shot.fecha }) { shot ->

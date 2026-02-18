@@ -92,7 +92,7 @@ fun BeansScreen(navController: NavController, vm: MainViewModel, padding: Paddin
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 88.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(filteredBeans) { bean ->

@@ -156,13 +156,13 @@ fun ShotCard(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 // ▼ SECCIÓN 1: MÉTRICAS PRINCIPALES (Grid 2x2)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     CompactMetricBadge(
                         emoji = "☕",
@@ -180,7 +180,7 @@ fun ShotCard(
                 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     CompactMetricBadge(
                         emoji = "⚖️",
@@ -207,10 +207,10 @@ fun ShotCard(
                             .fillMaxWidth()
                             .background(
                                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                shape = RoundedCornerShape(10.dp)
+                                shape = RoundedCornerShape(8.dp)
                             )
-                            .padding(horizontal = 12.dp, vertical = 10.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            .padding(horizontal = 8.dp, vertical = 6.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         if (shot.shot.tiempoSeg != null) {
                             StatusIndicator(
@@ -237,10 +237,10 @@ fun ShotCard(
                             .fillMaxWidth()
                             .background(
                                 color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-                                shape = RoundedCornerShape(8.dp)
+                                shape = RoundedCornerShape(6.dp)
                             )
-                            .padding(horizontal = 10.dp, vertical = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         if (shot.shot.temperaturaC != null) {
@@ -265,19 +265,20 @@ fun ShotCard(
                             .fillMaxWidth()
                             .background(
                                 color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f),
-                                shape = RoundedCornerShape(8.dp)
+                                shape = RoundedCornerShape(6.dp)
                             )
-                            .padding(10.dp)
+                            .padding(8.dp)
                     ) {
                         Text(
-                            text = "⏱️ Pre-Infusión",
+                            text = "⏱️ Pre-Inf",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.9f
                         )
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            modifier = Modifier.padding(top = 4.dp)
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.padding(top = 2.dp)
                         ) {
                             if (shot.shot.preinfusionTiempoSeg != null) {
                                 Text(
@@ -307,26 +308,27 @@ fun ShotCard(
                             .fillMaxWidth()
                             .background(
                                 color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.15f),
-                                shape = RoundedCornerShape(8.dp)
+                                shape = RoundedCornerShape(6.dp)
                             )
-                            .padding(10.dp)
+                            .padding(8.dp)
                     ) {
                         Text(
-                            text = "👃 Tasting Notes",
+                            text = "👃 Tasting",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.9f
                         )
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 6.dp),
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                                .padding(top = 3.dp),
+                            verticalArrangement = Arrangement.spacedBy(3.dp)
                         ) {
                             // Fila 1: Aroma y Sabor
                             if (!shot.shot.aromaNotes.isNullOrBlank() || !shot.shot.saborNotes.isNullOrBlank()) {
                                 Row(
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     if (!shot.shot.aromaNotes.isNullOrBlank()) {
@@ -365,13 +367,13 @@ fun ShotCard(
                             .fillMaxWidth()
                             .background(
                                 color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
-                                shape = RoundedCornerShape(8.dp)
+                                shape = RoundedCornerShape(6.dp)
                             )
-                            .padding(horizontal = 12.dp, vertical = 10.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "💡", style = MaterialTheme.typography.labelMedium)
+                        Text(text = "💡", style = MaterialTheme.typography.labelSmall)
                         Text(
                             text = shot.shot.nextShotNotes,
                             style = MaterialTheme.typography.labelSmall,
@@ -391,9 +393,9 @@ fun ShotCard(
                             .fillMaxWidth()
                             .background(
                                 color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.2f),
-                                shape = RoundedCornerShape(8.dp)
+                                shape = RoundedCornerShape(6.dp)
                             )
-                            .padding(10.dp)
+                            .padding(8.dp)
                     ) {
                         Text(
                             text = "📝",
@@ -458,28 +460,29 @@ fun CompactMetricBadge(
         modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(8.dp)
             )
-            .padding(vertical = 10.dp, horizontal = 8.dp),
+            .padding(vertical = 6.dp, horizontal = 6.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(1.dp)
     ) {
         Text(
             text = emoji,
-            style = MaterialTheme.typography.labelMedium
+            style = MaterialTheme.typography.labelSmall
         )
         Text(
             text = value,
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.95f
         )
         if (label != null) {
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = androidx.compose.material3.MaterialTheme.typography.labelSmall.fontSize * 0.85f
+                fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.75f
             )
         }
     }
@@ -496,24 +499,26 @@ fun TastingNoteBadge(
         modifier = modifier
             .background(
                 color = color.copy(alpha = 0.15f),
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(6.dp)
             )
-            .padding(horizontal = 8.dp, vertical = 6.dp),
+            .padding(horizontal = 6.dp, vertical = 4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(2.dp)
+        verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall,
             color = color,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
         )
         Text(
             text = value,
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurface,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.8f
         )
     }
 }
@@ -530,13 +535,14 @@ fun CompactInfoChip(
                 color = MaterialTheme.colorScheme.surfaceContainerHighest,
                 shape = RoundedCornerShape(6.dp)
             )
-            .padding(horizontal = 8.dp, vertical = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+            .padding(horizontal = 6.dp, vertical = 3.dp),
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = icon,
-            style = MaterialTheme.typography.labelSmall
+            style = MaterialTheme.typography.labelSmall,
+            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.9f
         )
         Text(
             text = text,
@@ -544,7 +550,8 @@ fun CompactInfoChip(
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onSurface,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
         )
     }
 }

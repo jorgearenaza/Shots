@@ -73,26 +73,24 @@ fun ShotCard(
         getYieldStatus(shot.shot.dosisG, shot.shot.rendimientoG)
     }
     
-    // Color según rating
-    val ratingGradient = remember(rating) {
-        when {
-            rating >= 9 -> listOf(
-                MaterialTheme.colorScheme.primary,
-                MaterialTheme.colorScheme.tertiary
-            )
-            rating >= 7 -> listOf(
-                MaterialTheme.colorScheme.secondary,
-                MaterialTheme.colorScheme.secondaryContainer
-            )
-            rating >= 5 -> listOf(
-                MaterialTheme.colorScheme.tertiary,
-                MaterialTheme.colorScheme.tertiaryContainer
-            )
-            else -> listOf(
-                MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
-                MaterialTheme.colorScheme.errorContainer
-            )
-        }
+    // Color según rating - se calcula en contexto @Composable
+    val ratingGradient = when {
+        rating >= 9 -> listOf(
+            MaterialTheme.colorScheme.primary,
+            MaterialTheme.colorScheme.tertiary
+        )
+        rating >= 7 -> listOf(
+            MaterialTheme.colorScheme.secondary,
+            MaterialTheme.colorScheme.secondaryContainer
+        )
+        rating >= 5 -> listOf(
+            MaterialTheme.colorScheme.tertiary,
+            MaterialTheme.colorScheme.tertiaryContainer
+        )
+        else -> listOf(
+            MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
+            MaterialTheme.colorScheme.errorContainer
+        )
     }
 
     Card(

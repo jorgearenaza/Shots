@@ -303,6 +303,7 @@ fun ShotCard(
                             }
                         }
                     }
+                    }
                 }
 
                 // ▼ SECCIÓN 3: PRE-INFUSIÓN
@@ -370,6 +371,7 @@ fun ShotCard(
                                 }
                             }
                         }
+                    }
                     }
                 }
 
@@ -461,6 +463,7 @@ fun ShotCard(
                             fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
                         )
                     }
+                    }
                 }
 
                 // ▼ SECCIÓN 6: NOTAS
@@ -491,6 +494,7 @@ fun ShotCard(
                             overflow = TextOverflow.Ellipsis,
                             fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
                         )
+                    }
                     }
                 }
 

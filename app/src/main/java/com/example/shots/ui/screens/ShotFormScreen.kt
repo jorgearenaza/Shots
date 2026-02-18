@@ -134,6 +134,19 @@ fun ShotFormScreen(
     )
     val nextShotDisplay = if (nextShotNotes.isBlank()) "Sin sugerencia" else nextShotNotes
 
+    // Opciones para tasting notes
+    val aromaOptions = listOf("N/A", "Floral", "Frutal", "Cítrico", "Chocolate", "Nueces", "Caramelo", "Vainilla", "Especiado", "Herbal")
+    val saborOptions = listOf("N/A", "Chocolate", "Caramelo", "Frutas rojas", "Frutas cítricas", "Nueces", "Avellana", "Miel", "Panela", "Frutas tropicales")
+    val cuerpoOptions = listOf("N/A", "Ligero", "Medio-Ligero", "Medio", "Medio-Completo", "Completo")
+    val acidezOptions = listOf("N/A", "Baja", "Media-Baja", "Media", "Media-Alta", "Alta", "Cítrica", "Málica", "Tánica")
+    val finishOptions = listOf("N/A", "Corto", "Medio", "Largo", "Dulce", "Limpio", "Seco", "Cremoso")
+    
+    val aromaDisplay = aromaNotes.ifBlank { "N/A" }
+    val saborDisplay = saborNotes.ifBlank { "N/A" }
+    val cuerpoDisplay = cuerpo.ifBlank { "N/A" }
+    val acidezDisplay = acidez.ifBlank { "N/A" }
+    val finishDisplay = finish.ifBlank { "N/A" }
+
     val ratioValue = run {
         val d = dosis.toDoubleOrNull() ?: 0.0
         val y = rendimiento.toDoubleOrNull() ?: 0.0
@@ -265,39 +278,39 @@ fun ShotFormScreen(
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
-                    OutlinedTextField(
-                        value = aromaNotes,
-                        onValueChange = { aromaNotes = it },
-                        label = { Text("Aroma") },
-                        placeholder = { Text("Ej: Floral, Frutal, Chocolate") },
+                    DropdownField(
+                        label = "Aroma",
+                        value = aromaDisplay,
+                        options = aromaOptions,
+                        onSelect = { idx -> aromaNotes = if (idx == 0) "" else aromaOptions[idx] },
                         modifier = Modifier.fillMaxWidth()
                     )
-                    OutlinedTextField(
-                        value = saborNotes,
-                        onValueChange = { saborNotes = it },
-                        label = { Text("Sabor") },
-                        placeholder = { Text("Ej: Chocolate, Caramelo, Cítrico") },
+                    DropdownField(
+                        label = "Sabor",
+                        value = saborDisplay,
+                        options = saborOptions,
+                        onSelect = { idx -> saborNotes = if (idx == 0) "" else saborOptions[idx] },
                         modifier = Modifier.fillMaxWidth()
                     )
-                    OutlinedTextField(
-                        value = cuerpo,
-                        onValueChange = { cuerpo = it },
-                        label = { Text("Cuerpo") },
-                        placeholder = { Text("Ej: Ligero, Medio, Completo") },
+                    DropdownField(
+                        label = "Cuerpo",
+                        value = cuerpoDisplay,
+                        options = cuerpoOptions,
+                        onSelect = { idx -> cuerpo = if (idx == 0) "" else cuerpoOptions[idx] },
                         modifier = Modifier.fillMaxWidth()
                     )
-                    OutlinedTextField(
-                        value = acidez,
-                        onValueChange = { acidez = it },
-                        label = { Text("Acidez") },
-                        placeholder = { Text("Ej: Cítrica, Málica, Baja") },
+                    DropdownField(
+                        label = "Acidez",
+                        value = acidezDisplay,
+                        options = acidezOptions,
+                        onSelect = { idx -> acidez = if (idx == 0) "" else acidezOptions[idx] },
                         modifier = Modifier.fillMaxWidth()
                     )
-                    OutlinedTextField(
-                        value = finish,
-                        onValueChange = { finish = it },
-                        label = { Text("Finish") },
-                        placeholder = { Text("Ej: Largo, Dulce, Limpio") },
+                    DropdownField(
+                        label = "Finish",
+                        value = finishDisplay,
+                        options = finishOptions,
+                        onSelect = { idx -> finish = if (idx == 0) "" else finishOptions[idx] },
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -420,39 +433,39 @@ fun ShotFormScreen(
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary
             )
-            OutlinedTextField(
-                value = aromaNotes,
-                onValueChange = { aromaNotes = it },
-                label = { Text("Aroma") },
-                placeholder = { Text("Ej: Floral, Frutal, Chocolate") },
+            DropdownField(
+                label = "Aroma",
+                value = aromaDisplay,
+                options = aromaOptions,
+                onSelect = { idx -> aromaNotes = if (idx == 0) "" else aromaOptions[idx] },
                 modifier = Modifier.fillMaxWidth()
             )
-            OutlinedTextField(
-                value = saborNotes,
-                onValueChange = { saborNotes = it },
-                label = { Text("Sabor") },
-                placeholder = { Text("Ej: Chocolate, Caramelo, Cítrico") },
+            DropdownField(
+                label = "Sabor",
+                value = saborDisplay,
+                options = saborOptions,
+                onSelect = { idx -> saborNotes = if (idx == 0) "" else saborOptions[idx] },
                 modifier = Modifier.fillMaxWidth()
             )
-            OutlinedTextField(
-                value = cuerpo,
-                onValueChange = { cuerpo = it },
-                label = { Text("Cuerpo") },
-                placeholder = { Text("Ej: Ligero, Medio, Completo") },
+            DropdownField(
+                label = "Cuerpo",
+                value = cuerpoDisplay,
+                options = cuerpoOptions,
+                onSelect = { idx -> cuerpo = if (idx == 0) "" else cuerpoOptions[idx] },
                 modifier = Modifier.fillMaxWidth()
             )
-            OutlinedTextField(
-                value = acidez,
-                onValueChange = { acidez = it },
-                label = { Text("Acidez") },
-                placeholder = { Text("Ej: Cítrica, Málica, Baja") },
+            DropdownField(
+                label = "Acidez",
+                value = acidezDisplay,
+                options = acidezOptions,
+                onSelect = { idx -> acidez = if (idx == 0) "" else acidezOptions[idx] },
                 modifier = Modifier.fillMaxWidth()
             )
-            OutlinedTextField(
-                value = finish,
-                onValueChange = { finish = it },
-                label = { Text("Finish") },
-                placeholder = { Text("Ej: Largo, Dulce, Limpio") },
+            DropdownField(
+                label = "Finish",
+                value = finishDisplay,
+                options = finishOptions,
+                onSelect = { idx -> finish = if (idx == 0) "" else finishOptions[idx] },
                 modifier = Modifier.fillMaxWidth()
             )
 

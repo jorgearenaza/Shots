@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.espressoshots.data.model.BeanEntity
 import com.example.espressoshots.ui.components.DateField
+import com.example.espressoshots.ui.components.DropdownField
 import com.example.espressoshots.viewmodel.MainViewModel
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
@@ -66,6 +67,13 @@ fun BeanFormScreen(
         }
     }
 
+    // Opciones para proceso y varietal
+    val procesoOptions = listOf("N/A", "Lavado", "Natural", "Honey", "Wet Hulled", "Anaeróbico", "Semi-Lavado")
+    val varietalOptions = listOf("N/A", "Caturra", "Bourbon", "Typica", "Gesha", "Catuai", "Castillo", "SL28", "SL34", "Pacamara", "Maragogipe")
+    
+    val procesoDisplay = proceso.ifBlank { "N/A" }
+    val varietalDisplay = varietal.ifBlank { "N/A" }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -96,17 +104,17 @@ fun BeanFormScreen(
             label = { Text("País") },
             placeholder = { Text("Ej: Colombia, Etiopía, Brasil") }
         )
-        OutlinedTextField(
-            value = proceso,
-            onValueChange = { proceso = it },
-            label = { Text("Proceso") },
-            placeholder = { Text("Ej: Lavado, Natural, Honey") }
+        DropdownField(
+            label = "Proceso",
+            value = procesoDisplay,
+            options = procesoOptions,
+            onSelect = { idx -> proceso = if (idx == 0) "" else procesoOptions[idx] }
         )
-        OutlinedTextField(
-            value = varietal,
-            onValueChange = { varietal = it },
-            label = { Text("Varietal") },
-            placeholder = { Text("Ej: Caturra, Gesha, Bourbon") }
+        DropdownField(
+            label = "Varietal",
+            value = varietalDisplay,
+            options = varietalOptions,
+            onSelect = { idx -> varietal = if (idx == 0) "" else varietalOptions[idx] }
         )
         OutlinedTextField(
             value = altitud,

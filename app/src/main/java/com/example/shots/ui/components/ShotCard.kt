@@ -6,6 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -42,6 +44,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ShotCard(
     shot: ShotDetails,
@@ -195,68 +198,99 @@ fun ShotCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(6.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                 // ▼ SECCIÓN 1: MÉTRICAS PRINCIPALES (Fila compacta)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
+                            shape = RoundedCornerShape(6.dp)
+                        )
+                        .padding(6.dp)
                 ) {
-                    CompactMetricBadge(
-                        emoji = "☕",
-                        value = "${shot.shot.dosisG}g",
-                        label = "Dose",
-                        modifier = Modifier.weight(1f)
+                    Text(
+                        text = "☕ Core Metrics",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f,
+                        modifier = Modifier.padding(bottom = 4.dp)
                     )
-                    CompactMetricBadge(
-                        emoji = "💧",
-                        value = "${shot.shot.rendimientoG}g",
-                        label = "Yield",
-                        modifier = Modifier.weight(1f)
-                    )
-                    CompactMetricBadge(
-                        emoji = "⚖️",
-                        value = ratio,
-                        label = "Ratio",
-                        modifier = Modifier.weight(1f)
-                    )
-                    if (shot.shot.tiempoSeg != null) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
                         CompactMetricBadge(
-                            emoji = "⏱️",
-                            value = "${shot.shot.tiempoSeg}s",
-                            label = "Time",
+                            emoji = "☕",
+                            value = "${shot.shot.dosisG}g",
+                            label = "Dose",
                             modifier = Modifier.weight(1f)
                         )
-                    } else {
-                        Box(modifier = Modifier.weight(1f))
+                        CompactMetricBadge(
+                            emoji = "💧",
+                            value = "${shot.shot.rendimientoG}g",
+                            label = "Yield",
+                            modifier = Modifier.weight(1f)
+                        )
+                        CompactMetricBadge(
+                            emoji = "⚖️",
+                            value = ratio,
+                            label = "Ratio",
+                            modifier = Modifier.weight(1f)
+                        )
+                        if (shot.shot.tiempoSeg != null) {
+                            CompactMetricBadge(
+                                emoji = "⏱️",
+                                value = "${shot.shot.tiempoSeg}s",
+                                label = "Time",
+                                modifier = Modifier.weight(1f)
+                            )
+                        } else {
+                            Box(modifier = Modifier.weight(1f))
+                        }
                     }
                 }
 
                 // ▼ SECCIÓN 2: DETALLES SECUNDARIOS
                 if (shot.shot.temperaturaC != null || !shot.shot.ajusteMolienda.isNullOrBlank() || 
                     !shot.grinderNombre.isNullOrBlank() || !shot.profileNombre.isNullOrBlank()) {
-                    Row(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
                                 color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
                                 shape = RoundedCornerShape(6.dp)
                             )
-                            .padding(horizontal = 6.dp, vertical = 3.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .padding(6.dp)
                     ) {
-                        if (shot.shot.temperaturaC != null) {
-                            CompactInfoChip(icon = "🌡️", text = "${shot.shot.temperaturaC.toInt()}°C")
-                        }
-                        if (!shot.shot.ajusteMolienda.isNullOrBlank()) {
-                            CompactInfoChip(icon = "⚙️", text = shot.shot.ajusteMolienda)
-                        }
-                        if (!shot.grinderNombre.isNullOrBlank()) {
-                            CompactInfoChip(icon = "🔧", text = shot.grinderNombre)
-                        }
-                        if (!shot.profileNombre.isNullOrBlank()) {
-                            CompactInfoChip(icon = "📋", text = shot.profileNombre)
+                        Text(
+                            text = "⚙️ Equipment",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
+                        )
+                        FlowRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            if (shot.shot.temperaturaC != null) {
+                                CompactInfoChip(icon = "🌡️", text = "${shot.shot.temperaturaC.toInt()}°C")
+                            }
+                            if (!shot.shot.ajusteMolienda.isNullOrBlank()) {
+                                CompactInfoChip(icon = "⚙️", text = shot.shot.ajusteMolienda)
+                            }
+                            if (!shot.grinderNombre.isNullOrBlank()) {
+                                CompactInfoChip(icon = "🔧", text = shot.grinderNombre)
+                            }
+                            if (!shot.profileNombre.isNullOrBlank()) {
+                                CompactInfoChip(icon = "📋", text = shot.profileNombre)
+                            }
                         }
                     }
                 }
@@ -273,33 +307,56 @@ fun ShotCard(
                             .padding(6.dp)
                     ) {
                         Text(
-                            text = "⏱️ Inf",
+                            text = "⏱️ Pre-Infusion",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
                         )
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            modifier = Modifier.padding(top = 1.dp)
+                        FlowRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
                             if (shot.shot.preinfusionTiempoSeg != null) {
-                                Text(
-                                    text = "${shot.shot.preinfusionTiempoSeg}s",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.8f
-                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Text(
+                                        text = "⏱️",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
+                                    )
+                                    Text(
+                                        text = "${shot.shot.preinfusionTiempoSeg}s",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
+                                    )
+                                }
                             }
                             if (shot.shot.preinfusionPresionBar != null) {
-                                Text(
-                                    text = "${String.format("%.1f", shot.shot.preinfusionPresionBar)}bar",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.8f
-                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Text(
+                                        text = "📊",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
+                                    )
+                                    Text(
+                                        text = "${String.format("%.1f", shot.shot.preinfusionPresionBar)}bar",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
+                                    )
+                                }
                             }
                         }
                     }
@@ -318,48 +375,33 @@ fun ShotCard(
                             .padding(6.dp)
                     ) {
                         Text(
-                            text = "👃 Tasting",
+                            text = "👃 Tasting Notes",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
                         )
-                        Column(
+                        FlowRow(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 2.dp),
-                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                                .padding(top = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            // Fila 1: Aroma y Sabor
-                            if (!shot.shot.aromaNotes.isNullOrBlank() || !shot.shot.saborNotes.isNullOrBlank()) {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    if (!shot.shot.aromaNotes.isNullOrBlank()) {
-                                        TastingNoteBadge("Aroma", shot.shot.aromaNotes, MaterialTheme.colorScheme.primary)
-                                    }
-                                    if (!shot.shot.saborNotes.isNullOrBlank()) {
-                                        TastingNoteBadge("Sabor", shot.shot.saborNotes, MaterialTheme.colorScheme.secondary)
-                                    }
-                                }
+                            if (!shot.shot.aromaNotes.isNullOrBlank()) {
+                                TastingNoteBadge("Aroma", shot.shot.aromaNotes, MaterialTheme.colorScheme.primary)
                             }
-                            // Fila 2: Cuerpo, Acidez, Finish
-                            if (!shot.shot.cuerpo.isNullOrBlank() || !shot.shot.acidez.isNullOrBlank() || !shot.shot.finish.isNullOrBlank()) {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    if (!shot.shot.cuerpo.isNullOrBlank()) {
-                                        TastingNoteBadge("Cuerpo", shot.shot.cuerpo, MaterialTheme.colorScheme.tertiary)
-                                    }
-                                    if (!shot.shot.acidez.isNullOrBlank()) {
-                                        TastingNoteBadge("Acidez", shot.shot.acidez, MaterialTheme.colorScheme.primary)
-                                    }
-                                    if (!shot.shot.finish.isNullOrBlank()) {
-                                        TastingNoteBadge("Finish", shot.shot.finish, MaterialTheme.colorScheme.secondary)
-                                    }
-                                }
+                            if (!shot.shot.saborNotes.isNullOrBlank()) {
+                                TastingNoteBadge("Sabor", shot.shot.saborNotes, MaterialTheme.colorScheme.secondary)
+                            }
+                            if (!shot.shot.cuerpo.isNullOrBlank()) {
+                                TastingNoteBadge("Cuerpo", shot.shot.cuerpo, MaterialTheme.colorScheme.tertiary)
+                            }
+                            if (!shot.shot.acidez.isNullOrBlank()) {
+                                TastingNoteBadge("Acidez", shot.shot.acidez, MaterialTheme.colorScheme.primary)
+                            }
+                            if (!shot.shot.finish.isNullOrBlank()) {
+                                TastingNoteBadge("Finish", shot.shot.finish, MaterialTheme.colorScheme.secondary)
                             }
                         }
                     }
@@ -367,26 +409,31 @@ fun ShotCard(
 
                 // ▼ SECCIÓN 5: RECOMENDACIÓN (Next Shot)
                 if (!shot.shot.nextShotNotes.isNullOrBlank()) {
-                    Row(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
+                                color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f),
                                 shape = RoundedCornerShape(6.dp)
                             )
-                            .padding(horizontal = 8.dp, vertical = 4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .padding(6.dp)
                     ) {
-                        Text(text = "💡", style = MaterialTheme.typography.labelSmall)
+                        Text(
+                            text = "💡 Next Shot",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f,
+                            modifier = Modifier.padding(bottom = 2.dp)
+                        )
                         Text(
                             text = shot.shot.nextShotNotes,
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            maxLines = 1,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 3,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f)
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
                         )
                     }
                 }
@@ -397,22 +444,26 @@ fun ShotCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.2f),
+                                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.15f),
                                 shape = RoundedCornerShape(6.dp)
                             )
-                            .padding(8.dp)
+                            .padding(6.dp)
                     ) {
                         Text(
-                            text = "📝",
-                            style = MaterialTheme.typography.labelSmall
+                            text = "📝 Notes",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f,
+                            modifier = Modifier.padding(bottom = 2.dp)
                         )
                         Text(
                             text = shot.shot.notas,
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            maxLines = 2,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 4,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(top = 4.dp)
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
                         )
                     }
                 }
@@ -422,11 +473,18 @@ fun ShotCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 4.dp),
-                    horizontalArrangement = Arrangement.End
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Box(modifier = Modifier.weight(1f))
                     IconButton(
                         onClick = onEdit,
-                        modifier = Modifier.size(36.dp)
+                        modifier = Modifier
+                            .size(36.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
                     ) {
                         Icon(
                             imageVector = Icons.Default.Edit,
@@ -437,7 +495,12 @@ fun ShotCard(
                     }
                     IconButton(
                         onClick = onDelete,
-                        modifier = Modifier.size(36.dp)
+                        modifier = Modifier
+                            .size(36.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.error.copy(alpha = 0.12f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,

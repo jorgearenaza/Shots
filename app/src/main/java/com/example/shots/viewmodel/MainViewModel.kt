@@ -41,6 +41,7 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
         temperaturaC: Double?,
         ajusteMolienda: String?,
         notas: String?,
+        nextShotNotes: String?,
         calificacion: Int?
     ) {
         val now = System.currentTimeMillis()
@@ -59,6 +60,7 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
                     temperaturaC = temperaturaC,
                     ajusteMolienda = ajusteMolienda,
                     notas = notas,
+                    nextShotNotes = nextShotNotes,
                     calificacion = calificacion,
                     createdAt = now,
                     updatedAt = now

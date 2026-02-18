@@ -47,6 +47,7 @@ data class ShotEntity(
     val temperaturaC: Double?,
     val ajusteMolienda: String?,
     val notas: String?,
+    val nextShotNotes: String?,
     val calificacion: Int?,
     val createdAt: Long,
     val updatedAt: Long

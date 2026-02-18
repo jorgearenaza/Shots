@@ -12,7 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+                } else if (shotId == null) {
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -27,7 +27,9 @@ import androidx.navigation.NavController
 import com.example.espressoshots.ui.components.AjusteMoliendaControl
 import com.example.espressoshots.ui.components.DateField
 import com.example.espressoshots.ui.components.DropdownField
+                            nextShotNotes = nextShotNotes.ifBlank { null },
 import com.example.espressoshots.ui.components.EmptyState
+import com.example.espressoshots.ui.components.RatingStars
 import com.example.espressoshots.viewmodel.MainViewModel
 
 @Composable
@@ -64,46 +66,49 @@ fun ShotFormScreen(
     var temperatura by remember { mutableStateOf("") }
     var ajuste by remember { mutableStateOf("") }
     var notas by remember { mutableStateOf("") }
+    var nextShotNotes by remember { mutableStateOf("") }
     var calificacion by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
     var createdAt by remember { mutableStateOf<Long?>(null) }
 
     LaunchedEffect(shotId) {
-        if (shotId != null && !loaded) {
-            val shot = vm.getShot(shotId)
-            if (shot != null) {
-                fechaMillis = shot.fecha
-                beanIndex = beans.value.indexOfFirst { it.id == shot.beanId }.coerceAtLeast(0)
-                grinderIndex = grinders.value.indexOfFirst { it.id == shot.molinoId }.takeIf { it >= 0 }
-                profileIndex = profiles.value.indexOfFirst { it.id == shot.perfilId }.takeIf { it >= 0 }
-                dosis = shot.dosisG.toString()
-                rendimiento = shot.rendimientoG.toString()
-                tiempoSeg = shot.tiempoSeg?.toString() ?: ""
-                temperatura = shot.temperaturaC?.toString() ?: ""
-                ajuste = shot.ajusteMolienda ?: ""
-                notas = shot.notas ?: ""
-                calificacion = shot.calificacion?.toString() ?: ""
-                createdAt = shot.createdAt
-            }
-            loaded = true
-        } else if (shotId == null && !loaded) {
-            if (settings.value.autofillShots) {
-                dosis = settings.value.defaultDoseG.toString()
-                rendimiento = settings.value.defaultYieldG.toString()
-            }
-            loaded = true
-        }
-    }
-
-    val beanLabels = beans.value.map { "${it.tostador} - ${it.cafe}" }
-    val grinderLabels = listOf("Sin molino") + grinders.value.map { it.nombre }
-    val profileLabels = listOf("Sin perfil") + profiles.value.map { it.nombre }
-
-    val ratioValue = run {
-        val d = dosis.toDoubleOrNull() ?: 0.0
-        val y = rendimiento.toDoubleOrNull() ?: 0.0
-        if (d == 0.0) 0.0 else y / d
-    }
+                if (shotId == null) {
+                    vm.addShot(
+                        fecha = fechaMillis,
+                        beanId = beanId,
+                        molinoId = grinderId,
+                        perfilId = profileId,
+                        dosisG = d,
+                        rendimientoG = y,
+                        tiempoSeg = tiempo,
+                        temperaturaC = temp,
+                        ajusteMolienda = ajuste.ifBlank { null },
+                        notas = notas.ifBlank { null },
+                        nextShotNotes = nextShotNotes.ifBlank { null },
+                        calificacion = rating
+                    )
+                } else {
+                    vm.updateShot(
+                        com.example.espressoshots.data.model.ShotEntity(
+                            id = shotId,
+                            fecha = fechaMillis,
+                            beanId = beanId,
+                            molinoId = grinderId,
+                            perfilId = profileId,
+                            dosisG = d,
+                            rendimientoG = y,
+                            ratio = if (d == 0.0) 0.0 else y / d,
+                            tiempoSeg = tiempo,
+                            temperaturaC = temp,
+                            ajusteMolienda = ajuste.ifBlank { null },
+                            notas = notas.ifBlank { null },
+                            nextShotNotes = nextShotNotes.ifBlank { null },
+                            calificacion = rating,
+                            createdAt = createdAt ?: System.currentTimeMillis(),
+                            updatedAt = System.currentTimeMillis()
+                        )
+                    )
+                }
 
     Column(
         modifier = Modifier
@@ -186,7 +191,16 @@ fun ShotFormScreen(
                     AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
 
                     OutlinedTextField(value = notas, onValueChange = { notas = it }, label = { Text("Notas") })
-                    OutlinedTextField(value = calificacion, onValueChange = { calificacion = it }, label = { Text("Calificacion (1-5)") })
+                    OutlinedTextField(
+                        value = nextShotNotes,
+                        onValueChange = { nextShotNotes = it },
+                        label = { Text("Para siguiente shot") }
+                    )
+                    RatingStars(
+                        rating = calificacion.toIntOrNull() ?: 0,
+                        max = 10,
+                        onRatingChange = { calificacion = it.toString() }
+                    )
                 }
             }
         } else {
@@ -248,7 +262,16 @@ fun ShotFormScreen(
             AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
 
             OutlinedTextField(value = notas, onValueChange = { notas = it }, label = { Text("Notas") })
-            OutlinedTextField(value = calificacion, onValueChange = { calificacion = it }, label = { Text("Calificacion (1-5)") })
+            OutlinedTextField(
+                value = nextShotNotes,
+                onValueChange = { nextShotNotes = it },
+                label = { Text("Para siguiente shot") }
+            )
+            RatingStars(
+                rating = calificacion.toIntOrNull() ?: 0,
+                max = 10,
+                onRatingChange = { calificacion = it.toString() }
+            )
         }
 
         if (error != null) {
@@ -272,7 +295,7 @@ fun ShotFormScreen(
                 val profileId = profileIndex?.let { profiles.value.getOrNull(it)?.id }
                 val tiempo = tiempoSeg.toIntOrNull()
                 val temp = temperatura.toDoubleOrNull()
-                val rating = calificacion.toIntOrNull()?.coerceIn(1, 5)
+                val rating = calificacion.toIntOrNull()?.coerceIn(1, 10)
 
                 if (shotId == null) {
                     vm.addShot(
@@ -286,6 +309,7 @@ fun ShotFormScreen(
                         temperaturaC = temp,
                         ajusteMolienda = ajuste.ifBlank { null },
                         notas = notas.ifBlank { null },
+                        nextShotNotes = nextShotNotes.ifBlank { null },
                         calificacion = rating
                     )
                 } else {
@@ -303,6 +327,7 @@ fun ShotFormScreen(
                             temperaturaC = temp,
                             ajusteMolienda = ajuste.ifBlank { null },
                             notas = notas.ifBlank { null },
+                            nextShotNotes = nextShotNotes.ifBlank { null },
                             calificacion = rating,
                             createdAt = createdAt ?: System.currentTimeMillis(),
                             updatedAt = System.currentTimeMillis()

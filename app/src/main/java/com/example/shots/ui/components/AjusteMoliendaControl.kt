@@ -1,13 +1,9 @@
 package com.example.espressoshots.ui.components
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -27,7 +23,6 @@ fun AjusteMoliendaControl(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val presets = listOf("Espresso", "Turbo", "Filtro", "Fino", "Medio", "Grueso")
     val current = value.toDoubleOrNull() ?: 0.0
     val sliderValue = current.coerceIn(0.0, 20.0)
 
@@ -63,20 +58,5 @@ fun AjusteMoliendaControl(
         }
     }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp)
-            .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        presets.forEach { preset ->
-            AssistChip(
-                onClick = { onValueChange(preset) },
-                label = { Text(preset) },
-                colors = AssistChipDefaults.assistChipColors()
-            )
-        }
-    }
     // TODO: extend to pro mode (advanced presets and profiles)
 }

@@ -101,6 +101,20 @@ fun ShotFormScreen(
     val beanLabels = beans.value.map { "${it.tostador} - ${it.cafe}" }
     val grinderLabels = listOf("Sin molino") + grinders.value.map { it.nombre }
     val profileLabels = listOf("Sin perfil") + profiles.value.map { it.nombre }
+    val nextShotOptions = listOf(
+        "Sin sugerencia",
+        "Mas Grueso",
+        "Mas fino",
+        "+ Temp",
+        "- Temp",
+        "+ Yield",
+        "- Yield",
+        "+ PreInf",
+        "- PreInf",
+        "Cambiar Perfil",
+        "Mejorar Puck Prep"
+    )
+    val nextShotDisplay = if (nextShotNotes.isBlank()) "Sin sugerencia" else nextShotNotes
 
     val ratioValue = run {
         val d = dosis.toDoubleOrNull() ?: 0.0
@@ -189,10 +203,13 @@ fun ShotFormScreen(
                     AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
 
                     OutlinedTextField(value = notas, onValueChange = { notas = it }, label = { Text("Notas") })
-                    OutlinedTextField(
-                        value = nextShotNotes,
-                        onValueChange = { nextShotNotes = it },
-                        label = { Text("Para siguiente shot") }
+                    DropdownField(
+                        label = "Para siguiente shot",
+                        value = nextShotDisplay,
+                        options = nextShotOptions,
+                        onSelect = { idx ->
+                            nextShotNotes = if (idx == 0) "" else nextShotOptions[idx]
+                        }
                     )
                     RatingStars(
                         rating = calificacion.toIntOrNull() ?: 0,
@@ -260,10 +277,13 @@ fun ShotFormScreen(
             AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
 
             OutlinedTextField(value = notas, onValueChange = { notas = it }, label = { Text("Notas") })
-            OutlinedTextField(
-                value = nextShotNotes,
-                onValueChange = { nextShotNotes = it },
-                label = { Text("Para siguiente shot") }
+            DropdownField(
+                label = "Para siguiente shot",
+                value = nextShotDisplay,
+                options = nextShotOptions,
+                onSelect = { idx ->
+                    nextShotNotes = if (idx == 0) "" else nextShotOptions[idx]
+                }
             )
             RatingStars(
                 rating = calificacion.toIntOrNull() ?: 0,

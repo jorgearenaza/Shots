@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -114,7 +115,7 @@ fun ShotCard(
                             )
                         }
                     )
-                    .padding(horizontal = 8.dp, vertical = 6.dp)
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
                 Row(
                     modifier = Modifier
@@ -182,7 +183,7 @@ fun ShotCard(
                         Icon(
                             imageVector = if (expanded.value) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                             contentDescription = "Expandir",
-                            modifier = Modifier.size(20.dp),
+                            modifier = Modifier.size(18.dp),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -194,8 +195,8 @@ fun ShotCard(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(6.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                        .padding(4.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                 // ▼ SECCIÓN 1: MÉTRICAS PRINCIPALES (Fila compacta)
                 Column(
@@ -209,10 +210,9 @@ fun ShotCard(
                 ) {
                     Text(
                         text = "☕ Core Metrics",
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
                     Row(
@@ -253,22 +253,23 @@ fun ShotCard(
                 // ▼ SECCIÓN 2: DETALLES SECUNDARIOS
                 if (shot.shot.temperaturaC != null || !shot.shot.ajusteMolienda.isNullOrBlank() || 
                     !shot.grinderNombre.isNullOrBlank() || !shot.profileNombre.isNullOrBlank()) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-                                shape = RoundedCornerShape(6.dp)
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Divider(modifier = Modifier.padding(vertical = 4.dp))
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.15f),
+                                    shape = RoundedCornerShape(6.dp)
+                                )
+                                .padding(6.dp)
+                        ) {
+                            Text(
+                                text = "⚙️ Equipment",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                            .padding(6.dp)
-                    ) {
-                        Text(
-                            text = "⚙️ Equipment",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
-                        )
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -306,22 +307,23 @@ fun ShotCard(
 
                 // ▼ SECCIÓN 3: PRE-INFUSIÓN
                 if (shot.shot.preinfusionTiempoSeg != null || shot.shot.preinfusionPresionBar != null) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f),
-                                shape = RoundedCornerShape(6.dp)
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Divider(modifier = Modifier.padding(vertical = 4.dp))
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.2f),
+                                    shape = RoundedCornerShape(6.dp)
+                                )
+                                .padding(6.dp)
+                        ) {
+                            Text(
+                                text = "⏱️ Pre-Infusion",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                            .padding(6.dp)
-                    ) {
-                        Text(
-                            text = "⏱️ Pre-Infusion",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
-                        )
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -374,22 +376,23 @@ fun ShotCard(
                 // ▼ SECCIÓN 4: TASTING NOTES
                 if (!shot.shot.aromaNotes.isNullOrBlank() || !shot.shot.saborNotes.isNullOrBlank() || 
                     !shot.shot.cuerpo.isNullOrBlank() || !shot.shot.acidez.isNullOrBlank() || !shot.shot.finish.isNullOrBlank()) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.15f),
-                                shape = RoundedCornerShape(6.dp)
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Divider(modifier = Modifier.padding(vertical = 4.dp))
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f),
+                                    shape = RoundedCornerShape(6.dp)
+                                )
+                                .padding(6.dp)
+                        ) {
+                            Text(
+                                text = "👃 Tasting Notes",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                            .padding(6.dp)
-                    ) {
-                        Text(
-                            text = "👃 Tasting Notes",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
-                        )
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -430,23 +433,24 @@ fun ShotCard(
 
                 // ▼ SECCIÓN 5: RECOMENDACIÓN (Next Shot)
                 if (!shot.shot.nextShotNotes.isNullOrBlank()) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f),
-                                shape = RoundedCornerShape(6.dp)
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Divider(modifier = Modifier.padding(vertical = 4.dp))
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f),
+                                    shape = RoundedCornerShape(6.dp)
+                                )
+                                .padding(6.dp)
+                        ) {
+                            Text(
+                                text = "💡 Next Shot",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(bottom = 2.dp)
                             )
-                            .padding(6.dp)
-                    ) {
-                        Text(
-                            text = "💡 Next Shot",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f,
-                            modifier = Modifier.padding(bottom = 2.dp)
-                        )
                         Text(
                             text = shot.shot.nextShotNotes,
                             style = MaterialTheme.typography.labelSmall,
@@ -461,23 +465,24 @@ fun ShotCard(
 
                 // ▼ SECCIÓN 6: NOTAS
                 if (!shot.shot.notas.isNullOrBlank()) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.15f),
-                                shape = RoundedCornerShape(6.dp)
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Divider(modifier = Modifier.padding(vertical = 4.dp))
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.1f),
+                                    shape = RoundedCornerShape(6.dp)
+                                )
+                                .padding(6.dp)
+                        ) {
+                            Text(
+                                text = "📝 Notes",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(bottom = 2.dp)
                             )
-                            .padding(6.dp)
-                    ) {
-                        Text(
-                            text = "📝 Notes",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f,
-                            modifier = Modifier.padding(bottom = 2.dp)
-                        )
                         Text(
                             text = shot.shot.notas,
                             style = MaterialTheme.typography.labelSmall,
@@ -490,7 +495,9 @@ fun ShotCard(
                 }
 
                 // ▼ SECCIÓN 7: ACCIONES
-                Row(
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Divider(modifier = Modifier.padding(vertical = 4.dp))
+                    Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 4.dp),
@@ -511,7 +518,7 @@ fun ShotCard(
                             imageVector = Icons.Default.Edit,
                             contentDescription = "Editar",
                             tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                     IconButton(
@@ -527,7 +534,7 @@ fun ShotCard(
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Eliminar",
                             tint = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 }
@@ -592,7 +599,7 @@ fun TastingNoteBadge(
                 color = color.copy(alpha = 0.15f),
                 shape = RoundedCornerShape(5.dp)
             )
-            .padding(horizontal = 4.dp, vertical = 3.dp),
+            .padding(horizontal = 3.dp, vertical = 2.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
@@ -626,7 +633,7 @@ fun CompactInfoChip(
                 color = MaterialTheme.colorScheme.surfaceContainerHighest,
                 shape = RoundedCornerShape(5.dp)
             )
-            .padding(horizontal = 4.dp, vertical = 2.dp),
+            .padding(horizontal = 3.dp, vertical = 2.dp),
         horizontalArrangement = Arrangement.spacedBy(1.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

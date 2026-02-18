@@ -1,6 +1,7 @@
 package com.example.espressoshots.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -39,6 +40,11 @@ fun StatusIndicator(
                         StatusColor.RED -> Color(0xFFF44336)     // Rojo vibrante
                         StatusColor.NEUTRAL -> Color(0xFF9E9E9E)  // Gris neutral
                     },
+                    shape = CircleShape
+                )
+                .border(
+                    width = 1.dp,
+                    color = Color.White.copy(alpha = 0.3f),
                     shape = CircleShape
                 )
         )

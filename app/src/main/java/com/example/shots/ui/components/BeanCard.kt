@@ -103,7 +103,7 @@ fun BeanCard(
 
             // Barra de frescura
             LinearProgressIndicator(
-                progress = freshness,
+                progress = { freshness },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(6.dp),

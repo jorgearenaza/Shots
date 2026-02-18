@@ -28,5 +28,5 @@ interface BeanDao {
     fun deactivate(id: Long, updatedAt: Long)
 
     @Query("SELECT COUNT(*) FROM beans WHERE tostador = :tostador AND cafe = :cafe AND id != :excludeId AND activo = 1")
-    suspend fun countByTostadorAndCafe(tostador: String, cafe: String, excludeId: Long = 0): Int
+    suspend fun countByTostadorAndCafe(tostador: String, cafe: String, excludeId: Long): Int
 }

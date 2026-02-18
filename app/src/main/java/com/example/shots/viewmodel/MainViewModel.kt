@@ -185,11 +185,11 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
 
     suspend fun getProfile(id: Long): ProfileEntity? = repo.getProfile(id)
 
-    suspend fun profileNameExists(nombre: String, excludeId: Long = 0): Boolean = repo.profileNameExists(nombre, excludeId)
+    suspend fun profileNameExists(nombre: String, excludeId: Long): Boolean = repo.profileNameExists(nombre, excludeId)
 
-    suspend fun beanCombinationExists(tostador: String, cafe: String, excludeId: Long = 0): Boolean = repo.beanCombinationExists(tostador, cafe, excludeId)
+    suspend fun beanCombinationExists(tostador: String, cafe: String, excludeId: Long): Boolean = repo.beanCombinationExists(tostador, cafe, excludeId)
 
-    suspend fun grinderNameExists(nombre: String, excludeId: Long = 0): Boolean = repo.grinderNameExists(nombre, excludeId)
+    suspend fun grinderNameExists(nombre: String, excludeId: Long): Boolean = repo.grinderNameExists(nombre, excludeId)
 
     fun saveSettings(state: SettingsState) {
         viewModelScope.launch {

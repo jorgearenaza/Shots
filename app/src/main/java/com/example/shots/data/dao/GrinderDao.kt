@@ -28,5 +28,5 @@ interface GrinderDao {
     fun deactivate(id: Long, updatedAt: Long)
 
     @Query("SELECT COUNT(*) FROM grinders WHERE nombre = :nombre AND id != :excludeId AND activo = 1")
-    suspend fun countByNombre(nombre: String, excludeId: Long = 0): Int
+    suspend fun countByNombre(nombre: String, excludeId: Long): Int
 }

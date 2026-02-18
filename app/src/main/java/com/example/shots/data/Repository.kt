@@ -107,15 +107,15 @@ class ShotsRepository(
         profileDao.getById(id)
     }
 
-    suspend fun profileNameExists(nombre: String, excludeId: Long = 0): Boolean = withContext(Dispatchers.IO) {
+    suspend fun profileNameExists(nombre: String, excludeId: Long): Boolean = withContext(Dispatchers.IO) {
         profileDao.countByNombre(nombre, excludeId) > 0
     }
 
-    suspend fun beanCombinationExists(tostador: String, cafe: String, excludeId: Long = 0): Boolean = withContext(Dispatchers.IO) {
+    suspend fun beanCombinationExists(tostador: String, cafe: String, excludeId: Long): Boolean = withContext(Dispatchers.IO) {
         beanDao.countByTostadorAndCafe(tostador, cafe, excludeId) > 0
     }
 
-    suspend fun grinderNameExists(nombre: String, excludeId: Long = 0): Boolean = withContext(Dispatchers.IO) {
+    suspend fun grinderNameExists(nombre: String, excludeId: Long): Boolean = withContext(Dispatchers.IO) {
         grinderDao.countByNombre(nombre, excludeId) > 0
     }
 }

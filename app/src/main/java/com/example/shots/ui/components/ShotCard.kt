@@ -116,80 +116,75 @@ fun ShotCard(
                     )
                     .padding(horizontal = 8.dp, vertical = 6.dp)
             ) {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    // Fila superior: Grano, Fecha, Rating
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = beanLabel,
-                                style = MaterialTheme.typography.labelMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            Text(
-                                text = date.format(dateFormatter),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.9f
-                            )
-                        }
-                        
-                        // Rating compacto + Chevron
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(2.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            if (rating > 0) {
-                                Text(
-                                    text = "★",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = ratingGradient[0]
-                                )
-                                Text(
-                                    text = rating.toString(),
-                                    style = MaterialTheme.typography.labelMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    color = ratingGradient[0]
-                                )
-                            }
-                            Icon(
-                                imageVector = if (expanded.value) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                                contentDescription = "Expandir",
-                                modifier = Modifier.size(20.dp),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Grano + Fecha (izquierda)
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = beanLabel,
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            text = date.format(dateFormatter),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.9f
+                        )
                     }
-
-                    // Fila inferior: Timer y Yield (Status indicators)
+                    
+                    // Timer y Yield (centro)
                     if (shot.shot.tiempoSeg != null || shot.shot.rendimientoG > 0) {
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 6.dp),
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             if (shot.shot.tiempoSeg != null) {
                                 StatusIndicator(
                                     label = "Timer",
                                     value = "${shot.shot.tiempoSeg}s",
-                                    status = timerStatus,
-                                    modifier = Modifier.weight(1f)
+                                    status = timerStatus
                                 )
                             }
                             StatusIndicator(
                                 label = "Yield",
                                 value = "${shot.shot.rendimientoG}g",
-                                status = yieldStatus,
-                                modifier = Modifier.weight(1f)
+                                status = yieldStatus
                             )
                         }
+                    }
+                    
+                    // Rating + Chevron (derecha)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(2.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (rating > 0) {
+                            Text(
+                                text = "★",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = ratingGradient[0]
+                            )
+                            Text(
+                                text = rating.toString(),
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = ratingGradient[0]
+                            )
+                        }
+                        Icon(
+                            imageVector = if (expanded.value) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                            contentDescription = "Expandir",
+                            modifier = Modifier.size(20.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
             }
@@ -237,36 +232,7 @@ fun ShotCard(
                     }
                 }
 
-                // ▼ SECCIÓN 2: INDICADORES DE ESTADO (Semáforo)
-                if (shot.shot.tiempoSeg != null || shot.shot.rendimientoG > 0) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                shape = RoundedCornerShape(6.dp)
-                            )
-                            .padding(horizontal = 6.dp, vertical = 3.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        if (shot.shot.tiempoSeg != null) {
-                            StatusIndicator(
-                                label = "Timer",
-                                value = "${shot.shot.tiempoSeg}s",
-                                status = timerStatus,
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                        StatusIndicator(
-                            label = "Yield",
-                            value = "${shot.shot.rendimientoG}g",
-                            status = yieldStatus,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-
-                // ▼ SECCIÓN 3: DETALLES SECUNDARIOS
+                // ▼ SECCIÓN 2: DETALLES SECUNDARIOS
                 if (shot.shot.temperaturaC != null || !shot.shot.ajusteMolienda.isNullOrBlank() || 
                     !shot.grinderNombre.isNullOrBlank() || !shot.profileNombre.isNullOrBlank()) {
                     Row(
@@ -295,7 +261,7 @@ fun ShotCard(
                     }
                 }
 
-                // ▼ SECCIÓN 4: PRE-INFUSIÓN
+                // ▼ SECCIÓN 3: PRE-INFUSIÓN
                 if (shot.shot.preinfusionTiempoSeg != null || shot.shot.preinfusionPresionBar != null) {
                     Column(
                         modifier = Modifier
@@ -339,7 +305,7 @@ fun ShotCard(
                     }
                 }
 
-                // ▼ SECCIÓN 5: TASTING NOTES
+                // ▼ SECCIÓN 4: TASTING NOTES
                 if (!shot.shot.aromaNotes.isNullOrBlank() || !shot.shot.saborNotes.isNullOrBlank() || 
                     !shot.shot.cuerpo.isNullOrBlank() || !shot.shot.acidez.isNullOrBlank() || !shot.shot.finish.isNullOrBlank()) {
                     Column(
@@ -399,7 +365,7 @@ fun ShotCard(
                     }
                 }
 
-                // ▼ SECCIÓN 6: RECOMENDACIÓN (Next Shot)
+                // ▼ SECCIÓN 5: RECOMENDACIÓN (Next Shot)
                 if (!shot.shot.nextShotNotes.isNullOrBlank()) {
                     Row(
                         modifier = Modifier
@@ -425,7 +391,7 @@ fun ShotCard(
                     }
                 }
 
-                // ▼ SECCIÓN 7: NOTAS
+                // ▼ SECCIÓN 6: NOTAS
                 if (!shot.shot.notas.isNullOrBlank()) {
                     Column(
                         modifier = Modifier
@@ -451,7 +417,7 @@ fun ShotCard(
                     }
                 }
 
-                // ▼ SECCIÓN 8: ACCIONES
+                // ▼ SECCIÓN 7: ACCIONES
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

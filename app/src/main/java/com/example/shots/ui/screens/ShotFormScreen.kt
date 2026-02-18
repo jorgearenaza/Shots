@@ -10,7 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -163,6 +170,11 @@ fun ShotFormScreen(
         if (d == 0.0) 0.0 else y / d
     }
 
+    // Estados de expansión de secciones
+    var expandPreInfusion by remember { mutableStateOf(false) }
+    var expandTasting by remember { mutableStateOf(false) }
+    var expandNextShot by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -171,168 +183,8 @@ fun ShotFormScreen(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(AppSpacing.medium)
     ) {
-        if (isWide) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(AppSpacing.medium)
-                ) {
-                    DateField(label = "Fecha", valueMillis = fechaMillis, onValueChange = { fechaMillis = it })
-
-                    DropdownField(
-                        label = "Grano",
-                        value = beanLabels.getOrElse(beanIndex) { "" },
-                        options = beanLabels,
-                        onSelect = { beanIndex = it }
-                    )
-
-                    if (grinders.value.isEmpty()) {
-                        Text("No hay molinos. Agrega uno desde Molinos.")
-                        Button(
-                            onClick = { navController.navigate("grinders/new") },
-                            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.error,
-                                contentColor = MaterialTheme.colorScheme.onError
-                            )
-                        ) {
-                            Text("Agregar molino")
-                        }
-                    } else {
-                        DropdownField(
-                            label = "Molino (opcional)",
-                            value = grinderIndex?.let { grinderLabels.getOrNull(it + 1) } ?: "Sin molino",
-                            options = grinderLabels,
-                            onSelect = { idx -> grinderIndex = if (idx == 0) null else idx - 1 }
-                        )
-                    }
-
-                    if (profiles.value.isEmpty()) {
-                        Text("No hay perfiles. Agrega uno desde Perfiles.")
-                        Button(
-                            onClick = { navController.navigate("profiles/new") },
-                            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.error,
-                                contentColor = MaterialTheme.colorScheme.onError
-                            )
-                        ) {
-                            Text("Agregar perfil")
-                        }
-                    } else {
-                        DropdownField(
-                            label = "Perfil (opcional)",
-                            value = profileIndex?.let { profileLabels.getOrNull(it + 1) } ?: "Sin perfil",
-                            options = profileLabels,
-                            onSelect = { idx -> profileIndex = if (idx == 0) null else idx - 1 }
-                        )
-                    }
-
-                    OutlinedTextField(
-                        value = dosis,
-                        onValueChange = { dosis = it },
-                        label = { Text("Dosis (g)") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                    )
-                    OutlinedTextField(
-                        value = rendimiento,
-                        onValueChange = { rendimiento = it },
-                        label = { Text("Rendimiento (g)") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                    )
-                    Text(text = "Ratio: ${"%.2f".format(ratioValue)}", style = MaterialTheme.typography.bodyMedium)
-                }
-
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(AppSpacing.medium)
-                ) {
-                    OutlinedTextField(
-                        value = tiempoSeg,
-                        onValueChange = { tiempoSeg = it },
-                        label = { Text("Tiempo (s)") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                    )
-                    OutlinedTextField(
-                        value = temperatura,
-                        onValueChange = { temperatura = it },
-                        label = { Text("Temperatura (C)") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                    )
-
-                    AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
-
-                    SectionHeaderCompact(icon = "⏱️", title = "Pre-Infusión")
-                    OutlinedTextField(
-                        value = preinfusionTiempo,
-                        onValueChange = { preinfusionTiempo = it },
-                        label = { Text("Tiempo (segundos)") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    OutlinedTextField(
-                        value = preinfusionPresion,
-                        onValueChange = { preinfusionPresion = it },
-                        label = { Text("Presión (bar)") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    SectionHeaderCompact(icon = "👃", title = "Tasting Notes")
-                    DropdownField(
-                        label = "Aroma",
-                        value = aromaDisplay,
-                        options = aromaOptions,
-                        onSelect = { idx -> aromaNotes = if (idx == 0) "" else aromaOptions[idx] },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    DropdownField(
-                        label = "Sabor",
-                        value = saborDisplay,
-                        options = saborOptions,
-                        onSelect = { idx -> saborNotes = if (idx == 0) "" else saborOptions[idx] },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    DropdownField(
-                        label = "Cuerpo",
-                        value = cuerpoDisplay,
-                        options = cuerpoOptions,
-                        onSelect = { idx -> cuerpo = if (idx == 0) "" else cuerpoOptions[idx] },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    DropdownField(
-                        label = "Acidez",
-                        value = acidezDisplay,
-                        options = acidezOptions,
-                        onSelect = { idx -> acidez = if (idx == 0) "" else acidezOptions[idx] },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    DropdownField(
-                        label = "Finish",
-                        value = finishDisplay,
-                        options = finishOptions,
-                        onSelect = { idx -> finish = if (idx == 0) "" else finishOptions[idx] },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    OutlinedTextField(value = notas, onValueChange = { notas = it }, label = { Text("Notas") })
-                    DropdownField(
-                        label = "Para siguiente shot",
-                        value = nextShotDisplay,
-                        options = nextShotOptions,
-                        onSelect = { idx ->
-                            nextShotNotes = if (idx == 0) "" else nextShotOptions[idx]
-                        }
-                    )
-                    RatingStars(
-                        rating = calificacion.toIntOrNull() ?: 0,
-                        max = 10,
-                        onRatingChange = { calificacion = it.toString() }
-                    )
-                }
-            }
-        } else {
+        // ========== SECCIÓN SETUP ==========
+        SectionCard(title = "Setup", icon = "⚙️") {
             DateField(label = "Fecha", valueMillis = fechaMillis, onValueChange = { fechaMillis = it })
 
             DropdownField(
@@ -346,10 +198,7 @@ fun ShotFormScreen(
                 Text("No hay molinos. Agrega uno desde Molinos.")
                 Button(
                     onClick = { navController.navigate("grinders/new") },
-                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.error,
-                        contentColor = MaterialTheme.colorScheme.onError
-                    )
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Agregar molino")
                 }
@@ -366,10 +215,7 @@ fun ShotFormScreen(
                 Text("No hay perfiles. Agrega uno desde Perfiles.")
                 Button(
                     onClick = { navController.navigate("profiles/new") },
-                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.error,
-                        contentColor = MaterialTheme.colorScheme.onError
-                    )
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Agregar perfil")
                 }
@@ -381,97 +227,149 @@ fun ShotFormScreen(
                     onSelect = { idx -> profileIndex = if (idx == 0) null else idx - 1 }
                 )
             }
+        }
 
-            OutlinedTextField(
-                value = dosis,
-                onValueChange = { dosis = it },
-                label = { Text("Dosis (g)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-            )
-            OutlinedTextField(
-                value = rendimiento,
-                onValueChange = { rendimiento = it },
-                label = { Text("Rendimiento (g)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-            )
-            Text(text = "Ratio: ${"%.2f".format(ratioValue)}", style = MaterialTheme.typography.bodyMedium)
-            OutlinedTextField(
-                value = tiempoSeg,
-                onValueChange = { tiempoSeg = it },
-                label = { Text("Tiempo (s)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
-            OutlinedTextField(
-                value = temperatura,
-                onValueChange = { temperatura = it },
-                label = { Text("Temperatura (C)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-            )
-
+        // ========== SECCIÓN MOLIENDA ==========
+        SectionCard(title = "Molienda", icon = "🌾") {
             AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
+        }
 
-            SectionHeaderCompact(icon = "⏱️", title = "Pre-Infusión")
+        // ========== SECCIÓN DOSIS Y RENDIMIENTO ==========
+        SectionCard(title = "Dosis y Rendimiento", icon = "⚖️") {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = AppSpacing.small),
+                horizontalArrangement = Arrangement.spacedBy(AppSpacing.medium)
+            ) {
+                OutlinedTextField(
+                    value = dosis,
+                    onValueChange = { dosis = it },
+                    label = { Text("Dosis (g)") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    modifier = Modifier.weight(1f)
+                )
+                OutlinedTextField(
+                    value = rendimiento,
+                    onValueChange = { rendimiento = it },
+                    label = { Text("Rendimiento (g)") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            Text(
+                text = "Ratio: ${"%.2f".format(ratioValue)}x",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(top = AppSpacing.small)
+            )
+        }
+
+        // ========== SECCIÓN EXTRACCIÓN ==========
+        SectionCard(title = "Extracción", icon = "☕") {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(AppSpacing.medium)
+            ) {
+                OutlinedTextField(
+                    value = tiempoSeg,
+                    onValueChange = { tiempoSeg = it },
+                    label = { Text("Tiempo (s)") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.weight(1f)
+                )
+                OutlinedTextField(
+                    value = temperatura,
+                    onValueChange = { temperatura = it },
+                    label = { Text("Temp (°C)") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        }
+
+        // ========== SECCIÓN COLAPSABLE PRE-INFUSIÓN ==========
+        ExpandableSection(
+            title = "Pre-Infusión",
+            icon = "⏱️",
+            expanded = expandPreInfusion,
+            onExpandChange = { expandPreInfusion = it }
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(AppSpacing.medium)
+            ) {
+                OutlinedTextField(
+                    value = preinfusionTiempo,
+                    onValueChange = { preinfusionTiempo = it },
+                    label = { Text("Tiempo (s)") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.weight(1f)
+                )
+                OutlinedTextField(
+                    value = preinfusionPresion,
+                    onValueChange = { preinfusionPresion = it },
+                    label = { Text("Presión (bar)") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        }
+
+        // ========== SECCIÓN COLAPSABLE TASTING NOTES ==========
+        ExpandableSection(
+            title = "Tasting Notes",
+            icon = "👃",
+            expanded = expandTasting,
+            onExpandChange = { expandTasting = it }
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(AppSpacing.small)
+            ) {
+                DropdownField(
+                    label = "Aroma",
+                    value = aromaDisplay,
+                    options = aromaOptions,
+                    onSelect = { idx -> aromaNotes = if (idx == 0) "" else aromaOptions[idx] }
+                )
+                DropdownField(
+                    label = "Sabor",
+                    value = saborDisplay,
+                    options = saborOptions,
+                    onSelect = { idx -> saborNotes = if (idx == 0) "" else saborOptions[idx] }
+                )
+                DropdownField(
+                    label = "Cuerpo",
+                    value = cuerpoDisplay,
+                    options = cuerpoOptions,
+                    onSelect = { idx -> cuerpo = if (idx == 0) "" else cuerpoOptions[idx] }
+                )
+                DropdownField(
+                    label = "Acidez",
+                    value = acidezDisplay,
+                    options = acidezOptions,
+                    onSelect = { idx -> acidez = if (idx == 0) "" else acidezOptions[idx] }
+                )
+                DropdownField(
+                    label = "Finish",
+                    value = finishDisplay,
+                    options = finishOptions,
+                    onSelect = { idx -> finish = if (idx == 0) "" else finishOptions[idx] }
+                )
+            }
+        }
+
+        // ========== SECCIÓN NOTAS Y CALIFICACIÓN ==========
+        SectionCard(title = "Notas y Calificación", icon = "📝") {
             OutlinedTextField(
-                value = preinfusionTiempo,
-                onValueChange = { preinfusionTiempo = it },
-                label = { Text("Tiempo (segundos)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
+                value = notas,
+                onValueChange = { notas = it },
+                label = { Text("Notas generales") },
+                modifier = Modifier.fillMaxWidth(),
+                minLines = 3
             )
-            OutlinedTextField(
-                value = preinfusionPresion,
-                onValueChange = { preinfusionPresion = it },
-                label = { Text("Presión (bar)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            SectionHeaderCompact(icon = "👃", title = "Tasting Notes")
-            DropdownField(
-                label = "Aroma",
-                value = aromaDisplay,
-                options = aromaOptions,
-                onSelect = { idx -> aromaNotes = if (idx == 0) "" else aromaOptions[idx] },
-                modifier = Modifier.fillMaxWidth()
-            )
-            DropdownField(
-                label = "Sabor",
-                value = saborDisplay,
-                options = saborOptions,
-                onSelect = { idx -> saborNotes = if (idx == 0) "" else saborOptions[idx] },
-                modifier = Modifier.fillMaxWidth()
-            )
-            DropdownField(
-                label = "Cuerpo",
-                value = cuerpoDisplay,
-                options = cuerpoOptions,
-                onSelect = { idx -> cuerpo = if (idx == 0) "" else cuerpoOptions[idx] },
-                modifier = Modifier.fillMaxWidth()
-            )
-            DropdownField(
-                label = "Acidez",
-                value = acidezDisplay,
-                options = acidezOptions,
-                onSelect = { idx -> acidez = if (idx == 0) "" else acidezOptions[idx] },
-                modifier = Modifier.fillMaxWidth()
-            )
-            DropdownField(
-                label = "Finish",
-                value = finishDisplay,
-                options = finishOptions,
-                onSelect = { idx -> finish = if (idx == 0) "" else finishOptions[idx] },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            OutlinedTextField(value = notas, onValueChange = { notas = it }, label = { Text("Notas") })
-            DropdownField(
-                label = "Para siguiente shot",
-                value = nextShotDisplay,
-                options = nextShotOptions,
-                onSelect = { idx ->
-                    nextShotNotes = if (idx == 0) "" else nextShotOptions[idx]
-                }
-            )
+            
             RatingStars(
                 rating = calificacion.toIntOrNull() ?: 0,
                 max = 10,
@@ -479,8 +377,36 @@ fun ShotFormScreen(
             )
         }
 
+        // ========== SECCIÓN COLAPSABLE SIGUIENTE SHOT ==========
+        ExpandableSection(
+            title = "Para Siguiente Shot",
+            icon = "💡",
+            expanded = expandNextShot,
+            onExpandChange = { expandNextShot = it }
+        ) {
+            DropdownField(
+                label = "Sugerencia",
+                value = nextShotDisplay,
+                options = nextShotOptions,
+                onSelect = { idx ->
+                    nextShotNotes = if (idx == 0) "" else nextShotOptions[idx]
+                }
+            )
+        }
+
         if (error != null) {
-            Text(text = error ?: "", color = MaterialTheme.colorScheme.error)
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(AppSpacing.small),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
+            ) {
+                Text(
+                    text = error ?: "",
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                    modifier = Modifier.padding(AppSpacing.medium)
+                )
+            }
         }
 
         Button(
@@ -555,12 +481,97 @@ fun ShotFormScreen(
                 }
                 navController.navigateUp()
             },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = AppSpacing.medium),
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.error,
-                contentColor = MaterialTheme.colorScheme.onError
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             )
         ) {
-            Text("Guardar")
+            Text(if (shotId == null) "Registrar Shot" else "Actualizar Shot", modifier = Modifier.padding(AppSpacing.small))
+        }
+    }
+}
+
+@Composable
+private fun SectionCard(
+    title: String,
+    icon: String,
+    content: @Composable () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(AppSpacing.medium),
+            verticalArrangement = Arrangement.spacedBy(AppSpacing.small)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(AppSpacing.small)
+            ) {
+                Text(icon, style = MaterialTheme.typography.headlineSmall)
+                Text(title, style = MaterialTheme.typography.titleMedium)
+            }
+            content()
+        }
+    }
+}
+
+@Composable
+private fun ExpandableSection(
+    title: String,
+    icon: String,
+    expanded: Boolean,
+    onExpandChange: (Boolean) -> Unit,
+    content: @Composable () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+        )
+    ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(AppSpacing.medium),
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(AppSpacing.small)
+                ) {
+                    Text(icon, style = MaterialTheme.typography.headlineSmall)
+                    Text(title, style = MaterialTheme.typography.titleMedium)
+                }
+                IconButton(onClick = { onExpandChange(!expanded) }) {
+                    Icon(
+                        imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                        contentDescription = if (expanded) "Colapsar" else "Expandir"
+                    )
+                }
+            }
+            if (expanded) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = AppSpacing.medium)
+                        .padding(bottom = AppSpacing.medium),
+                    verticalArrangement = Arrangement.spacedBy(AppSpacing.small)
+                ) {
+                    content()
+                }
+            }
         }
     }
 }

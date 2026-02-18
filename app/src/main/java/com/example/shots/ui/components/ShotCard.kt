@@ -273,12 +273,13 @@ fun ShotCard(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 4.dp),
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             // Primera fila
                             Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
                                 if (shot.shot.temperaturaC != null) {
                                     CompactInfoChip(icon = "🌡️", text = "${shot.shot.temperaturaC.toInt()}°C")
@@ -289,8 +290,8 @@ fun ShotCard(
                             }
                             // Segunda fila
                             Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
                                 if (!shot.grinderNombre.isNullOrBlank()) {
                                     CompactInfoChip(icon = "🔧", text = shot.grinderNombre)
@@ -325,7 +326,8 @@ fun ShotCard(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 4.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             if (shot.shot.preinfusionTiempoSeg != null) {
                                 Row(
@@ -392,12 +394,13 @@ fun ShotCard(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 4.dp),
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             // Primera fila: Aroma, Sabor, Cuerpo
                             Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
                                 if (!shot.shot.aromaNotes.isNullOrBlank()) {
                                     TastingNoteBadge("Aroma", shot.shot.aromaNotes, MaterialTheme.colorScheme.primary)
@@ -411,8 +414,8 @@ fun ShotCard(
                             }
                             // Segunda fila: Acidez, Finish
                             Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
                                 if (!shot.shot.acidez.isNullOrBlank()) {
                                     TastingNoteBadge("Acidez", shot.shot.acidez, MaterialTheme.colorScheme.primary)

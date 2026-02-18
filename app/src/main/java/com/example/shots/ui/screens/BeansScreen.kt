@@ -100,9 +100,13 @@ fun BeansScreen(navController: NavController, vm: MainViewModel, padding: Paddin
                         bean = bean,
                         onEdit = { navController.navigate("beans/edit/${bean.id}") },
                         onDelete = { beanToDelete = bean.id },
-                        onFreshnessUpdate = { newDate ->
-                            vm.updateBeanEntity(bean.copy(fechaCompra = newDate))
-                            scope.launch { snackbarHostState.showSnackbar("Frescura actualizada") }
+                        onPurchaseUpdate = {
+                            vm.updateBeanEntity(bean.copy(fechaCompra = System.currentTimeMillis()))
+                            scope.launch { snackbarHostState.showSnackbar("Fecha de compra actualizada") }
+                        },
+                        onRoastUpdate = {
+                            vm.updateBeanEntity(bean.copy(fechaTostado = System.currentTimeMillis()))
+                            scope.launch { snackbarHostState.showSnackbar("Fecha de tostado actualizada") }
                         }
                     )
                 }

@@ -38,7 +38,8 @@ fun BeanCard(
     bean: BeanEntity,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    onFreshnessUpdate: ((Long) -> Unit)? = null,
+    onPurchaseUpdate: (() -> Unit)? = null,
+    onRoastUpdate: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val baseDate = maxOf(bean.fechaTostado, bean.fechaCompra)
@@ -157,36 +158,40 @@ fun BeanCard(
             }
 
             // Botones de frescura
-            if (onFreshnessUpdate != null) {
+            if (onPurchaseUpdate != null || onRoastUpdate != null) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Button(
-                        onClick = { onFreshnessUpdate(System.currentTimeMillis()) },
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(36.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer
-                        )
-                    ) {
-                        Text("Compre mas", style = MaterialTheme.typography.labelSmall)
+                    if (onPurchaseUpdate != null) {
+                        Button(
+                            onClick = onPurchaseUpdate,
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(36.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                            )
+                        ) {
+                            Text("Compre mas", style = MaterialTheme.typography.labelSmall)
+                        }
                     }
-                    Button(
-                        onClick = { onFreshnessUpdate(System.currentTimeMillis()) },
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(36.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                        )
-                    ) {
-                        Text("Termine", style = MaterialTheme.typography.labelSmall)
+                    if (onRoastUpdate != null) {
+                        Button(
+                            onClick = onRoastUpdate,
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(36.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        ) {
+                            Text("Tostado nuevo", style = MaterialTheme.typography.labelSmall)
+                        }
                     }
                 }
             }
@@ -195,7 +200,7 @@ fun BeanCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = if (onFreshnessUpdate != null) 4.dp else 8.dp),
+                    .padding(top = if (onPurchaseUpdate != null || onRoastUpdate != null) 4.dp else 8.dp),
                 horizontalArrangement = Arrangement.End
             ) {
                 IconButton(onClick = onEdit, modifier = Modifier.padding(horizontal = 4.dp)) {

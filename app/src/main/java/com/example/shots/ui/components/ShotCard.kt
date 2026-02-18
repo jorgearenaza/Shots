@@ -15,6 +15,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -22,6 +24,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,6 +50,7 @@ fun ShotCard(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val expanded = remember { mutableStateOf(false) }
     val date = Instant.ofEpochMilli(shot.shot.fecha).atZone(ZoneId.systemDefault()).toLocalDate()
     val dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.getDefault())
     val ratio = String.format("%.2f", shot.shot.ratio)
@@ -78,7 +83,6 @@ fun ShotCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onEdit() }
             .animateContentSize(),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
@@ -88,7 +92,9 @@ fun ShotCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded.value = !expanded.value }
         ) {
             // Header compacto con gradiente según rating
             Box(
@@ -110,56 +116,92 @@ fun ShotCard(
                     )
                     .padding(horizontal = 8.dp, vertical = 6.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = beanLabel,
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Text(
-                            text = date.format(dateFormatter),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.9f
-                        )
-                    }
-                    
-                    // Rating compacto
-                    if (rating > 0) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(0.5.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    // Fila superior: Grano, Fecha, Rating
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "★",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = ratingGradient[0]
-                            )
-                            Text(
-                                text = rating.toString(),
+                                text = beanLabel,
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = ratingGradient[0]
+                                color = MaterialTheme.colorScheme.primary,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Text(
+                                text = date.format(dateFormatter),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.9f
+                            )
+                        }
+                        
+                        // Rating compacto + Chevron
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(2.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            if (rating > 0) {
+                                Text(
+                                    text = "★",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = ratingGradient[0]
+                                )
+                                Text(
+                                    text = rating.toString(),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = ratingGradient[0]
+                                )
+                            }
+                            Icon(
+                                imageVector = if (expanded.value) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                                contentDescription = "Expandir",
+                                modifier = Modifier.size(20.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+
+                    // Fila inferior: Timer y Yield (Status indicators)
+                    if (shot.shot.tiempoSeg != null || shot.shot.rendimientoG > 0) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 6.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            if (shot.shot.tiempoSeg != null) {
+                                StatusIndicator(
+                                    label = "Timer",
+                                    value = "${shot.shot.tiempoSeg}s",
+                                    status = timerStatus,
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                            StatusIndicator(
+                                label = "Yield",
+                                value = "${shot.shot.rendimientoG}g",
+                                status = yieldStatus,
+                                modifier = Modifier.weight(1f)
                             )
                         }
                     }
                 }
             }
             
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(6.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
+            // Contenido expandible
+            if (expanded.value) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                 // ▼ SECCIÓN 1: MÉTRICAS PRINCIPALES (Fila compacta)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -438,6 +480,7 @@ fun ShotCard(
                             modifier = Modifier.size(18.dp)
                         )
                     }
+                }
                 }
             }
         }

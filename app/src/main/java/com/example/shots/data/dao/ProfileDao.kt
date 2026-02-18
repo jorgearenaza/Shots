@@ -27,6 +27,6 @@ interface ProfileDao {
     @Query("UPDATE profiles SET activo = 0, updatedAt = :updatedAt WHERE id = :id")
     fun deactivate(id: Long, updatedAt: Long)
 
-    @Query("SELECT COUNT(*) FROM profiles WHERE nombre = :nombre AND id != :excludeId AND activo = 1")
-    suspend fun countByNombre(nombre: String, excludeId: Long): Int
+    @Query("SELECT * FROM profiles WHERE nombre = :nombre AND id != :excludeId AND activo = 1 LIMIT 1")
+    suspend fun findDuplicateByNombre(nombre: String, excludeId: Long): ProfileEntity?
 }

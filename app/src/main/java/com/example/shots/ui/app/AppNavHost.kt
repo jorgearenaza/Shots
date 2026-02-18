@@ -12,9 +12,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -68,23 +76,30 @@ fun AppNavHost(repository: ShotsRepository) {
         else -> null
     }
 
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
+
     Scaffold(
-        bottomBar = {
-            NavigationBar {
-                topRoutes.forEach { item ->
-                    val selected = backStackEntry?.destination?.hierarchy?.any { it.route == item.route } == true
-                    NavigationBarItem(
-                        selected = selected,
-                        onClick = {
-                            nav.navigate(item.route) {
-                                launchSingleTop = true
-                                restoreState = true
-                                popUpTo(nav.graph.startDestinationId) { saveState = true }
-                            }
-                        },
-                        icon = item.icon,
-                        label = { androidx.compose.material3.Text(item.label) }
-                    )
+        bottomBar = if (isLandscape) {
+            null
+        } else {
+            {
+                NavigationBar {
+                    topRoutes.forEach { item ->
+                        val selected = backStackEntry?.destination?.hierarchy?.any { it.route == item.route } == true
+                        NavigationBarItem(
+                            selected = selected,
+                            onClick = {
+                                nav.navigate(item.route) {
+                                    launchSingleTop = true
+                                    restoreState = true
+                                    popUpTo(nav.graph.startDestinationId) { saveState = true }
+                                }
+                            },
+                            icon = item.icon,
+                            label = { androidx.compose.material3.Text(item.label) }
+                        )
+                    }
                 }
             }
         },
@@ -100,36 +115,90 @@ fun AppNavHost(repository: ShotsRepository) {
             }
         }
     ) { padding ->
-        NavHost(navController = nav, startDestination = "shots") {
-            composable("shots") { ShotsScreen(navController = nav, vm = vm, padding = padding) }
-            composable("shots/new") { ShotFormScreen(navController = nav, vm = vm, shotId = null, padding = padding) }
-            composable("shots/edit/{id}") { entry ->
-                val id = entry.arguments?.getString("id")?.toLongOrNull()
-                ShotFormScreen(navController = nav, vm = vm, shotId = id, padding = padding)
-            }
+        val contentPadding = if (isLandscape) PaddingValues(0.dp) else padding
+        if (isLandscape) {
+            Row(modifier = Modifier.padding(padding)) {
+                NavigationRail {
+                    topRoutes.forEach { item ->
+                        val selected = backStackEntry?.destination?.hierarchy?.any { it.route == item.route } == true
+                        NavigationRailItem(
+                            selected = selected,
+                            onClick = {
+                                nav.navigate(item.route) {
+                                    launchSingleTop = true
+                                    restoreState = true
+                                    popUpTo(nav.graph.startDestinationId) { saveState = true }
+                                }
+                            },
+                            icon = item.icon,
+                            label = { androidx.compose.material3.Text(item.label) }
+                        )
+                    }
+                }
+                NavHost(navController = nav, startDestination = "shots") {
+                    composable("shots") { ShotsScreen(navController = nav, vm = vm, padding = contentPadding) }
+                    composable("shots/new") { ShotFormScreen(navController = nav, vm = vm, shotId = null, padding = contentPadding) }
+                    composable("shots/edit/{id}") { entry ->
+                        val id = entry.arguments?.getString("id")?.toLongOrNull()
+                        ShotFormScreen(navController = nav, vm = vm, shotId = id, padding = contentPadding)
+                    }
 
-            composable("beans") { BeansScreen(navController = nav, vm = vm, padding = padding) }
-            composable("beans/new") { BeanFormScreen(navController = nav, vm = vm, beanId = null, padding = padding) }
-            composable("beans/edit/{id}") { entry ->
-                val id = entry.arguments?.getString("id")?.toLongOrNull()
-                BeanFormScreen(navController = nav, vm = vm, beanId = id, padding = padding)
-            }
+                    composable("beans") { BeansScreen(navController = nav, vm = vm, padding = contentPadding) }
+                    composable("beans/new") { BeanFormScreen(navController = nav, vm = vm, beanId = null, padding = contentPadding) }
+                    composable("beans/edit/{id}") { entry ->
+                        val id = entry.arguments?.getString("id")?.toLongOrNull()
+                        BeanFormScreen(navController = nav, vm = vm, beanId = id, padding = contentPadding)
+                    }
 
-            composable("grinders") { GrindersScreen(navController = nav, vm = vm, padding = padding) }
-            composable("grinders/new") { GrinderFormScreen(navController = nav, vm = vm, grinderId = null, padding = padding) }
-            composable("grinders/edit/{id}") { entry ->
-                val id = entry.arguments?.getString("id")?.toLongOrNull()
-                GrinderFormScreen(navController = nav, vm = vm, grinderId = id, padding = padding)
-            }
+                    composable("grinders") { GrindersScreen(navController = nav, vm = vm, padding = contentPadding) }
+                    composable("grinders/new") { GrinderFormScreen(navController = nav, vm = vm, grinderId = null, padding = contentPadding) }
+                    composable("grinders/edit/{id}") { entry ->
+                        val id = entry.arguments?.getString("id")?.toLongOrNull()
+                        GrinderFormScreen(navController = nav, vm = vm, grinderId = id, padding = contentPadding)
+                    }
 
-            composable("profiles") { ProfilesScreen(navController = nav, vm = vm, padding = padding) }
-            composable("profiles/new") { ProfileFormScreen(navController = nav, vm = vm, profileId = null, padding = padding) }
-            composable("profiles/edit/{id}") { entry ->
-                val id = entry.arguments?.getString("id")?.toLongOrNull()
-                ProfileFormScreen(navController = nav, vm = vm, profileId = id, padding = padding)
-            }
+                    composable("profiles") { ProfilesScreen(navController = nav, vm = vm, padding = contentPadding) }
+                    composable("profiles/new") { ProfileFormScreen(navController = nav, vm = vm, profileId = null, padding = contentPadding) }
+                    composable("profiles/edit/{id}") { entry ->
+                        val id = entry.arguments?.getString("id")?.toLongOrNull()
+                        ProfileFormScreen(navController = nav, vm = vm, profileId = id, padding = contentPadding)
+                    }
 
-            composable("options") { OptionsScreen(navController = nav, vm = vm, padding = padding) }
+                    composable("options") { OptionsScreen(navController = nav, vm = vm, padding = contentPadding) }
+                }
+            }
+        } else {
+            NavHost(navController = nav, startDestination = "shots") {
+                composable("shots") { ShotsScreen(navController = nav, vm = vm, padding = contentPadding) }
+                composable("shots/new") { ShotFormScreen(navController = nav, vm = vm, shotId = null, padding = contentPadding) }
+                composable("shots/edit/{id}") { entry ->
+                    val id = entry.arguments?.getString("id")?.toLongOrNull()
+                    ShotFormScreen(navController = nav, vm = vm, shotId = id, padding = contentPadding)
+                }
+
+                composable("beans") { BeansScreen(navController = nav, vm = vm, padding = contentPadding) }
+                composable("beans/new") { BeanFormScreen(navController = nav, vm = vm, beanId = null, padding = contentPadding) }
+                composable("beans/edit/{id}") { entry ->
+                    val id = entry.arguments?.getString("id")?.toLongOrNull()
+                    BeanFormScreen(navController = nav, vm = vm, beanId = id, padding = contentPadding)
+                }
+
+                composable("grinders") { GrindersScreen(navController = nav, vm = vm, padding = contentPadding) }
+                composable("grinders/new") { GrinderFormScreen(navController = nav, vm = vm, grinderId = null, padding = contentPadding) }
+                composable("grinders/edit/{id}") { entry ->
+                    val id = entry.arguments?.getString("id")?.toLongOrNull()
+                    GrinderFormScreen(navController = nav, vm = vm, grinderId = id, padding = contentPadding)
+                }
+
+                composable("profiles") { ProfilesScreen(navController = nav, vm = vm, padding = contentPadding) }
+                composable("profiles/new") { ProfileFormScreen(navController = nav, vm = vm, profileId = null, padding = contentPadding) }
+                composable("profiles/edit/{id}") { entry ->
+                    val id = entry.arguments?.getString("id")?.toLongOrNull()
+                    ProfileFormScreen(navController = nav, vm = vm, profileId = id, padding = contentPadding)
+                }
+
+                composable("options") { OptionsScreen(navController = nav, vm = vm, padding = contentPadding) }
+            }
         }
     }
 }

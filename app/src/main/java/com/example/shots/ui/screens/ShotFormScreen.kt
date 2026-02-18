@@ -31,6 +31,8 @@ import com.example.espressoshots.ui.components.DateField
 import com.example.espressoshots.ui.components.DropdownField
 import com.example.espressoshots.ui.components.EmptyState
 import com.example.espressoshots.ui.components.RatingStars
+import com.example.espressoshots.ui.components.SectionHeaderCompact
+import com.example.espressoshots.ui.theme.AppSpacing
 import com.example.espressoshots.viewmodel.MainViewModel
 
 @Composable
@@ -157,9 +159,9 @@ fun ShotFormScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(padding)
-            .padding(16.dp)
+            .padding(AppSpacing.large)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(AppSpacing.medium)
     ) {
         if (isWide) {
             Row(
@@ -168,7 +170,7 @@ fun ShotFormScreen(
             ) {
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                    verticalArrangement = Arrangement.spacedBy(AppSpacing.medium)
                 ) {
                     DateField(label = "Fecha", valueMillis = fechaMillis, onValueChange = { fechaMillis = it })
 
@@ -236,7 +238,7 @@ fun ShotFormScreen(
 
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                    verticalArrangement = Arrangement.spacedBy(AppSpacing.medium)
                 ) {
                     OutlinedTextField(
                         value = tiempoSeg,
@@ -253,11 +255,7 @@ fun ShotFormScreen(
 
                     AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
 
-                    Text(
-                        text = "⏱️ Pre-Infusión",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    SectionHeaderCompact(icon = "⏱️", title = "Pre-Infusión")
                     OutlinedTextField(
                         value = preinfusionTiempo,
                         onValueChange = { preinfusionTiempo = it },
@@ -273,11 +271,7 @@ fun ShotFormScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    Text(
-                        text = "👃 Tasting Notes",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    SectionHeaderCompact(icon = "👃", title = "Tasting Notes")
                     DropdownField(
                         label = "Aroma",
                         value = aromaDisplay,
@@ -408,11 +402,7 @@ fun ShotFormScreen(
 
             AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
 
-            Text(
-                text = "⏱️ Pre-Infusión",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
+            SectionHeaderCompact(icon = "⏱️", title = "Pre-Infusión")
             OutlinedTextField(
                 value = preinfusionTiempo,
                 onValueChange = { preinfusionTiempo = it },
@@ -428,11 +418,7 @@ fun ShotFormScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Text(
-                text = "👃 Tasting Notes",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
+            SectionHeaderCompact(icon = "👃", title = "Tasting Notes")
             DropdownField(
                 label = "Aroma",
                 value = aromaDisplay,

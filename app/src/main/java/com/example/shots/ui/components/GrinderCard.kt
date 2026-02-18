@@ -1,5 +1,6 @@
 package com.example.espressoshots.ui.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +36,8 @@ fun GrinderCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onEdit() },
+            .clickable { onEdit() }
+            .animateContentSize(),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -46,7 +48,8 @@ fun GrinderCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(12.dp)
+                .animateContentSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // Header

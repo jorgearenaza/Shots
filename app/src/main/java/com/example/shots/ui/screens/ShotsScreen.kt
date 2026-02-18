@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.espressoshots.ui.components.EmptyState
 import com.example.espressoshots.ui.components.ShotCard
+import com.example.espressoshots.ui.theme.AppSpacing
 import com.example.espressoshots.viewmodel.MainViewModel
 import java.time.Instant
 import java.time.LocalDate
@@ -114,8 +115,8 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
                     .background(
                         color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
                     )
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    .padding(horizontal = AppSpacing.large, vertical = AppSpacing.medium),
+                horizontalArrangement = Arrangement.spacedBy(AppSpacing.large),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
@@ -163,7 +164,7 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(AppSpacing.large),
             singleLine = true
         )
         
@@ -171,8 +172,8 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(horizontal = AppSpacing.large),
+            horizontalArrangement = Arrangement.spacedBy(AppSpacing.small)
         ) {
             item {
                 FilterChip(
@@ -234,9 +235,9 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                contentPadding = PaddingValues(top = 8.dp, bottom = 88.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                    .padding(horizontal = AppSpacing.large),
+                contentPadding = PaddingValues(top = AppSpacing.small, bottom = 88.dp),
+                verticalArrangement = Arrangement.spacedBy(AppSpacing.medium)
             ) {
                 items(filteredShots.sortedByDescending { it.shot.fecha }) { shot ->
                     val beanLabel = "${shot.beanTostador} - ${shot.beanCafe}"

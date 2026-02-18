@@ -25,6 +25,8 @@ import androidx.navigation.NavController
 import com.example.espressoshots.data.model.BeanEntity
 import com.example.espressoshots.ui.components.DateField
 import com.example.espressoshots.ui.components.DropdownField
+import com.example.espressoshots.ui.components.SectionHeader
+import com.example.espressoshots.ui.theme.AppSpacing
 import com.example.espressoshots.viewmodel.MainViewModel
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
@@ -78,25 +80,21 @@ fun BeanFormScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(padding)
-            .padding(16.dp)
+            .padding(AppSpacing.large)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(AppSpacing.medium)
     ) {
-        Text(
-            text = "Información Básica",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary
-        )
+        SectionHeader(icon = "📝", title = "Información Básica")
+        
         OutlinedTextField(value = tostador, onValueChange = { tostador = it }, label = { Text("Tostador") })
         OutlinedTextField(value = cafe, onValueChange = { cafe = it }, label = { Text("Café") })
         DateField(label = "Fecha de tostado", valueMillis = fechaTostado, onValueChange = { fechaTostado = it })
         DateField(label = "Fecha de compra", valueMillis = fechaCompra, onValueChange = { fechaCompra = it })
         
-        Text(
-            text = "☕ Origen y Proceso",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(top = 8.dp)
+        SectionHeader(
+            icon = "☕",
+            title = "Origen y Proceso",
+            modifier = Modifier.padding(top = AppSpacing.small)
         )
         OutlinedTextField(
             value = pais,
@@ -124,11 +122,10 @@ fun BeanFormScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
         
-        Text(
-            text = "📝 Notas",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(top = 8.dp)
+        SectionHeader(
+            icon = "📝",
+            title = "Notas",
+            modifier = Modifier.padding(top = AppSpacing.small)
         )
         OutlinedTextField(value = notas, onValueChange = { notas = it }, label = { Text("Notas adicionales") })
 

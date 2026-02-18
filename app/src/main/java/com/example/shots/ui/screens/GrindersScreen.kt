@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.espressoshots.ui.components.EmptyState
 import com.example.espressoshots.ui.components.GrinderCard
+import com.example.espressoshots.ui.theme.AppSpacing
 import com.example.espressoshots.viewmodel.MainViewModel
 
 @Composable
@@ -67,7 +68,7 @@ fun GrindersScreen(navController: NavController, vm: MainViewModel, padding: Pad
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(AppSpacing.large),
             singleLine = true
         )
 
@@ -80,8 +81,8 @@ fun GrindersScreen(navController: NavController, vm: MainViewModel, padding: Pad
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 88.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                contentPadding = PaddingValues(start = AppSpacing.large, end = AppSpacing.large, top = AppSpacing.large, bottom = 88.dp),
+                verticalArrangement = Arrangement.spacedBy(AppSpacing.medium)
             ) {
                 items(filteredGrinders) { grinder ->
                     GrinderCard(

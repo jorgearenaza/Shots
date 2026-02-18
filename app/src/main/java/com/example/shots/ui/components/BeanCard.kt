@@ -1,5 +1,6 @@
 package com.example.espressoshots.ui.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -67,12 +68,17 @@ fun BeanCard(
             containerColor = MaterialTheme.colorScheme.surfaceContainer,
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onEdit() }
+            .animateContentSize()
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(12.dp)
+                .animateContentSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // Header compacto: Tostador y café

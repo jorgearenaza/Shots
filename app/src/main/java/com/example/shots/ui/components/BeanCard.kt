@@ -42,19 +42,19 @@ fun BeanCard(
     onRoastUpdate: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
-    val baseDate = maxOf(bean.fechaTostado, bean.fechaCompra)
-    val fresh = Instant.ofEpochMilli(baseDate).atZone(ZoneId.systemDefault()).toLocalDate()
-    val days = ChronoUnit.DAYS.between(fresh, LocalDate.now()).toInt()
+    // La frescura se calcula desde la fecha de tostado
+    val roastDate = Instant.ofEpochMilli(bean.fechaTostado).atZone(ZoneId.systemDefault()).toLocalDate()
+    val daysSinceRoast = ChronoUnit.DAYS.between(roastDate, LocalDate.now()).toInt()
     
-    // Indicador de frescura: 0-7 días = verde, 7-14 = amarillo, 14+ = rojo
+    // Indicador de frescura: 0-14 días = verde, 14-21 = amarillo, 21+ = rojo
     val freshness = when {
-        days < 7 -> 1.0f
-        days < 14 -> 0.6f
+        daysSinceRoast <= 14 -> 1.0f
+        daysSinceRoast <= 21 -> 0.6f
         else -> 0.3f
     }
     val freshnessColor = when {
-        days < 7 -> MaterialTheme.colorScheme.primary
-        days < 14 -> MaterialTheme.colorScheme.tertiaryContainer
+        daysSinceRoast <= 14 -> MaterialTheme.colorScheme.primary
+        daysSinceRoast <= 21 -> MaterialTheme.colorScheme.tertiaryContainer
         else -> MaterialTheme.colorScheme.error
     }
 
@@ -95,7 +95,7 @@ fun BeanCard(
                     )
                 }
                 Text(
-                    text = "${days}d",
+                    text = "${daysSinceRoast}d",
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = freshnessColor

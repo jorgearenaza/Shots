@@ -64,3 +64,4 @@ fun StatsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
             ShotsPerBeanChart(shots.value)
         }
     }
+}

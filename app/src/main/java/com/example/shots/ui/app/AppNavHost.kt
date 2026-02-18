@@ -222,7 +222,9 @@ fun AppNavHost(repository: ShotsRepository) {
                     ProfileFormScreen(navController = nav, vm = vm, profileId = id, padding = contentPadding)
                 }
 
-                composable("options") { OptionsScreen(navController = nav, vm = vm, padding = contentPadding) }                composable(\"stats\") { StatsScreen(navController = nav, vm = vm, padding = contentPadding) }            }
+                composable("options") { OptionsScreen(navController = nav, vm = vm, padding = contentPadding) }
+                composable("stats") { StatsScreen(navController = nav, vm = vm, padding = contentPadding) }
+            }
         }
     }
 }

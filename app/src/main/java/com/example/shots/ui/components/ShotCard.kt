@@ -157,47 +157,59 @@ fun ShotCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                // Métricas principales en grid compacto
+                // ▼ SECCIÓN 1: MÉTRICAS PRINCIPALES (Grid 2x2)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     CompactMetricBadge(
                         emoji = "☕",
                         value = "${shot.shot.dosisG}g",
+                        label = "Dose",
                         modifier = Modifier.weight(1f)
                     )
                     CompactMetricBadge(
                         emoji = "💧",
                         value = "${shot.shot.rendimientoG}g",
+                        label = "Yield",
                         modifier = Modifier.weight(1f)
                     )
+                }
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
                     CompactMetricBadge(
                         emoji = "⚖️",
                         value = ratio,
+                        label = "Ratio",
                         modifier = Modifier.weight(1f)
                     )
                     if (shot.shot.tiempoSeg != null) {
                         CompactMetricBadge(
                             emoji = "⏱️",
                             value = "${shot.shot.tiempoSeg}s",
+                            label = "Time",
                             modifier = Modifier.weight(1f)
                         )
+                    } else {
+                        Box(modifier = Modifier.weight(1f))
                     }
                 }
-                
-                // Indicadores de estado (semáforo) para timer y yield
+
+                // ▼ SECCIÓN 2: INDICADORES DE ESTADO (Semáforo)
                 if (shot.shot.tiempoSeg != null || shot.shot.rendimientoG > 0) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
                                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                shape = RoundedCornerShape(8.dp)
+                                shape = RoundedCornerShape(10.dp)
                             )
-                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                            .padding(horizontal = 12.dp, vertical = 10.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         if (shot.shot.tiempoSeg != null) {
@@ -216,205 +228,193 @@ fun ShotCard(
                         )
                     }
                 }
-                
-                // Segunda fila de métricas si hay datos
+
+                // ▼ SECCIÓN 3: DETALLES SECUNDARIOS
                 if (shot.shot.temperaturaC != null || !shot.shot.ajusteMolienda.isNullOrBlank() || 
                     !shot.grinderNombre.isNullOrBlank() || !shot.profileNombre.isNullOrBlank()) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (shot.shot.temperaturaC != null) {
-                            CompactInfoChip(
-                                icon = "🌡️",
-                                text = "${shot.shot.temperaturaC.toInt()}°C"
-                            )
-                        }
-                        if (!shot.shot.ajusteMolienda.isNullOrBlank()) {
-                            CompactInfoChip(
-                                icon = "⚙️",
-                                text = shot.shot.ajusteMolienda
-                            )
-                        }
-                        if (!shot.grinderNombre.isNullOrBlank()) {
-                            CompactInfoChip(
-                                icon = "🔧",
-                                text = shot.grinderNombre
-                            )
-                        }
-                        if (!shot.profileNombre.isNullOrBlank()) {
-                            CompactInfoChip(
-                                icon = "📋",
-                                text = shot.profileNombre
-                            )
-                        }
-                    }
-                }
-                
-                // Pre-infusión inline compacta
-                if (shot.shot.preinfusionTiempoSeg != null || shot.shot.preinfusionPresionBar != null) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                shape = RoundedCornerShape(6.dp)
+                                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                                shape = RoundedCornerShape(8.dp)
                             )
-                            .padding(8.dp),
+                            .padding(horizontal = 10.dp, vertical = 8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = "⏱️",
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                        if (shot.shot.preinfusionTiempoSeg != null) {
-                            Text(
-                                text = "${shot.shot.preinfusionTiempoSeg}s",
-                                style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                        if (shot.shot.temperaturaC != null) {
+                            CompactInfoChip(icon = "🌡️", text = "${shot.shot.temperaturaC.toInt()}°C")
                         }
-                        if (shot.shot.preinfusionPresionBar != null) {
-                            Text(
-                                text = "·",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Text(
-                                text = "${String.format("%.1f", shot.shot.preinfusionPresionBar)}bar",
-                                style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                        if (!shot.shot.ajusteMolienda.isNullOrBlank()) {
+                            CompactInfoChip(icon = "⚙️", text = shot.shot.ajusteMolienda)
+                        }
+                        if (!shot.grinderNombre.isNullOrBlank()) {
+                            CompactInfoChip(icon = "🔧", text = shot.grinderNombre)
+                        }
+                        if (!shot.profileNombre.isNullOrBlank()) {
+                            CompactInfoChip(icon = "📋", text = shot.profileNombre)
                         }
                     }
                 }
 
-                // Tasting Notes inline compactas
+                // ▼ SECCIÓN 4: PRE-INFUSIÓN
+                if (shot.shot.preinfusionTiempoSeg != null || shot.shot.preinfusionPresionBar != null) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(10.dp)
+                    ) {
+                        Text(
+                            text = "⏱️ Pre-Infusión",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier.padding(top = 4.dp)
+                        ) {
+                            if (shot.shot.preinfusionTiempoSeg != null) {
+                                Text(
+                                    text = "${shot.shot.preinfusionTiempoSeg}s",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                            if (shot.shot.preinfusionPresionBar != null) {
+                                Text(
+                                    text = "${String.format("%.1f", shot.shot.preinfusionPresionBar)} bar",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // ▼ SECCIÓN 5: TASTING NOTES
                 if (!shot.shot.aromaNotes.isNullOrBlank() || !shot.shot.saborNotes.isNullOrBlank() || 
                     !shot.shot.cuerpo.isNullOrBlank() || !shot.shot.acidez.isNullOrBlank() || !shot.shot.finish.isNullOrBlank()) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                color = MaterialTheme.colorScheme.surfaceContainerHighest,
-                                shape = RoundedCornerShape(6.dp)
+                                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.15f),
+                                shape = RoundedCornerShape(8.dp)
                             )
-                            .padding(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                            .padding(10.dp)
                     ) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                        Text(
+                            text = "👃 Tasting Notes",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 6.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            Text(
-                                text = "👃",
-                                style = MaterialTheme.typography.labelSmall
-                            )
-                            if (!shot.shot.aromaNotes.isNullOrBlank()) {
-                                Text(
-                                    text = shot.shot.aromaNotes,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    modifier = Modifier.weight(1f, false)
-                                )
+                            // Fila 1: Aroma y Sabor
+                            if (!shot.shot.aromaNotes.isNullOrBlank() || !shot.shot.saborNotes.isNullOrBlank()) {
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    if (!shot.shot.aromaNotes.isNullOrBlank()) {
+                                        TastingNoteBadge("Aroma", shot.shot.aromaNotes, MaterialTheme.colorScheme.primary)
+                                    }
+                                    if (!shot.shot.saborNotes.isNullOrBlank()) {
+                                        TastingNoteBadge("Sabor", shot.shot.saborNotes, MaterialTheme.colorScheme.secondary)
+                                    }
+                                }
                             }
-                            if (!shot.shot.saborNotes.isNullOrBlank()) {
-                                if (!shot.shot.aromaNotes.isNullOrBlank()) {
-                                    Text(
-                                        text = "·",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                Text(
-                                    text = shot.shot.saborNotes,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    modifier = Modifier.weight(1f, false)
-                                )
-                            }
-                        }
-                        if (!shot.shot.cuerpo.isNullOrBlank() || !shot.shot.acidez.isNullOrBlank() || !shot.shot.finish.isNullOrBlank()) {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                if (!shot.shot.cuerpo.isNullOrBlank()) {
-                                    Text(
-                                        text = "${shot.shot.cuerpo}",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                if (!shot.shot.acidez.isNullOrBlank()) {
-                                    Text(
-                                        text = "· ${shot.shot.acidez}",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                if (!shot.shot.finish.isNullOrBlank()) {
-                                    Text(
-                                        text = "· ${shot.shot.finish}",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
+                            // Fila 2: Cuerpo, Acidez, Finish
+                            if (!shot.shot.cuerpo.isNullOrBlank() || !shot.shot.acidez.isNullOrBlank() || !shot.shot.finish.isNullOrBlank()) {
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    if (!shot.shot.cuerpo.isNullOrBlank()) {
+                                        TastingNoteBadge("Cuerpo", shot.shot.cuerpo, MaterialTheme.colorScheme.tertiary)
+                                    }
+                                    if (!shot.shot.acidez.isNullOrBlank()) {
+                                        TastingNoteBadge("Acidez", shot.shot.acidez, MaterialTheme.colorScheme.primary)
+                                    }
+                                    if (!shot.shot.finish.isNullOrBlank()) {
+                                        TastingNoteBadge("Finish", shot.shot.finish, MaterialTheme.colorScheme.secondary)
+                                    }
                                 }
                             }
                         }
                     }
                 }
-                
-                // Next shot notes compacto
+
+                // ▼ SECCIÓN 6: RECOMENDACIÓN (Next Shot)
                 if (!shot.shot.nextShotNotes.isNullOrBlank()) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                color = MaterialTheme.colorScheme.secondaryContainer,
-                                shape = RoundedCornerShape(6.dp)
+                                color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
+                                shape = RoundedCornerShape(8.dp)
                             )
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            .padding(horizontal = 12.dp, vertical = 10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = "💡",
-                            style = MaterialTheme.typography.labelSmall
-                        )
+                        Text(text = "💡", style = MaterialTheme.typography.labelMedium)
                         Text(
                             text = shot.shot.nextShotNotes,
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.secondary,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f)
                         )
                     }
                 }
 
-                // Notas compactas
+                // ▼ SECCIÓN 7: NOTAS
                 if (!shot.shot.notas.isNullOrBlank()) {
-                    Text(
-                        text = "📝 ${shot.shot.notas}",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.2f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(10.dp)
+                    ) {
+                        Text(
+                            text = "📝",
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                        Text(
+                            text = shot.shot.notas,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
                 }
 
-                // Acciones compactas
+                // ▼ SECCIÓN 8: ACCIONES
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
                     horizontalArrangement = Arrangement.End
                 ) {
                     IconButton(
@@ -445,22 +445,24 @@ fun ShotCard(
     }
 }
 
-// Componentes compactos optimizados
+// Componentes optimizados
+
 @Composable
 fun CompactMetricBadge(
     emoji: String,
     value: String,
+    label: String? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(10.dp)
             )
-            .padding(vertical = 6.dp, horizontal = 8.dp),
+            .padding(vertical = 10.dp, horizontal = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(2.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Text(
             text = emoji,
@@ -471,6 +473,47 @@ fun CompactMetricBadge(
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
+        )
+        if (label != null) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = androidx.compose.material3.MaterialTheme.typography.labelSmall.fontSize * 0.85f
+            )
+        }
+    }
+}
+
+@Composable
+fun TastingNoteBadge(
+    label: String,
+    value: String,
+    color: androidx.compose.ui.graphics.Color,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .background(
+                color = color.copy(alpha = 0.15f),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(horizontal = 8.dp, vertical = 6.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = color,
+            fontWeight = FontWeight.SemiBold
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

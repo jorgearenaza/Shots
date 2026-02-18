@@ -74,10 +74,10 @@ fun ShotCard(
             .clickable { onEdit() },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()
@@ -221,7 +221,7 @@ fun ShotCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f),
+                                color = MaterialTheme.colorScheme.surfaceContainerHigh,
                                 shape = RoundedCornerShape(6.dp)
                             )
                             .padding(8.dp),
@@ -263,7 +263,7 @@ fun ShotCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.15f),
+                                color = MaterialTheme.colorScheme.surfaceContainerHighest,
                                 shape = RoundedCornerShape(6.dp)
                             )
                             .padding(8.dp),
@@ -342,7 +342,7 @@ fun ShotCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.25f),
+                                color = MaterialTheme.colorScheme.secondaryContainer,
                                 shape = RoundedCornerShape(6.dp)
                             )
                             .padding(8.dp),
@@ -418,7 +418,7 @@ fun CompactMetricBadge(
     Column(
         modifier = modifier
             .background(
-                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 shape = RoundedCornerShape(8.dp)
             )
             .padding(vertical = 6.dp, horizontal = 8.dp),
@@ -447,7 +447,7 @@ fun CompactInfoChip(
     Row(
         modifier = modifier
             .background(
-                color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.25f),
+                color = MaterialTheme.colorScheme.surfaceContainerHighest,
                 shape = RoundedCornerShape(6.dp)
             )
             .padding(horizontal = 8.dp, vertical = 4.dp),

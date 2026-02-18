@@ -64,10 +64,10 @@ fun BeanCard(
             .clickable { onEdit() },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier
@@ -75,7 +75,7 @@ fun BeanCard(
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Header: Tostador y café
+            // Header compacto: Tostador y café
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -84,124 +84,143 @@ fun BeanCard(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = bean.tostador,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
                         text = bean.cafe,
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                Text(
-                    text = "${daysSinceRoast}d",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = freshnessColor
-                )
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = "${daysSinceRoast}d",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = freshnessColor
+                    )
+                    Text(
+                        text = when {
+                            daysSinceRoast <= 14 -> "Fresco"
+                            daysSinceRoast <= 21 -> "Óptimo"
+                            else -> "Viejo"
+                        },
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
 
-            // Barra de frescura
+            // Barra de frescura compacta
             LinearProgressIndicator(
                 progress = { freshness },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(6.dp),
+                    .height(4.dp),
                 color = freshnessColor,
                 trackColor = MaterialTheme.colorScheme.surfaceVariant
             )
 
-            // Fechas
+            // Fechas compactas
+            val tostDate = Instant.ofEpochMilli(bean.fechaTostado).atZone(ZoneId.systemDefault()).toLocalDate()
+            val compDate = Instant.ofEpochMilli(bean.fechaCompra).atZone(ZoneId.systemDefault()).toLocalDate()
+            
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                val tostDate = Instant.ofEpochMilli(bean.fechaTostado).atZone(ZoneId.systemDefault()).toLocalDate()
-                val compDate = Instant.ofEpochMilli(bean.fechaCompra).atZone(ZoneId.systemDefault()).toLocalDate()
-                
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .background(
-                            color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .padding(8.dp)
+                Row(
+                    modifier = Modifier.weight(1f),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Tostado", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text(tostDate.toString(), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+                    Text("🔥", style = MaterialTheme.typography.labelSmall)
+                    Column {
+                        Text("Tostado", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(tostDate.toString(), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.SemiBold)
+                    }
                 }
-                
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .background(
-                            color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .padding(8.dp)
+                Row(
+                    modifier = Modifier.weight(1f),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Compra", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text(compDate.toString(), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+                    Text("🛒", style = MaterialTheme.typography.labelSmall)
+                    Column {
+                        Text("Compra", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(compDate.toString(), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.SemiBold)
+                    }
                 }
             }
 
-            // Información de origen si existe
+            // Información de origen inline compacta
             if (!bean.pais.isNullOrBlank() || !bean.proceso.isNullOrBlank() || !bean.varietal.isNullOrBlank() || bean.altitud != null) {
-                Column(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.2f),
-                            shape = RoundedCornerShape(8.dp)
+                            color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                            shape = RoundedCornerShape(6.dp)
                         )
-                        .padding(10.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "☕ Origen",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        text = "☕",
+                        style = MaterialTheme.typography.labelSmall
                     )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        if (!bean.pais.isNullOrBlank()) {
-                            Text(
-                                text = "🌍 ${bean.pais}",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                        if (!bean.proceso.isNullOrBlank()) {
-                            Text(
-                                text = "⚙️ ${bean.proceso}",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
+                    if (!bean.pais.isNullOrBlank()) {
+                        Text(
+                            text = bean.pais,
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        if (!bean.varietal.isNullOrBlank()) {
-                            Text(
-                                text = "🌱 ${bean.varietal}",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                        if (bean.altitud != null) {
-                            Text(
-                                text = "⛰️ ${bean.altitud}m",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
+                    if (!bean.proceso.isNullOrBlank()) {
+                        Text(
+                            text = "·",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = bean.proceso,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    if (!bean.varietal.isNullOrBlank()) {
+                        Text(
+                            text = "·",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = bean.varietal,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    if (bean.altitud != null) {
+                        Text(
+                            text = "·",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = "${bean.altitud}m",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 }
             }
@@ -255,18 +274,32 @@ fun BeanCard(
                 }
             }
 
-            // Acciones
+            // Acciones compactas
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = if (onPurchaseUpdate != null || onRoastUpdate != null) 4.dp else 8.dp),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                IconButton(onClick = onEdit, modifier = Modifier.padding(horizontal = 4.dp)) {
-                    Icon(Icons.Default.Edit, contentDescription = "Editar", tint = MaterialTheme.colorScheme.primary)
+                IconButton(
+                    onClick = onEdit,
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Edit,
+                        contentDescription = "Editar",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(18.dp)
+                    )
                 }
-                IconButton(onClick = onDelete, modifier = Modifier.padding(horizontal = 4.dp)) {
-                    Icon(Icons.Default.Delete, contentDescription = "Eliminar", tint = MaterialTheme.colorScheme.error)
+                IconButton(
+                    onClick = onDelete,
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = "Eliminar",
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(18.dp)
+                    )
                 }
             }
         }

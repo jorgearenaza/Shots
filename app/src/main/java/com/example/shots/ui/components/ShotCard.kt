@@ -193,8 +193,12 @@ fun ShotCard(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         if (shot.shot.tiempoSeg != null) {
                             StatusIndicator(

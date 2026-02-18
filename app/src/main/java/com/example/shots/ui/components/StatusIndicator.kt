@@ -2,14 +2,18 @@ package com.example.espressoshots.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -20,29 +24,32 @@ fun StatusIndicator(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .padding(horizontal = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Indicador circular
+        // Indicador circular prominente
         Box(
             modifier = Modifier
-                .size(8.dp)
+                .size(12.dp)
                 .background(
                     color = when (status) {
-                        StatusColor.GREEN -> MaterialTheme.colorScheme.primary
-                        StatusColor.YELLOW -> MaterialTheme.colorScheme.tertiary
-                        StatusColor.RED -> MaterialTheme.colorScheme.error
-                        StatusColor.NEUTRAL -> MaterialTheme.colorScheme.onSurfaceVariant
+                        StatusColor.GREEN -> Color(0xFF4CAF50)   // Verde vibrante
+                        StatusColor.YELLOW -> Color(0xFFFFC107)  // Amarillo vibrante
+                        StatusColor.RED -> Color(0xFFF44336)     // Rojo vibrante
+                        StatusColor.NEUTRAL -> Color(0xFF9E9E9E)  // Gris neutral
                     },
                     shape = CircleShape
                 )
         )
         
+        Spacer(modifier = Modifier.width(6.dp))
+        
         Text(
             text = "$label: $value",
             style = MaterialTheme.typography.labelSmall,
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.align(Alignment.CenterVertically)
         )
     }
 }

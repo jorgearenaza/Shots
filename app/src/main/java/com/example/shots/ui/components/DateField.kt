@@ -2,6 +2,11 @@ package com.example.espressoshots.ui.components
 
 import android.app.DatePickerDialog
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +33,7 @@ fun DateField(
     }
     val formatter = remember { DateTimeFormatter.ofPattern("yyyy-MM-dd") }
     val showPicker = remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
 
     if (showPicker.value) {
         // Detectar si estamos en tema oscuro
@@ -54,7 +60,16 @@ fun DateField(
         value = date.format(formatter),
         onValueChange = {},
         label = { Text(label) },
-        modifier = modifier.clickable { showPicker.value = true },
-        readOnly = true
+        trailingIcon = {
+            IconButton(onClick = { showPicker.value = true }) {
+                Icon(Icons.Default.CalendarToday, contentDescription = "Seleccionar fecha")
+            }
+        },
+        modifier = modifier.clickable(
+            interactionSource = interactionSource,
+            indication = null
+        ) { showPicker.value = true },
+        readOnly = true,
+        interactionSource = interactionSource
     )
 }

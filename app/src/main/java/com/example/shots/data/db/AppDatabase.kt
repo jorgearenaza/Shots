@@ -1,17 +1,17 @@
-package com.example.espressoshots.data.db
+package com.example.shots.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.espressoshots.data.dao.BeanDao
-import com.example.espressoshots.data.dao.GrinderDao
-import com.example.espressoshots.data.dao.ProfileDao
-import com.example.espressoshots.data.dao.ShotDao
-import com.example.espressoshots.data.model.BeanEntity
-import com.example.espressoshots.data.model.GrinderEntity
-import com.example.espressoshots.data.model.ProfileEntity
-import com.example.espressoshots.data.model.ShotEntity
+import com.example.shots.data.dao.BeanDao
+import com.example.shots.data.dao.GrinderDao
+import com.example.shots.data.dao.ProfileDao
+import com.example.shots.data.dao.ShotDao
+import com.example.shots.data.model.BeanEntity
+import com.example.shots.data.model.GrinderEntity
+import com.example.shots.data.model.ProfileEntity
+import com.example.shots.data.model.ShotEntity
 
 @Database(
     entities = [ShotEntity::class, BeanEntity::class, GrinderEntity::class, ProfileEntity::class],

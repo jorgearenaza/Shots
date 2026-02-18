@@ -1,4 +1,4 @@
-package com.example.espressoshots.ui.screens
+package com.example.shots.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -38,10 +38,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.espressoshots.ui.components.EmptyState
-import com.example.espressoshots.ui.components.ShotCard
-import com.example.espressoshots.ui.theme.AppSpacing
-import com.example.espressoshots.viewmodel.MainViewModel
+import com.example.shots.ui.components.EmptyState
+import com.example.shots.ui.components.ShotCard
+import com.example.shots.ui.theme.AppSpacing
+import com.example.shots.viewmodel.MainViewModel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId

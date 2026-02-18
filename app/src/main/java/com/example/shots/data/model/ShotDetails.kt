@@ -1,4 +1,4 @@
-package com.example.espressoshots.data.model
+package com.example.shots.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded

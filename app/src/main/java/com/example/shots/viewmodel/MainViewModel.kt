@@ -1,14 +1,14 @@
-package com.example.espressoshots.viewmodel
+package com.example.shots.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.espressoshots.data.ShotsRepository
-import com.example.espressoshots.data.SettingsState
-import com.example.espressoshots.data.model.BeanEntity
-import com.example.espressoshots.data.model.GrinderEntity
-import com.example.espressoshots.data.model.ProfileEntity
-import com.example.espressoshots.data.model.ShotDetails
-import com.example.espressoshots.data.model.ShotEntity
+import com.example.shots.data.ShotsRepository
+import com.example.shots.data.SettingsState
+import com.example.shots.data.model.BeanEntity
+import com.example.shots.data.model.GrinderEntity
+import com.example.shots.data.model.ProfileEntity
+import com.example.shots.data.model.ShotDetails
+import com.example.shots.data.model.ShotEntity
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn

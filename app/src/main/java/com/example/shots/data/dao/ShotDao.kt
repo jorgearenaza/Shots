@@ -1,4 +1,4 @@
-package com.example.espressoshots.data.dao
+package com.example.shots.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

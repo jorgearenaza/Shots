@@ -1,12 +1,12 @@
-package com.example.espressoshots
+package com.example.shots
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
-import com.example.espressoshots.data.ServiceLocator
-import com.example.espressoshots.ui.app.AppNavHost
-import com.example.espressoshots.ui.theme.ShotsTheme
+import com.example.shots.data.ServiceLocator
+import com.example.shots.ui.app.AppNavHost
+import com.example.shots.ui.theme.ShotsTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

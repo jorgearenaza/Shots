@@ -6,8 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -44,7 +42,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ShotCard(
     shot: ShotDetails,
@@ -272,24 +269,35 @@ fun ShotCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
                         )
-                        FlowRow(
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 4.dp),
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            if (shot.shot.temperaturaC != null) {
-                                CompactInfoChip(icon = "🌡️", text = "${shot.shot.temperaturaC.toInt()}°C")
+                            // Primera fila
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                if (shot.shot.temperaturaC != null) {
+                                    CompactInfoChip(icon = "🌡️", text = "${shot.shot.temperaturaC.toInt()}°C")
+                                }
+                                if (!shot.shot.ajusteMolienda.isNullOrBlank()) {
+                                    CompactInfoChip(icon = "⚙️", text = shot.shot.ajusteMolienda)
+                                }
                             }
-                            if (!shot.shot.ajusteMolienda.isNullOrBlank()) {
-                                CompactInfoChip(icon = "⚙️", text = shot.shot.ajusteMolienda)
-                            }
-                            if (!shot.grinderNombre.isNullOrBlank()) {
-                                CompactInfoChip(icon = "🔧", text = shot.grinderNombre)
-                            }
-                            if (!shot.profileNombre.isNullOrBlank()) {
-                                CompactInfoChip(icon = "📋", text = shot.profileNombre)
+                            // Segunda fila
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                if (!shot.grinderNombre.isNullOrBlank()) {
+                                    CompactInfoChip(icon = "🔧", text = shot.grinderNombre)
+                                }
+                                if (!shot.profileNombre.isNullOrBlank()) {
+                                    CompactInfoChip(icon = "📋", text = shot.profileNombre)
+                                }
                             }
                         }
                     }
@@ -313,12 +321,11 @@ fun ShotCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
                         )
-                        FlowRow(
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 4.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             if (shot.shot.preinfusionTiempoSeg != null) {
                                 Row(
@@ -381,27 +388,38 @@ fun ShotCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
                         )
-                        FlowRow(
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 4.dp),
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            if (!shot.shot.aromaNotes.isNullOrBlank()) {
-                                TastingNoteBadge("Aroma", shot.shot.aromaNotes, MaterialTheme.colorScheme.primary)
+                            // Primera fila: Aroma, Sabor, Cuerpo
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                if (!shot.shot.aromaNotes.isNullOrBlank()) {
+                                    TastingNoteBadge("Aroma", shot.shot.aromaNotes, MaterialTheme.colorScheme.primary)
+                                }
+                                if (!shot.shot.saborNotes.isNullOrBlank()) {
+                                    TastingNoteBadge("Sabor", shot.shot.saborNotes, MaterialTheme.colorScheme.secondary)
+                                }
+                                if (!shot.shot.cuerpo.isNullOrBlank()) {
+                                    TastingNoteBadge("Cuerpo", shot.shot.cuerpo, MaterialTheme.colorScheme.tertiary)
+                                }
                             }
-                            if (!shot.shot.saborNotes.isNullOrBlank()) {
-                                TastingNoteBadge("Sabor", shot.shot.saborNotes, MaterialTheme.colorScheme.secondary)
-                            }
-                            if (!shot.shot.cuerpo.isNullOrBlank()) {
-                                TastingNoteBadge("Cuerpo", shot.shot.cuerpo, MaterialTheme.colorScheme.tertiary)
-                            }
-                            if (!shot.shot.acidez.isNullOrBlank()) {
-                                TastingNoteBadge("Acidez", shot.shot.acidez, MaterialTheme.colorScheme.primary)
-                            }
-                            if (!shot.shot.finish.isNullOrBlank()) {
-                                TastingNoteBadge("Finish", shot.shot.finish, MaterialTheme.colorScheme.secondary)
+                            // Segunda fila: Acidez, Finish
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                if (!shot.shot.acidez.isNullOrBlank()) {
+                                    TastingNoteBadge("Acidez", shot.shot.acidez, MaterialTheme.colorScheme.primary)
+                                }
+                                if (!shot.shot.finish.isNullOrBlank()) {
+                                    TastingNoteBadge("Finish", shot.shot.finish, MaterialTheme.colorScheme.secondary)
+                                }
                             }
                         }
                     }

@@ -16,13 +16,17 @@ fun RatingStars(
     max: Int = 10,
     onRatingChange: (Int) -> Unit
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+    Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
         for (i in 1..max) {
             val filled = i <= rating
-            IconButton(onClick = { onRatingChange(i) }) {
+            IconButton(
+                onClick = { onRatingChange(i) },
+                modifier = androidx.compose.foundation.layout.size(28.dp)
+            ) {
                 Icon(
                     imageVector = if (filled) Icons.Filled.Star else Icons.Outlined.StarBorder,
-                    contentDescription = null
+                    contentDescription = null,
+                    modifier = androidx.compose.ui.Modifier.size(16.dp)
                 )
             }
         }

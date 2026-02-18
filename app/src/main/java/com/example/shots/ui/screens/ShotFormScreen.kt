@@ -630,7 +630,7 @@ fun ShotFormScreen(
                 contentColor = MaterialTheme.colorScheme.onPrimary
             )
         ) {
-            Text(if (shotId == null) "📸 Registrar" else "✏️ Actualizar", modifier = Modifier.padding(6.dp), style = MaterialTheme.typography.labelLarge)
+            Text(if (shotId == null) "Registrar" else "Actualizar", modifier = Modifier.padding(6.dp), style = MaterialTheme.typography.labelLarge)
         }
     }
 }

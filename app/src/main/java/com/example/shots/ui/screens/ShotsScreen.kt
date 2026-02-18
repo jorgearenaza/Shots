@@ -1,6 +1,5 @@
 package com.example.espressoshots.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,23 +8,31 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.espressoshots.ui.components.EmptyState
+import com.example.espressoshots.ui.components.ShotCard
 import com.example.espressoshots.viewmodel.MainViewModel
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: PaddingValues) {
     val shots = vm.shots.collectAsState()
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val beans = vm.beans.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
 
     if (shots.value.isEmpty()) {
         EmptyState(
@@ -36,26 +43,66 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
         return
     }
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(padding),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+    // Filtrar shots por búsqueda
+    val filteredShots = shots.value.filter { shot ->
+        val beanLabel = "${shot.beanTostador} - ${shot.beanCafe}".lowercase()
+        val notes = (shot.shot.notas ?: "").lowercase()
+        val nextShot = (shot.shot.nextShotNotes ?: "").lowercase()
+        val searchLower = searchQuery.lowercase()
+        
+        beanLabel.contains(searchLower) || 
+        notes.contains(searchLower) || 
+        nextShot.contains(searchLower) ||
+        shot.shot.dosisG.toString().contains(searchLower)
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
     ) {
-        items(shots.value) { item ->
-            val date = Instant.ofEpochMilli(item.shot.fecha)
-                .atZone(ZoneId.systemDefault()).toLocalDate()
-                .format(formatter)
-            val beanLabel = "${item.beanTostador} - ${item.beanCafe}"
-            val grinderLabel = item.grinderNombre ?: "Sin molino"
-            Column(
+        // Barra de búsqueda
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            label = { Text("Buscar por grano, notas...") },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            trailingIcon = {
+                if (searchQuery.isNotEmpty()) {
+                    IconButton(onClick = { searchQuery = "" }) {
+                        Icon(Icons.Default.Close, contentDescription = null)
+                    }
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            singleLine = true
+        )
+
+        // Lista de shots
+        if (filteredShots.isEmpty()) {
+            EmptyState(
+                message = "No se encontraron shots con esa búsqueda.",
+                actionLabel = "Limpiar búsqueda",
+                onAction = { searchQuery = "" }
+            )
+        } else {
+            LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { navController.navigate("shots/edit/${item.shot.id}") }
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                contentPadding = PaddingValues(bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Text(text = beanLabel, style = MaterialTheme.typography.titleMedium)
-                Text(text = "$date | ${item.shot.dosisG}g -> ${item.shot.rendimientoG}g | ratio ${"%.2f".format(item.shot.ratio)}")
-                Text(text = grinderLabel, style = MaterialTheme.typography.bodySmall)
-            }
-        }
+                items(filteredShots) { shot ->
+                    val beanLabel = "${shot.beanTostador} - ${shot.beanCafe}"
+                    ShotCard(
+                        shot = shot.shot,
+                        beanLabel = beanLabel,
+                        onEdit = { navController.navigate("shots/edit/${shot.shot.id}") },
+                        onDelete = { /* TODO: implementar eliminación */ }
+                    )
+                }
     }
 }

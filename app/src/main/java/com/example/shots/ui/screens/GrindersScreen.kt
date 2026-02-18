@@ -1,25 +1,37 @@
 package com.example.espressoshots.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.espressoshots.ui.components.EmptyState
+import com.example.espressoshots.ui.components.GrinderCard
 import com.example.espressoshots.viewmodel.MainViewModel
 
 @Composable
 fun GrindersScreen(navController: NavController, vm: MainViewModel, padding: PaddingValues) {
     val grinders = vm.grinders.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
 
     if (grinders.value.isEmpty()) {
         EmptyState(
@@ -30,17 +42,52 @@ fun GrindersScreen(navController: NavController, vm: MainViewModel, padding: Pad
         return
     }
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(padding),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        items(grinders.value) { grinder ->
-            Text(
-                text = grinder.nombre,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.clickable { navController.navigate("grinders/edit/${grinder.id}") }
+    val filteredGrinders = grinders.value.filter { grinder ->
+        val label = grinder.nombre.lowercase()
+        val notes = (grinder.notas ?: "").lowercase()
+        val searchLower = searchQuery.lowercase()
+        label.contains(searchLower) || notes.contains(searchLower)
+    }
+
+    Column(modifier = Modifier.fillMaxSize().padding(padding)) {
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            label = { Text("Buscar molino...") },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            trailingIcon = {
+                if (searchQuery.isNotEmpty()) {
+                    IconButton(onClick = { searchQuery = "" }) {
+                        Icon(Icons.Default.Close, contentDescription = null)
+                    }
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            singleLine = true
+        )
+
+        if (filteredGrinders.isEmpty()) {
+            EmptyState(
+                message = "No se encontraron molinos con esa búsqueda.",
+                actionLabel = "Limpiar búsqueda",
+                onAction = { searchQuery = "" }
             )
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(filteredGrinders) { grinder ->
+                    GrinderCard(
+                        grinder = grinder,
+                        onEdit = { navController.navigate("grinders/edit/${grinder.id}") },
+                        onDelete = { /* TODO: implementar eliminación */ }
+                    )
+                }
+            }
         }
     }
 }

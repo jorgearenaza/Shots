@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -16,6 +17,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -82,9 +84,24 @@ fun OptionsScreen(navController: NavController, vm: MainViewModel, padding: Padd
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     Text("Defaults", style = MaterialTheme.typography.titleMedium)
-                    OutlinedTextField(value = dose, onValueChange = { dose = it }, label = { Text("Default dose (g)") })
-                    OutlinedTextField(value = ratio, onValueChange = { ratio = it }, label = { Text("Default ratio") })
-                    OutlinedTextField(value = yield, onValueChange = { yield = it }, label = { Text("Default yield (g)") })
+                    OutlinedTextField(
+                        value = dose,
+                        onValueChange = { dose = it },
+                        label = { Text("Default dose (g)") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                    )
+                    OutlinedTextField(
+                        value = ratio,
+                        onValueChange = { ratio = it },
+                        label = { Text("Default ratio") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                    )
+                    OutlinedTextField(
+                        value = yield,
+                        onValueChange = { yield = it },
+                        label = { Text("Default yield (g)") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                    )
                 }
 
                 Column(
@@ -112,9 +129,24 @@ fun OptionsScreen(navController: NavController, vm: MainViewModel, padding: Padd
             }
         } else {
             Text("Defaults", style = MaterialTheme.typography.titleMedium)
-            OutlinedTextField(value = dose, onValueChange = { dose = it }, label = { Text("Default dose (g)") })
-            OutlinedTextField(value = ratio, onValueChange = { ratio = it }, label = { Text("Default ratio") })
-            OutlinedTextField(value = yield, onValueChange = { yield = it }, label = { Text("Default yield (g)") })
+            OutlinedTextField(
+                value = dose,
+                onValueChange = { dose = it },
+                label = { Text("Default dose (g)") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+            )
+            OutlinedTextField(
+                value = ratio,
+                onValueChange = { ratio = it },
+                label = { Text("Default ratio") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+            )
+            OutlinedTextField(
+                value = yield,
+                onValueChange = { yield = it },
+                label = { Text("Default yield (g)") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+            )
 
             Text("Preferencias", style = MaterialTheme.typography.titleMedium)
             DropdownField(

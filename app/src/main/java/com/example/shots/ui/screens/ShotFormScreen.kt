@@ -114,6 +114,10 @@ fun ShotFormScreen(
                 dosis = settings.value.defaultDoseG.toString()
                 rendimiento = settings.value.defaultYieldG.toString()
             }
+            // Seleccionar molino por defecto si existe
+            if (settings.value.defaultMolinoId != null) {
+                grinderIndex = grinders.value.indexOfFirst { it.id == settings.value.defaultMolinoId }.takeIf { it >= 0 }
+            }
             loaded = true
         }
     }

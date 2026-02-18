@@ -30,6 +30,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.espressoshots.data.model.ShotDetails
+import com.example.espressoshots.ui.components.getTimerStatus
+import com.example.espressoshots.ui.components.getYieldStatus
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -48,6 +50,10 @@ fun ShotCard(
     val dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.getDefault())
     val ratio = String.format("%.2f", shot.shot.ratio)
     val rating = shot.shot.calificacion ?: 0
+    
+    // Calcular estado de timer y yield
+    val timerStatus = getTimerStatus(shot.shot.tiempoSeg, shot.shot.dosisG, shot.shot.rendimientoG)
+    val yieldStatus = getYieldStatus(shot.shot.dosisG, shot.shot.rendimientoG)
     
     // Color según rating
     val ratingGradient = when {
@@ -177,6 +183,31 @@ fun ShotCard(
                         CompactMetricBadge(
                             emoji = "⏱️",
                             value = "${shot.shot.tiempoSeg}s",
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+                
+                // Indicadores de estado (semáforo) para timer y yield
+                if (shot.shot.tiempoSeg != null || shot.shot.rendimientoG > 0) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        if (shot.shot.tiempoSeg != null) {
+                            StatusIndicator(
+                                label = "Timer",
+                                value = "${shot.shot.tiempoSeg}s",
+                                status = timerStatus,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                        StatusIndicator(
+                            label = "Yield",
+                            value = "${shot.shot.rendimientoG}g",
+                            status = yieldStatus,
                             modifier = Modifier.weight(1f)
                         )
                     }

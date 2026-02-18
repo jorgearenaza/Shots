@@ -67,39 +67,46 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
     
     // Calcular estadísticas rápidas del día
     val today = LocalDate.now()
-    val todayShots = shots.value.filter {
-        val shotDate = Instant.ofEpochMilli(it.shot.fecha).atZone(ZoneId.systemDefault()).toLocalDate()
-        shotDate == today
+    val todayShots = remember(shots.value) {
+        shots.value.filter {
+            val shotDate = Instant.ofEpochMilli(it.shot.fecha).atZone(ZoneId.systemDefault()).toLocalDate()
+            shotDate == today
+        }
     }
-    val todayAvgRating = todayShots.mapNotNull { it.shot.calificacion }.let {
-        if (it.isEmpty()) 0.0 else it.average()
+    val todayAvgRating = remember(todayShots) {
+        todayShots.mapNotNull { it.shot.calificacion }.let {
+            if (it.isEmpty()) 0.0 else it.average()
+        }
     }
 
     // Filtrar shots por búsqueda y filtros
-    var filteredShots = shots.value.filter { shot ->
-        val beanLabel = "${shot.beanTostador} - ${shot.beanCafe}".lowercase()
-        val notes = (shot.shot.notas ?: "").lowercase()
-        val nextShot = (shot.shot.nextShotNotes ?: "").lowercase()
-        val searchLower = searchQuery.lowercase()
-        
-        beanLabel.contains(searchLower) || 
-        notes.contains(searchLower) || 
-        nextShot.contains(searchLower) ||
-        shot.shot.dosisG.toString().contains(searchLower)
-    }
-    
-    // Aplicar filtro de rating
-    if (filterRating != null) {
-        filteredShots = filteredShots.filter { (it.shot.calificacion ?: 0) >= filterRating!! }
-    }
-    
-    // Aplicar filtro de recientes (últimos 7 días)
-    if (filterRecent) {
-        val weekAgo = today.minusDays(7)
-        filteredShots = filteredShots.filter {
-            val shotDate = Instant.ofEpochMilli(it.shot.fecha).atZone(ZoneId.systemDefault()).toLocalDate()
-            shotDate.isAfter(weekAgo) || shotDate.isEqual(weekAgo)
+    val filteredShots = remember(shots.value, searchQuery, filterRating, filterRecent) {
+        var result = shots.value.filter { shot ->
+            val beanLabel = "${shot.beanTostador} - ${shot.beanCafe}".lowercase()
+            val notes = (shot.shot.notas ?: "").lowercase()
+            val nextShot = (shot.shot.nextShotNotes ?: "").lowercase()
+            val searchLower = searchQuery.lowercase()
+            
+            beanLabel.contains(searchLower) || 
+            notes.contains(searchLower) || 
+            nextShot.contains(searchLower) ||
+            shot.shot.dosisG.toString().contains(searchLower)
         }
+        
+        // Aplicar filtro de rating
+        if (filterRating != null) {
+            result = result.filter { (it.shot.calificacion ?: 0) >= filterRating }
+        }
+        
+        // Aplicar filtro de recientes (últimos 7 días)
+        if (filterRecent) {
+            val weekAgo = today.minusDays(7)
+            result = result.filter {
+                val shotDate = Instant.ofEpochMilli(it.shot.fecha).atZone(ZoneId.systemDefault()).toLocalDate()
+                shotDate.isAfter(weekAgo) || shotDate.isEqual(weekAgo)
+            }
+        }
+        result
     }
 
     Column(

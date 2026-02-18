@@ -28,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.input.KeyboardType
@@ -133,38 +134,32 @@ fun ShotFormScreen(
         }
     }
 
-    val beanLabels = beans.value.map { "${it.tostador} - ${it.cafe}" }
-    val grinderLabels = listOf("Sin molino") + grinders.value.map { it.nombre }
-    val profileLabels = listOf("Sin perfil") + profiles.value.map { it.nombre }
-    val nextShotOptions = listOf(
-        "Sin sugerencia",
-        "Mas Grueso",
-        "Mas fino",
-        "+ Temp",
-        "- Temp",
-        "+ Yield",
-        "- Yield",
-        "+ PreInf",
-        "- PreInf",
-        "Cambiar Perfil",
-        "Mejorar Puck Prep"
-    )
-    val nextShotDisplay = if (nextShotNotes.isBlank()) "Sin sugerencia" else nextShotNotes
-
-    // Opciones para tasting notes
-    val aromaOptions = listOf("N/A", "Floral", "Frutal", "Cítrico", "Chocolate", "Nueces", "Caramelo", "Vainilla", "Especiado", "Herbal")
-    val saborOptions = listOf("N/A", "Chocolate", "Caramelo", "Frutas rojas", "Frutas cítricas", "Nueces", "Avellana", "Miel", "Panela", "Frutas tropicales")
-    val cuerpoOptions = listOf("N/A", "Ligero", "Medio-Ligero", "Medio", "Medio-Completo", "Completo")
-    val acidezOptions = listOf("N/A", "Baja", "Media-Baja", "Media", "Media-Alta", "Alta", "Cítrica", "Málica", "Tánica")
-    val finishOptions = listOf("N/A", "Corto", "Medio", "Largo", "Dulce", "Limpio", "Seco", "Cremoso")
+    val beanLabels = remember(beans.value) { beans.value.map { "${it.tostador} - ${it.cafe}" } }
+    val grinderLabels = remember(grinders.value) { listOf("Sin molino") + grinders.value.map { it.nombre } }
+    val profileLabels = remember(profiles.value) { listOf("Sin perfil") + profiles.value.map { it.nombre } }
     
-    val aromaDisplay = aromaNotes.ifBlank { "N/A" }
-    val saborDisplay = saborNotes.ifBlank { "N/A" }
-    val cuerpoDisplay = cuerpo.ifBlank { "N/A" }
-    val acidezDisplay = acidez.ifBlank { "N/A" }
-    val finishDisplay = finish.ifBlank { "N/A" }
+    val nextShotOptions = remember {
+        listOf(
+            "Sin sugerencia", "Mas Grueso", "Mas fino",
+            "+ Temp", "- Temp", "+ Yield", "- Yield",
+            "+ PreInf", "- PreInf", "Cambiar Perfil", "Mejorar Puck Prep"
+        )
+    }
+    val nextShotDisplay = remember(nextShotNotes) { if (nextShotNotes.isBlank()) "Sin sugerencia" else nextShotNotes }
 
-    val ratioValue = run {
+    val aromaOptions = remember { listOf("N/A", "Floral", "Frutal", "Cítrico", "Chocolate", "Nueces", "Caramelo", "Vainilla", "Especiado", "Herbal") }
+    val saborOptions = remember { listOf("N/A", "Chocolate", "Caramelo", "Frutas rojas", "Frutas cítricas", "Nueces", "Avellana", "Miel", "Panela", "Frutas tropicales") }
+    val cuerpoOptions = remember { listOf("N/A", "Ligero", "Medio-Ligero", "Medio", "Medio-Completo", "Completo") }
+    val acidezOptions = remember { listOf("N/A", "Baja", "Media-Baja", "Media", "Media-Alta", "Alta", "Cítrica", "Málica", "Tánica") }
+    val finishOptions = remember { listOf("N/A", "Corto", "Medio", "Largo", "Dulce", "Limpio", "Seco", "Cremoso") }
+    
+    val aromaDisplay = remember(aromaNotes) { aromaNotes.ifBlank { "N/A" } }
+    val saborDisplay = remember(saborNotes) { saborNotes.ifBlank { "N/A" } }
+    val cuerpoDisplay = remember(cuerpo) { cuerpo.ifBlank { "N/A" } }
+    val acidezDisplay = remember(acidez) { acidez.ifBlank { "N/A" } }
+    val finishDisplay = remember(finish) { finish.ifBlank { "N/A" } }
+
+    val ratioValue = remember(dosis, rendimiento) {
         val d = dosis.toDoubleOrNull() ?: 0.0
         val y = rendimiento.toDoubleOrNull() ?: 0.0
         if (d == 0.0) 0.0 else y / d

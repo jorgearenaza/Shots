@@ -53,12 +53,14 @@ fun BeansScreen(navController: NavController, vm: MainViewModel, padding: Paddin
     }
 
     // Filtrar beans por búsqueda
-    val filteredBeans = beans.value.filter { bean ->
-        val label = "${bean.tostador} - ${bean.cafe}".lowercase()
-        val notes = (bean.notas ?: "").lowercase()
-        val searchLower = searchQuery.lowercase()
-        
-        label.contains(searchLower) || notes.contains(searchLower)
+    val filteredBeans = remember(beans.value, searchQuery) {
+        beans.value.filter { bean ->
+            val label = "${bean.tostador} - ${bean.cafe}".lowercase()
+            val notes = (bean.notas ?: "").lowercase()
+            val searchLower = searchQuery.lowercase()
+            
+            label.contains(searchLower) || notes.contains(searchLower)
+        }
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(padding)) {

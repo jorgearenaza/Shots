@@ -54,30 +54,41 @@ fun ShotCard(
     modifier: Modifier = Modifier
 ) {
     val expanded = remember { mutableStateOf(false) }
-    val date = Instant.ofEpochMilli(shot.shot.fecha).atZone(ZoneId.systemDefault()).toLocalDate()
-    val dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.getDefault())
-    val ratio = String.format("%.2f", shot.shot.ratio)
-    val rating = shot.shot.calificacion ?: 0
+    
+    val date = remember(shot.shot.fecha) {
+        Instant.ofEpochMilli(shot.shot.fecha).atZone(ZoneId.systemDefault()).toLocalDate()
+    }
+    
+    val dateFormatter = remember { DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.getDefault()) }
+    
+    val ratio = remember(shot.shot.ratio) { String.format("%.2f", shot.shot.ratio) }
+    val rating = remember(shot.shot.calificacion) { shot.shot.calificacion ?: 0 }
     
     // Calcular estado de timer y yield
-    val timerStatus = getTimerStatus(shot.shot.tiempoSeg, shot.shot.dosisG, shot.shot.rendimientoG)
-    val yieldStatus = getYieldStatus(shot.shot.dosisG, shot.shot.rendimientoG)
+    val timerStatus = remember(shot.shot.tiempoSeg, shot.shot.dosisG, shot.shot.rendimientoG) {
+        getTimerStatus(shot.shot.tiempoSeg, shot.shot.dosisG, shot.shot.rendimientoG)
+    }
+    
+    val yieldStatus = remember(shot.shot.dosisG, shot.shot.rendimientoG) {
+        getYieldStatus(shot.shot.dosisG, shot.shot.rendimientoG)
+    }
     
     // Color según rating
-    val ratingGradient = when {
-        rating >= 9 -> listOf(
-            MaterialTheme.colorScheme.primary,
-            MaterialTheme.colorScheme.tertiary
-        )
-        rating >= 7 -> listOf(
-            MaterialTheme.colorScheme.secondary,
-            MaterialTheme.colorScheme.secondaryContainer
-        )
-        rating >= 5 -> listOf(
-            MaterialTheme.colorScheme.tertiary,
-            MaterialTheme.colorScheme.tertiaryContainer
-        )
-        else -> listOf(
+    val ratingGradient = remember(rating) {
+        when {
+            rating >= 9 -> listOf(
+                MaterialTheme.colorScheme.primary,
+                MaterialTheme.colorScheme.tertiary
+            )
+            rating >= 7 -> listOf(
+                MaterialTheme.colorScheme.secondary,
+                MaterialTheme.colorScheme.secondaryContainer
+            )
+            rating >= 5 -> listOf(
+                MaterialTheme.colorScheme.tertiary,
+                MaterialTheme.colorScheme.tertiaryContainer
+            )
+            else -> listOf(
             MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
             MaterialTheme.colorScheme.errorContainer
         )

@@ -46,11 +46,13 @@ fun GrindersScreen(navController: NavController, vm: MainViewModel, padding: Pad
         return
     }
 
-    val filteredGrinders = grinders.value.filter { grinder ->
-        val label = grinder.nombre.lowercase()
-        val notes = (grinder.notas ?: "").lowercase()
-        val searchLower = searchQuery.lowercase()
-        label.contains(searchLower) || notes.contains(searchLower)
+    val filteredGrinders = remember(grinders.value, searchQuery) {
+        grinders.value.filter { grinder ->
+            val label = grinder.nombre.lowercase()
+            val notes = (grinder.notas ?: "").lowercase()
+            val searchLower = searchQuery.lowercase()
+            label.contains(searchLower) || notes.contains(searchLower)
+        }
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(padding)) {

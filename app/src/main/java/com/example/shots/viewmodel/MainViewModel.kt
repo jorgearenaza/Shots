@@ -83,7 +83,7 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
 
     suspend fun getShot(id: Long): ShotEntity? = repo.getShot(id)
 
-    fun saveBean(
+    suspend fun saveBean(
         id: Long?,
         tostador: String,
         cafe: String,
@@ -92,20 +92,18 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
         notas: String?
     ) {
         val now = System.currentTimeMillis()
-        viewModelScope.launch {
-            if (id == null) {
-                repo.insertBean(
-                    BeanEntity(
-                        tostador = tostador,
-                        cafe = cafe,
-                        fechaTostado = fechaTostado,
-                        fechaCompra = fechaCompra,
-                        notas = notas,
-                        createdAt = now,
-                        updatedAt = now
-                    )
+        if (id == null) {
+            repo.insertBean(
+                BeanEntity(
+                    tostador = tostador,
+                    cafe = cafe,
+                    fechaTostado = fechaTostado,
+                    fechaCompra = fechaCompra,
+                    notas = notas,
+                    createdAt = now,
+                    updatedAt = now
                 )
-            }
+            )
         }
     }
 
@@ -123,20 +121,18 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
 
     suspend fun getBean(id: Long): BeanEntity? = repo.getBean(id)
 
-    fun saveGrinder(id: Long?, nombre: String, ajusteDefault: String?, notas: String?) {
+    suspend fun saveGrinder(id: Long?, nombre: String, ajusteDefault: String?, notas: String?) {
         val now = System.currentTimeMillis()
-        viewModelScope.launch {
-            if (id == null) {
-                repo.insertGrinder(
-                    GrinderEntity(
-                        nombre = nombre,
-                        ajusteDefault = ajusteDefault,
-                        notas = notas,
-                        createdAt = now,
-                        updatedAt = now
-                    )
+        if (id == null) {
+            repo.insertGrinder(
+                GrinderEntity(
+                    nombre = nombre,
+                    ajusteDefault = ajusteDefault,
+                    notas = notas,
+                    createdAt = now,
+                    updatedAt = now
                 )
-            }
+            )
         }
     }
 
@@ -154,20 +150,18 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
 
     suspend fun getGrinder(id: Long): GrinderEntity? = repo.getGrinder(id)
 
-    fun saveProfile(id: Long?, nombre: String, descripcion: String?, parametros: String?) {
+    suspend fun saveProfile(id: Long?, nombre: String, descripcion: String?, parametros: String?) {
         val now = System.currentTimeMillis()
-        viewModelScope.launch {
-            if (id == null) {
-                repo.insertProfile(
-                    ProfileEntity(
-                        nombre = nombre,
-                        descripcion = descripcion,
-                        parametros = parametros,
-                        createdAt = now,
-                        updatedAt = now
-                    )
+        if (id == null) {
+            repo.insertProfile(
+                ProfileEntity(
+                    nombre = nombre,
+                    descripcion = descripcion,
+                    parametros = parametros,
+                    createdAt = now,
+                    updatedAt = now
                 )
-            }
+            )
         }
     }
 

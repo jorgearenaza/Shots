@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.espressoshots.data.model.GrinderEntity
 import com.example.espressoshots.viewmodel.MainViewModel
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun GrinderFormScreen(
@@ -33,6 +35,7 @@ fun GrinderFormScreen(
     var notas by remember { mutableStateOf("") }
     var createdAt by remember { mutableStateOf<Long?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(grinderId) {
         if (grinderId != null) {
@@ -64,27 +67,35 @@ fun GrinderFormScreen(
                     error = "Nombre es obligatorio."
                     return@Button
                 }
-                if (grinderId == null) {
-                    vm.saveGrinder(
-                        id = null,
-                        nombre = nombre.trim(),
-                        ajusteDefault = ajusteDefault.ifBlank { null },
-                        notas = notas.ifBlank { null }
-                    )
-                } else {
-                    vm.updateGrinderEntity(
-                        GrinderEntity(
-                            id = grinderId,
+                scope.launch {
+                    val exists = vm.grinderNameExists(nombre.trim(), grinderId ?: 0)
+                    if (exists) {
+                        error = "Ya existe un molino con ese nombre."
+                        return@launch
+                    }
+                    error = null
+                    if (grinderId == null) {
+                        vm.saveGrinder(
+                            id = null,
                             nombre = nombre.trim(),
                             ajusteDefault = ajusteDefault.ifBlank { null },
-                            notas = notas.ifBlank { null },
-                            activo = true,
-                            createdAt = createdAt ?: System.currentTimeMillis(),
-                            updatedAt = System.currentTimeMillis()
+                            notas = notas.ifBlank { null }
                         )
-                    )
+                    } else {
+                        vm.updateGrinderEntity(
+                            GrinderEntity(
+                                id = grinderId,
+                                nombre = nombre.trim(),
+                                ajusteDefault = ajusteDefault.ifBlank { null },
+                                notas = notas.ifBlank { null },
+                                activo = true,
+                                createdAt = createdAt ?: System.currentTimeMillis(),
+                                updatedAt = System.currentTimeMillis()
+                            )
+                        )
+                    }
+                    navController.navigateUp()
                 }
-                navController.navigateUp()
             },
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.error,

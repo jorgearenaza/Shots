@@ -13,6 +13,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import android.content.res.Configuration
 
 @Composable
 fun DateField(
@@ -29,8 +30,12 @@ fun DateField(
     val showPicker = remember { mutableStateOf(false) }
 
     if (showPicker.value) {
+        // Detectar si estamos en tema oscuro
+        val isDarkTheme = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        
         val dialog = DatePickerDialog(
             context,
+            if (isDarkTheme) android.R.style.Theme_Material_Dialog else android.R.style.Theme_Material_Light_Dialog,
             { _, year, month, day ->
                 val newDate = LocalDate.of(year, month + 1, day)
                 val millis = newDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()

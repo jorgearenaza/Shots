@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.espressoshots.data.model.ProfileEntity
 import com.example.espressoshots.viewmodel.MainViewModel
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileFormScreen(
@@ -33,6 +35,7 @@ fun ProfileFormScreen(
     var parametros by remember { mutableStateOf("") }
     var createdAt by remember { mutableStateOf<Long?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(profileId) {
         if (profileId != null) {
@@ -64,27 +67,35 @@ fun ProfileFormScreen(
                     error = "Nombre es obligatorio."
                     return@Button
                 }
-                if (profileId == null) {
-                    vm.saveProfile(
-                        id = null,
-                        nombre = nombre.trim(),
-                        descripcion = descripcion.ifBlank { null },
-                        parametros = parametros.ifBlank { null }
-                    )
-                } else {
-                    vm.updateProfileEntity(
-                        ProfileEntity(
-                            id = profileId,
+                scope.launch {
+                    val exists = vm.profileNameExists(nombre.trim(), profileId ?: 0)
+                    if (exists) {
+                        error = "Ya existe un perfil con ese nombre."
+                        return@launch
+                    }
+                    error = null
+                    if (profileId == null) {
+                        vm.saveProfile(
+                            id = null,
                             nombre = nombre.trim(),
                             descripcion = descripcion.ifBlank { null },
-                            parametros = parametros.ifBlank { null },
-                            activo = true,
-                            createdAt = createdAt ?: System.currentTimeMillis(),
-                            updatedAt = System.currentTimeMillis()
+                            parametros = parametros.ifBlank { null }
                         )
-                    )
+                    } else {
+                        vm.updateProfileEntity(
+                            ProfileEntity(
+                                id = profileId,
+                                nombre = nombre.trim(),
+                                descripcion = descripcion.ifBlank { null },
+                                parametros = parametros.ifBlank { null },
+                                activo = true,
+                                createdAt = createdAt ?: System.currentTimeMillis(),
+                                updatedAt = System.currentTimeMillis()
+                            )
+                        )
+                    }
+                    navController.navigateUp()
                 }
-                navController.navigateUp()
             },
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.error,

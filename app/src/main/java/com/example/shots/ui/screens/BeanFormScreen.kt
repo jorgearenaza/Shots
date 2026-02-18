@@ -21,6 +21,8 @@ import androidx.navigation.NavController
 import com.example.espressoshots.data.model.BeanEntity
 import com.example.espressoshots.ui.components.DateField
 import com.example.espressoshots.viewmodel.MainViewModel
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun BeanFormScreen(
@@ -36,6 +38,7 @@ fun BeanFormScreen(
     var notas by remember { mutableStateOf("") }
     var createdAt by remember { mutableStateOf<Long?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(beanId) {
         if (beanId != null) {
@@ -71,31 +74,39 @@ fun BeanFormScreen(
                     error = "Tostador y cafe son obligatorios."
                     return@Button
                 }
-                if (beanId == null) {
-                    vm.saveBean(
-                        id = null,
-                        tostador = tostador.trim(),
-                        cafe = cafe.trim(),
-                        fechaTostado = fechaTostado,
-                        fechaCompra = fechaCompra,
-                        notas = notas.ifBlank { null }
-                    )
-                } else {
-                    vm.updateBeanEntity(
-                        BeanEntity(
-                            id = beanId,
+                scope.launch {
+                    val exists = vm.beanCombinationExists(tostador.trim(), cafe.trim(), beanId ?: 0)
+                    if (exists) {
+                        error = "Ya existe un grano con ese tostador y café."
+                        return@launch
+                    }
+                    error = null
+                    if (beanId == null) {
+                        vm.saveBean(
+                            id = null,
                             tostador = tostador.trim(),
                             cafe = cafe.trim(),
                             fechaTostado = fechaTostado,
                             fechaCompra = fechaCompra,
-                            notas = notas.ifBlank { null },
-                            activo = true,
-                            createdAt = createdAt ?: System.currentTimeMillis(),
-                            updatedAt = System.currentTimeMillis()
+                            notas = notas.ifBlank { null }
                         )
-                    )
+                    } else {
+                        vm.updateBeanEntity(
+                            BeanEntity(
+                                id = beanId,
+                                tostador = tostador.trim(),
+                                cafe = cafe.trim(),
+                                fechaTostado = fechaTostado,
+                                fechaCompra = fechaCompra,
+                                notas = notas.ifBlank { null },
+                                activo = true,
+                                createdAt = createdAt ?: System.currentTimeMillis(),
+                                updatedAt = System.currentTimeMillis()
+                            )
+                        )
+                    }
+                    navController.navigateUp()
                 }
-                navController.navigateUp()
             },
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.error,

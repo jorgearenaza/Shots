@@ -147,6 +147,65 @@ fun BeanCard(
                 }
             }
 
+            // Información de origen si existe
+            if (!bean.pais.isNullOrBlank() || !bean.proceso.isNullOrBlank() || !bean.varietal.isNullOrBlank() || bean.altitud != null) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.2f),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = "☕ Origen",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        if (!bean.pais.isNullOrBlank()) {
+                            Text(
+                                text = "🌍 ${bean.pais}",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                        if (!bean.proceso.isNullOrBlank()) {
+                            Text(
+                                text = "⚙️ ${bean.proceso}",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        if (!bean.varietal.isNullOrBlank()) {
+                            Text(
+                                text = "🌱 ${bean.varietal}",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                        if (bean.altitud != null) {
+                            Text(
+                                text = "⛰️ ${bean.altitud}m",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
+                }
+            }
+
             // Notas si existen
             if (!bean.notas.isNullOrBlank()) {
                 Text(

@@ -69,6 +69,15 @@ fun ShotFormScreen(
     var notas by remember { mutableStateOf("") }
     var nextShotNotes by remember { mutableStateOf("") }
     var calificacion by remember { mutableStateOf("") }
+    // Pre-infusión
+    var preinfusionTiempo by remember { mutableStateOf("") }
+    var preinfusionPresion by remember { mutableStateOf("") }
+    // Tasting notes estructuradas
+    var aromaNotes by remember { mutableStateOf("") }
+    var saborNotes by remember { mutableStateOf("") }
+    var cuerpo by remember { mutableStateOf("") }
+    var acidez by remember { mutableStateOf("") }
+    var finish by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
     var createdAt by remember { mutableStateOf<Long?>(null) }
 
@@ -85,6 +94,13 @@ fun ShotFormScreen(
                 tiempoSeg = shot.tiempoSeg?.toString() ?: ""
                 temperatura = shot.temperaturaC?.toString() ?: ""
                 ajuste = shot.ajusteMolienda ?: ""
+                preinfusionTiempo = shot.preinfusionTiempoSeg?.toString() ?: ""
+                preinfusionPresion = shot.preinfusionPresionBar?.toString() ?: ""
+                aromaNotes = shot.aromaNotes ?: ""
+                saborNotes = shot.saborNotes ?: ""
+                cuerpo = shot.cuerpo ?: ""
+                acidez = shot.acidez ?: ""
+                finish = shot.finish ?: ""
                 notas = shot.notas ?: ""
                 nextShotNotes = shot.nextShotNotes ?: ""
                 calificacion = shot.calificacion?.toString() ?: ""
@@ -224,6 +240,67 @@ fun ShotFormScreen(
 
                     AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
 
+                    Text(
+                        text = "⏱️ Pre-Infusión",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    OutlinedTextField(
+                        value = preinfusionTiempo,
+                        onValueChange = { preinfusionTiempo = it },
+                        label = { Text("Tiempo (segundos)") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = preinfusionPresion,
+                        onValueChange = { preinfusionPresion = it },
+                        label = { Text("Presión (bar)") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Text(
+                        text = "👃 Tasting Notes",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    OutlinedTextField(
+                        value = aromaNotes,
+                        onValueChange = { aromaNotes = it },
+                        label = { Text("Aroma") },
+                        placeholder = { Text("Ej: Floral, Frutal, Chocolate") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = saborNotes,
+                        onValueChange = { saborNotes = it },
+                        label = { Text("Sabor") },
+                        placeholder = { Text("Ej: Chocolate, Caramelo, Cítrico") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = cuerpo,
+                        onValueChange = { cuerpo = it },
+                        label = { Text("Cuerpo") },
+                        placeholder = { Text("Ej: Ligero, Medio, Completo") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = acidez,
+                        onValueChange = { acidez = it },
+                        label = { Text("Acidez") },
+                        placeholder = { Text("Ej: Cítrica, Málica, Baja") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = finish,
+                        onValueChange = { finish = it },
+                        label = { Text("Finish") },
+                        placeholder = { Text("Ej: Largo, Dulce, Limpio") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
                     OutlinedTextField(value = notas, onValueChange = { notas = it }, label = { Text("Notas") })
                     DropdownField(
                         label = "Para siguiente shot",
@@ -318,6 +395,67 @@ fun ShotFormScreen(
 
             AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
 
+            Text(
+                text = "⏱️ Pre-Infusión",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+            OutlinedTextField(
+                value = preinfusionTiempo,
+                onValueChange = { preinfusionTiempo = it },
+                label = { Text("Tiempo (segundos)") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth()
+            )
+            OutlinedTextField(
+                value = preinfusionPresion,
+                onValueChange = { preinfusionPresion = it },
+                label = { Text("Presión (bar)") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Text(
+                text = "👃 Tasting Notes",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+            OutlinedTextField(
+                value = aromaNotes,
+                onValueChange = { aromaNotes = it },
+                label = { Text("Aroma") },
+                placeholder = { Text("Ej: Floral, Frutal, Chocolate") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            OutlinedTextField(
+                value = saborNotes,
+                onValueChange = { saborNotes = it },
+                label = { Text("Sabor") },
+                placeholder = { Text("Ej: Chocolate, Caramelo, Cítrico") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            OutlinedTextField(
+                value = cuerpo,
+                onValueChange = { cuerpo = it },
+                label = { Text("Cuerpo") },
+                placeholder = { Text("Ej: Ligero, Medio, Completo") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            OutlinedTextField(
+                value = acidez,
+                onValueChange = { acidez = it },
+                label = { Text("Acidez") },
+                placeholder = { Text("Ej: Cítrica, Málica, Baja") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            OutlinedTextField(
+                value = finish,
+                onValueChange = { finish = it },
+                label = { Text("Finish") },
+                placeholder = { Text("Ej: Largo, Dulce, Limpio") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
             OutlinedTextField(value = notas, onValueChange = { notas = it }, label = { Text("Notas") })
             DropdownField(
                 label = "Para siguiente shot",
@@ -370,7 +508,14 @@ fun ShotFormScreen(
                         ajusteMolienda = ajuste.ifBlank { null },
                         notas = notas.ifBlank { null },
                         nextShotNotes = nextShotNotes.ifBlank { null },
-                        calificacion = rating
+                        calificacion = rating,
+                        preinfusionTiempoSeg = preinfusionTiempo.toIntOrNull(),
+                        preinfusionPresionBar = preinfusionPresion.toDoubleOrNull(),
+                        aromaNotes = aromaNotes.ifBlank { null },
+                        saborNotes = saborNotes.ifBlank { null },
+                        cuerpo = cuerpo.ifBlank { null },
+                        acidez = acidez.ifBlank { null },
+                        finish = finish.ifBlank { null }
                     )
                 } else {
                     vm.updateShot(
@@ -389,6 +534,13 @@ fun ShotFormScreen(
                             notas = notas.ifBlank { null },
                             nextShotNotes = nextShotNotes.ifBlank { null },
                             calificacion = rating,
+                            preinfusionTiempoSeg = preinfusionTiempo.toIntOrNull(),
+                            preinfusionPresionBar = preinfusionPresion.toDoubleOrNull(),
+                            aromaNotes = aromaNotes.ifBlank { null },
+                            saborNotes = saborNotes.ifBlank { null },
+                            cuerpo = cuerpo.ifBlank { null },
+                            acidez = acidez.ifBlank { null },
+                            finish = finish.ifBlank { null },
                             createdAt = createdAt ?: System.currentTimeMillis(),
                             updatedAt = System.currentTimeMillis()
                         )

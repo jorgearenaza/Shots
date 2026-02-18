@@ -40,6 +40,13 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
         tiempoSeg: Int?,
         temperaturaC: Double?,
         ajusteMolienda: String?,
+        preinfusionTiempoSeg: Int?,
+        preinfusionPresionBar: Double?,
+        aromaNotes: String?,
+        saborNotes: String?,
+        cuerpo: String?,
+        acidez: String?,
+        finish: String?,
         notas: String?,
         nextShotNotes: String?,
         calificacion: Int?
@@ -59,6 +66,13 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
                     tiempoSeg = tiempoSeg,
                     temperaturaC = temperaturaC,
                     ajusteMolienda = ajusteMolienda,
+                    preinfusionTiempoSeg = preinfusionTiempoSeg,
+                    preinfusionPresionBar = preinfusionPresionBar,
+                    aromaNotes = aromaNotes,
+                    saborNotes = saborNotes,
+                    cuerpo = cuerpo,
+                    acidez = acidez,
+                    finish = finish,
                     notas = notas,
                     nextShotNotes = nextShotNotes,
                     calificacion = calificacion,
@@ -89,7 +103,11 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
         cafe: String,
         fechaTostado: Long,
         fechaCompra: Long,
-        notas: String?
+        notas: String?,
+        pais: String?,
+        proceso: String?,
+        varietal: String?,
+        altitud: Int?
     ) {
         val now = System.currentTimeMillis()
         if (id == null) {
@@ -100,6 +118,10 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
                     fechaTostado = fechaTostado,
                     fechaCompra = fechaCompra,
                     notas = notas,
+                    pais = pais,
+                    proceso = proceso,
+                    varietal = varietal,
+                    altitud = altitud,
                     createdAt = now,
                     updatedAt = now
                 )

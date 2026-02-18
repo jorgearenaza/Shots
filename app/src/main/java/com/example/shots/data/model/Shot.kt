@@ -46,6 +46,15 @@ data class ShotEntity(
     val tiempoSeg: Int?,
     val temperaturaC: Double?,
     val ajusteMolienda: String?,
+    // Pre-infusion tracking
+    val preinfusionTiempoSeg: Int?,
+    val preinfusionPresionBar: Double?,
+    // Tasting notes estructuradas
+    val aromaNotes: String?,
+    val saborNotes: String?,
+    val cuerpo: String?,
+    val acidez: String?,
+    val finish: String?,
     val notas: String?,
     val nextShotNotes: String?,
     val calificacion: Int?,

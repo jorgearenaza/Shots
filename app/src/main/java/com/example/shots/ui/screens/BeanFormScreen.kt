@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -16,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.espressoshots.data.model.BeanEntity
@@ -36,6 +40,10 @@ fun BeanFormScreen(
     var fechaTostado by remember { mutableStateOf(System.currentTimeMillis()) }
     var fechaCompra by remember { mutableStateOf(System.currentTimeMillis()) }
     var notas by remember { mutableStateOf("") }
+    var pais by remember { mutableStateOf("") }
+    var proceso by remember { mutableStateOf("") }
+    var varietal by remember { mutableStateOf("") }
+    var altitud by remember { mutableStateOf("") }
     var createdAt by remember { mutableStateOf<Long?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
@@ -49,20 +57,72 @@ fun BeanFormScreen(
                 fechaTostado = bean.fechaTostado
                 fechaCompra = bean.fechaCompra
                 notas = bean.notas ?: ""
+                pais = bean.pais ?: ""
+                proceso = bean.proceso ?: ""
+                varietal = bean.varietal ?: ""
+                altitud = bean.altitud?.toString() ?: ""
                 createdAt = bean.createdAt
             }
         }
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
+        Text(
+            text = "Información Básica",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
         OutlinedTextField(value = tostador, onValueChange = { tostador = it }, label = { Text("Tostador") })
-        OutlinedTextField(value = cafe, onValueChange = { cafe = it }, label = { Text("Cafe") })
+        OutlinedTextField(value = cafe, onValueChange = { cafe = it }, label = { Text("Café") })
         DateField(label = "Fecha de tostado", valueMillis = fechaTostado, onValueChange = { fechaTostado = it })
         DateField(label = "Fecha de compra", valueMillis = fechaCompra, onValueChange = { fechaCompra = it })
-        OutlinedTextField(value = notas, onValueChange = { notas = it }, label = { Text("Notas") })
+        
+        Text(
+            text = "☕ Origen y Proceso",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        OutlinedTextField(
+            value = pais,
+            onValueChange = { pais = it },
+            label = { Text("País") },
+            placeholder = { Text("Ej: Colombia, Etiopía, Brasil") }
+        )
+        OutlinedTextField(
+            value = proceso,
+            onValueChange = { proceso = it },
+            label = { Text("Proceso") },
+            placeholder = { Text("Ej: Lavado, Natural, Honey") }
+        )
+        OutlinedTextField(
+            value = varietal,
+            onValueChange = { varietal = it },
+            label = { Text("Varietal") },
+            placeholder = { Text("Ej: Caturra, Gesha, Bourbon") }
+        )
+        OutlinedTextField(
+            value = altitud,
+            onValueChange = { altitud = it },
+            label = { Text("Altitud (msnm)") },
+            placeholder = { Text("Ej: 1600") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+        
+        Text(
+            text = "📝 Notas",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        OutlinedTextField(value = notas, onValueChange = { notas = it }, label = { Text("Notas adicionales") })
 
         if (error != null) {
             Text(text = error ?: "", color = MaterialTheme.colorScheme.error)
@@ -84,7 +144,11 @@ fun BeanFormScreen(
                                 cafe = cafe.trim(),
                                 fechaTostado = fechaTostado,
                                 fechaCompra = fechaCompra,
-                                notas = notas.ifBlank { null }
+                                notas = notas.ifBlank { null },
+                                pais = pais.ifBlank { null },
+                                proceso = proceso.ifBlank { null },
+                                varietal = varietal.ifBlank { null },
+                                altitud = altitud.toIntOrNull()
                             )
                         } else {
                             vm.updateBeanEntity(
@@ -95,6 +159,10 @@ fun BeanFormScreen(
                                     fechaTostado = fechaTostado,
                                     fechaCompra = fechaCompra,
                                     notas = notas.ifBlank { null },
+                                    pais = pais.ifBlank { null },
+                                    proceso = proceso.ifBlank { null },
+                                    varietal = varietal.ifBlank { null },
+                                    altitud = altitud.toIntOrNull(),
                                     activo = true,
                                     createdAt = createdAt ?: System.currentTimeMillis(),
                                     updatedAt = System.currentTimeMillis()

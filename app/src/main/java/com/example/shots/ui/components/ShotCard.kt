@@ -253,6 +253,108 @@ fun ShotCard(
                     }
                 }
                 
+                // Pre-infusión si existe
+                if (shot.shot.preinfusionTiempoSeg != null || shot.shot.preinfusionPresionBar != null) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = "⏱️ Pre-Infusión",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            if (shot.shot.preinfusionTiempoSeg != null) {
+                                Text(
+                                    text = "⏲️ ${shot.shot.preinfusionTiempoSeg}s",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                            if (shot.shot.preinfusionPresionBar != null) {
+                                Text(
+                                    text = "💪 ${String.format("%.1f", shot.shot.preinfusionPresionBar)} bar",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Tasting Notes si existen
+                if (!shot.shot.aromaNotes.isNullOrBlank() || !shot.shot.saborNotes.isNullOrBlank() || 
+                    !shot.shot.cuerpo.isNullOrBlank() || !shot.shot.acidez.isNullOrBlank() || !shot.shot.finish.isNullOrBlank()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.2f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = "👃 Tasting Notes",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        if (!shot.shot.aromaNotes.isNullOrBlank()) {
+                            Text(
+                                text = "🌸 Aroma: ${shot.shot.aromaNotes}",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                        if (!shot.shot.saborNotes.isNullOrBlank()) {
+                            Text(
+                                text = "☕ Sabor: ${shot.shot.saborNotes}",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            if (!shot.shot.cuerpo.isNullOrBlank()) {
+                                Text(
+                                    text = "💪 ${shot.shot.cuerpo}",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            if (!shot.shot.acidez.isNullOrBlank()) {
+                                Text(
+                                    text = "🍋 ${shot.shot.acidez}",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            if (!shot.shot.finish.isNullOrBlank()) {
+                                Text(
+                                    text = "✨ ${shot.shot.finish}",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                }
+                
                 // Next shot notes destacado
                 if (!shot.shot.nextShotNotes.isNullOrBlank()) {
                     Row(

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -16,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.espressoshots.data.model.GrinderEntity
@@ -54,7 +56,12 @@ fun GrinderFormScreen(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         OutlinedTextField(value = nombre, onValueChange = { nombre = it }, label = { Text("Nombre") })
-        OutlinedTextField(value = ajusteDefault, onValueChange = { ajusteDefault = it }, label = { Text("Ajuste default") })
+        OutlinedTextField(
+            value = ajusteDefault,
+            onValueChange = { ajusteDefault = it },
+            label = { Text("Ajuste default") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+        )
         OutlinedTextField(value = notas, onValueChange = { notas = it }, label = { Text("Notas") })
 
         if (error != null) {

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.espressoshots.ui.components.AjusteMoliendaControl
@@ -188,8 +190,18 @@ fun ShotFormScreen(
                         )
                     }
 
-                    OutlinedTextField(value = dosis, onValueChange = { dosis = it }, label = { Text("Dosis (g)") })
-                    OutlinedTextField(value = rendimiento, onValueChange = { rendimiento = it }, label = { Text("Rendimiento (g)") })
+                    OutlinedTextField(
+                        value = dosis,
+                        onValueChange = { dosis = it },
+                        label = { Text("Dosis (g)") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                    )
+                    OutlinedTextField(
+                        value = rendimiento,
+                        onValueChange = { rendimiento = it },
+                        label = { Text("Rendimiento (g)") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                    )
                     Text(text = "Ratio: ${"%.2f".format(ratioValue)}", style = MaterialTheme.typography.bodyMedium)
                 }
 
@@ -197,8 +209,18 @@ fun ShotFormScreen(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    OutlinedTextField(value = tiempoSeg, onValueChange = { tiempoSeg = it }, label = { Text("Tiempo (s)") })
-                    OutlinedTextField(value = temperatura, onValueChange = { temperatura = it }, label = { Text("Temperatura (C)") })
+                    OutlinedTextField(
+                        value = tiempoSeg,
+                        onValueChange = { tiempoSeg = it },
+                        label = { Text("Tiempo (s)") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                    OutlinedTextField(
+                        value = temperatura,
+                        onValueChange = { temperatura = it },
+                        label = { Text("Temperatura (C)") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                    )
 
                     AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
 
@@ -268,11 +290,31 @@ fun ShotFormScreen(
                 )
             }
 
-            OutlinedTextField(value = dosis, onValueChange = { dosis = it }, label = { Text("Dosis (g)") })
-            OutlinedTextField(value = rendimiento, onValueChange = { rendimiento = it }, label = { Text("Rendimiento (g)") })
+            OutlinedTextField(
+                value = dosis,
+                onValueChange = { dosis = it },
+                label = { Text("Dosis (g)") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+            )
+            OutlinedTextField(
+                value = rendimiento,
+                onValueChange = { rendimiento = it },
+                label = { Text("Rendimiento (g)") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+            )
             Text(text = "Ratio: ${"%.2f".format(ratioValue)}", style = MaterialTheme.typography.bodyMedium)
-            OutlinedTextField(value = tiempoSeg, onValueChange = { tiempoSeg = it }, label = { Text("Tiempo (s)") })
-            OutlinedTextField(value = temperatura, onValueChange = { temperatura = it }, label = { Text("Temperatura (C)") })
+            OutlinedTextField(
+                value = tiempoSeg,
+                onValueChange = { tiempoSeg = it },
+                label = { Text("Tiempo (s)") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            OutlinedTextField(
+                value = temperatura,
+                onValueChange = { temperatura = it },
+                label = { Text("Temperatura (C)") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+            )
 
             AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
 

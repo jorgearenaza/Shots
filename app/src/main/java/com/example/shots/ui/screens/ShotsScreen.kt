@@ -98,11 +98,13 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
                 items(filteredShots) { shot ->
                     val beanLabel = "${shot.beanTostador} - ${shot.beanCafe}"
                     ShotCard(
-                        shot = shot.shot,
+                        shot = shot,
                         beanLabel = beanLabel,
                         onEdit = { navController.navigate("shots/edit/${shot.shot.id}") },
                         onDelete = { /* TODO: implementar eliminación */ }
                     )
                 }
+            }
+        }
     }
 }

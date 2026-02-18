@@ -35,9 +35,9 @@ fun ShotCard(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val date = Instant.ofEpochMilli(shot.fecha).atZone(ZoneId.systemDefault()).toLocalDate()
-    val ratio = String.format("%.2f", shot.ratio)
-    val rating = shot.calificacion ?: 0
+    val date = Instant.ofEpochMilli(shot.shot.fecha).atZone(ZoneId.systemDefault()).toLocalDate()
+    val ratio = String.format("%.2f", shot.shot.ratio)
+    val rating = shot.shot.calificacion ?: 0
 
     Card(
         modifier = modifier
@@ -100,7 +100,7 @@ fun ShotCard(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
-                        text = "${shot.dosisG}g → ${shot.rendimientoG}g",
+                        text = "${shot.shot.dosisG}g → ${shot.shot.rendimientoG}g",
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -112,7 +112,7 @@ fun ShotCard(
                 }
 
                 // Tiempo
-                if (shot.tiempoSeg != null) {
+                if (shot.shot.tiempoSeg != null) {
                     Column(
                         modifier = Modifier
                             .weight(1f)
@@ -124,7 +124,7 @@ fun ShotCard(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = "${shot.tiempoSeg}s",
+                            text = "${shot.shot.tiempoSeg}s",
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -137,7 +137,7 @@ fun ShotCard(
                 }
 
                 // Temperatura
-                if (shot.temperaturaC != null) {
+                if (shot.shot.temperaturaC != null) {
                     Column(
                         modifier = Modifier
                             .weight(1f)
@@ -149,7 +149,7 @@ fun ShotCard(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = "${shot.temperaturaC}°C",
+                            text = "${shot.shot.temperaturaC}°C",
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -163,9 +163,9 @@ fun ShotCard(
             }
 
             // Notas si existen
-            if (!shot.notas.isNullOrBlank()) {
+            if (!shot.shot.notas.isNullOrBlank()) {
                 Text(
-                    text = shot.notas,
+                    text = shot.shot.notas,
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2

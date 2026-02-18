@@ -103,5 +103,7 @@ fun BeansScreen(navController: NavController, vm: MainViewModel, padding: Paddin
                         }
                     )
                 }
+            }
+        }
     }
 }

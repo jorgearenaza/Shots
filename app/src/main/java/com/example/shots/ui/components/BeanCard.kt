@@ -108,8 +108,7 @@ fun BeanCard(
                     .fillMaxWidth()
                     .height(6.dp),
                 color = freshnessColor,
-                trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                shape = RoundedCornerShape(3.dp)
+                trackColor = MaterialTheme.colorScheme.surfaceVariant
             )
 
             // Fechas

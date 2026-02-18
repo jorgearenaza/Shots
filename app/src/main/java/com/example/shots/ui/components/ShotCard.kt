@@ -239,16 +239,16 @@ fun ShotCard(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    if (!shot.molinoNombre.isNullOrBlank()) {
+                    if (!shot.grinderNombre.isNullOrBlank()) {
                         InfoBadge(
                             icon = "🔧",
-                            text = shot.molinoNombre
+                            text = shot.grinderNombre
                         )
                     }
-                    if (!shot.perfilNombre.isNullOrBlank()) {
+                    if (!shot.profileNombre.isNullOrBlank()) {
                         InfoBadge(
                             icon = "📋",
-                            text = shot.perfilNombre
+                            text = shot.profileNombre
                         )
                     }
                 }

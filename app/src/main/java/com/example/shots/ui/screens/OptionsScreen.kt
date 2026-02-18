@@ -3,8 +3,13 @@ package com.example.espressoshots.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.weight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -21,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.espressoshots.data.SettingsState
@@ -42,6 +48,8 @@ fun OptionsScreen(navController: NavController, vm: MainViewModel, padding: Padd
     var grinderIndex by remember { mutableStateOf<Int?>(null) }
     var profileIndex by remember { mutableStateOf<Int?>(null) }
     var autofill by remember { mutableStateOf(true) }
+    val configuration = LocalConfiguration.current
+    val isWide = configuration.screenWidthDp >= 600
 
     LaunchedEffect(settings.value) {
         dose = settings.value.defaultDoseG.toString()
@@ -53,34 +61,81 @@ fun OptionsScreen(navController: NavController, vm: MainViewModel, padding: Padd
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         SnackbarHost(hostState = snackbarHostState)
 
-        OutlinedTextField(value = dose, onValueChange = { dose = it }, label = { Text("Default dose (g)") })
-        OutlinedTextField(value = ratio, onValueChange = { ratio = it }, label = { Text("Default ratio") })
-        OutlinedTextField(value = yield, onValueChange = { yield = it }, label = { Text("Default yield (g)") })
-
         val grinderOptions = listOf("Sin molino") + grinders.value.map { it.nombre }
-        DropdownField(
-            label = "Molino default",
-            value = grinderIndex?.let { grinders.value.getOrNull(it)?.nombre } ?: "Sin molino",
-            options = grinderOptions,
-            onSelect = { idx -> grinderIndex = if (idx == 0) null else idx - 1 }
-        )
-
         val profileOptions = listOf("Sin perfil") + profiles.value.map { it.nombre }
-        DropdownField(
-            label = "Perfil default",
-            value = profileIndex?.let { profiles.value.getOrNull(it)?.nombre } ?: "Sin perfil",
-            options = profileOptions,
-            onSelect = { idx -> profileIndex = if (idx == 0) null else idx - 1 }
-        )
 
-        Column {
-            Text("Autofill en shots")
-            Switch(checked = autofill, onCheckedChange = { autofill = it })
+        if (isWide) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text("Defaults", style = MaterialTheme.typography.titleMedium)
+                    OutlinedTextField(value = dose, onValueChange = { dose = it }, label = { Text("Default dose (g)") })
+                    OutlinedTextField(value = ratio, onValueChange = { ratio = it }, label = { Text("Default ratio") })
+                    OutlinedTextField(value = yield, onValueChange = { yield = it }, label = { Text("Default yield (g)") })
+                }
+
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text("Preferencias", style = MaterialTheme.typography.titleMedium)
+                    DropdownField(
+                        label = "Molino default",
+                        value = grinderIndex?.let { grinders.value.getOrNull(it)?.nombre } ?: "Sin molino",
+                        options = grinderOptions,
+                        onSelect = { idx -> grinderIndex = if (idx == 0) null else idx - 1 }
+                    )
+                    DropdownField(
+                        label = "Perfil default",
+                        value = profileIndex?.let { profiles.value.getOrNull(it)?.nombre } ?: "Sin perfil",
+                        options = profileOptions,
+                        onSelect = { idx -> profileIndex = if (idx == 0) null else idx - 1 }
+                    )
+                    Column {
+                        Text("Autofill en shots")
+                        Switch(checked = autofill, onCheckedChange = { autofill = it })
+                    }
+                }
+            }
+        } else {
+            Text("Defaults", style = MaterialTheme.typography.titleMedium)
+            OutlinedTextField(value = dose, onValueChange = { dose = it }, label = { Text("Default dose (g)") })
+            OutlinedTextField(value = ratio, onValueChange = { ratio = it }, label = { Text("Default ratio") })
+            OutlinedTextField(value = yield, onValueChange = { yield = it }, label = { Text("Default yield (g)") })
+
+            Text("Preferencias", style = MaterialTheme.typography.titleMedium)
+            DropdownField(
+                label = "Molino default",
+                value = grinderIndex?.let { grinders.value.getOrNull(it)?.nombre } ?: "Sin molino",
+                options = grinderOptions,
+                onSelect = { idx -> grinderIndex = if (idx == 0) null else idx - 1 }
+            )
+
+            DropdownField(
+                label = "Perfil default",
+                value = profileIndex?.let { profiles.value.getOrNull(it)?.nombre } ?: "Sin perfil",
+                options = profileOptions,
+                onSelect = { idx -> profileIndex = if (idx == 0) null else idx - 1 }
+            )
+
+            Column {
+                Text("Autofill en shots")
+                Switch(checked = autofill, onCheckedChange = { autofill = it })
+            }
         }
 
         Button(

@@ -15,6 +15,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.PaddingValues
@@ -78,6 +80,22 @@ fun AppNavHost(repository: ShotsRepository) {
 
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
+    val title = when (currentRoute) {
+        "shots" -> "Shots"
+        "shots/new" -> "Nuevo shot"
+        "shots/edit/{id}" -> "Editar shot"
+        "beans" -> "Granos"
+        "beans/new" -> "Nuevo grano"
+        "beans/edit/{id}" -> "Editar grano"
+        "grinders" -> "Molinos"
+        "grinders/new" -> "Nuevo molino"
+        "grinders/edit/{id}" -> "Editar molino"
+        "profiles" -> "Perfiles"
+        "profiles/new" -> "Nuevo perfil"
+        "profiles/edit/{id}" -> "Editar perfil"
+        "options" -> "Opciones"
+        else -> "EspressoShots"
+    }
     val bottomBarContent: @Composable () -> Unit = {
         if (!isLandscape) {
             NavigationBar {
@@ -101,6 +119,7 @@ fun AppNavHost(repository: ShotsRepository) {
     }
 
     Scaffold(
+        topBar = { TopAppBar(title = { Text(title) }) },
         bottomBar = bottomBarContent,
         floatingActionButton = {
             if (fabRoute != null) {

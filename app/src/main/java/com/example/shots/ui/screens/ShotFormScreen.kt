@@ -3,8 +3,13 @@ package com.example.espressoshots.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.weight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -17,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.espressoshots.ui.components.AjusteMoliendaControl
@@ -36,6 +42,8 @@ fun ShotFormScreen(
     val grinders = vm.grinders.collectAsState()
     val profiles = vm.profiles.collectAsState()
     val settings = vm.settings.collectAsState()
+    val configuration = LocalConfiguration.current
+    val isWide = configuration.screenWidthDp >= 600
 
     if (beans.value.isEmpty()) {
         EmptyState(
@@ -99,68 +107,150 @@ fun ShotFormScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        DateField(label = "Fecha", valueMillis = fechaMillis, onValueChange = { fechaMillis = it })
-
-        DropdownField(
-            label = "Grano",
-            value = beanLabels.getOrElse(beanIndex) { "" },
-            options = beanLabels,
-            onSelect = { beanIndex = it }
-        )
-
-        if (grinders.value.isEmpty()) {
-            Text("No hay molinos. Agrega uno desde Molinos.")
-            Button(
-                onClick = { navController.navigate("grinders/new") },
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.error,
-                    contentColor = MaterialTheme.colorScheme.onError
-                )
+        if (isWide) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text("Agregar molino")
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    DateField(label = "Fecha", valueMillis = fechaMillis, onValueChange = { fechaMillis = it })
+
+                    DropdownField(
+                        label = "Grano",
+                        value = beanLabels.getOrElse(beanIndex) { "" },
+                        options = beanLabels,
+                        onSelect = { beanIndex = it }
+                    )
+
+                    if (grinders.value.isEmpty()) {
+                        Text("No hay molinos. Agrega uno desde Molinos.")
+                        Button(
+                            onClick = { navController.navigate("grinders/new") },
+                            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.error,
+                                contentColor = MaterialTheme.colorScheme.onError
+                            )
+                        ) {
+                            Text("Agregar molino")
+                        }
+                    } else {
+                        DropdownField(
+                            label = "Molino (opcional)",
+                            value = grinderIndex?.let { grinderLabels.getOrNull(it + 1) } ?: "Sin molino",
+                            options = grinderLabels,
+                            onSelect = { idx -> grinderIndex = if (idx == 0) null else idx - 1 }
+                        )
+                    }
+
+                    if (profiles.value.isEmpty()) {
+                        Text("No hay perfiles. Agrega uno desde Perfiles.")
+                        Button(
+                            onClick = { navController.navigate("profiles/new") },
+                            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.error,
+                                contentColor = MaterialTheme.colorScheme.onError
+                            )
+                        ) {
+                            Text("Agregar perfil")
+                        }
+                    } else {
+                        DropdownField(
+                            label = "Perfil (opcional)",
+                            value = profileIndex?.let { profileLabels.getOrNull(it + 1) } ?: "Sin perfil",
+                            options = profileLabels,
+                            onSelect = { idx -> profileIndex = if (idx == 0) null else idx - 1 }
+                        )
+                    }
+
+                    OutlinedTextField(value = dosis, onValueChange = { dosis = it }, label = { Text("Dosis (g)") })
+                    OutlinedTextField(value = rendimiento, onValueChange = { rendimiento = it }, label = { Text("Rendimiento (g)") })
+                    Text(text = "Ratio: ${"%.2f".format(ratioValue)}", style = MaterialTheme.typography.bodyMedium)
+                }
+
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    OutlinedTextField(value = tiempoSeg, onValueChange = { tiempoSeg = it }, label = { Text("Tiempo (s)") })
+                    OutlinedTextField(value = temperatura, onValueChange = { temperatura = it }, label = { Text("Temperatura (C)") })
+
+                    AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
+
+                    OutlinedTextField(value = notas, onValueChange = { notas = it }, label = { Text("Notas") })
+                    OutlinedTextField(value = calificacion, onValueChange = { calificacion = it }, label = { Text("Calificacion (1-5)") })
+                }
             }
         } else {
-            DropdownField(
-                label = "Molino (opcional)",
-                value = grinderIndex?.let { grinderLabels.getOrNull(it + 1) } ?: "Sin molino",
-                options = grinderLabels,
-                onSelect = { idx -> grinderIndex = if (idx == 0) null else idx - 1 }
-            )
-        }
+            DateField(label = "Fecha", valueMillis = fechaMillis, onValueChange = { fechaMillis = it })
 
-        if (profiles.value.isEmpty()) {
-            Text("No hay perfiles. Agrega uno desde Perfiles.")
-            Button(
-                onClick = { navController.navigate("profiles/new") },
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.error,
-                    contentColor = MaterialTheme.colorScheme.onError
+            DropdownField(
+                label = "Grano",
+                value = beanLabels.getOrElse(beanIndex) { "" },
+                options = beanLabels,
+                onSelect = { beanIndex = it }
+            )
+
+            if (grinders.value.isEmpty()) {
+                Text("No hay molinos. Agrega uno desde Molinos.")
+                Button(
+                    onClick = { navController.navigate("grinders/new") },
+                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.onError
+                    )
+                ) {
+                    Text("Agregar molino")
+                }
+            } else {
+                DropdownField(
+                    label = "Molino (opcional)",
+                    value = grinderIndex?.let { grinderLabels.getOrNull(it + 1) } ?: "Sin molino",
+                    options = grinderLabels,
+                    onSelect = { idx -> grinderIndex = if (idx == 0) null else idx - 1 }
                 )
-            ) {
-                Text("Agregar perfil")
             }
-        } else {
-            DropdownField(
-                label = "Perfil (opcional)",
-                value = profileIndex?.let { profileLabels.getOrNull(it + 1) } ?: "Sin perfil",
-                options = profileLabels,
-                onSelect = { idx -> profileIndex = if (idx == 0) null else idx - 1 }
-            )
+
+            if (profiles.value.isEmpty()) {
+                Text("No hay perfiles. Agrega uno desde Perfiles.")
+                Button(
+                    onClick = { navController.navigate("profiles/new") },
+                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.onError
+                    )
+                ) {
+                    Text("Agregar perfil")
+                }
+            } else {
+                DropdownField(
+                    label = "Perfil (opcional)",
+                    value = profileIndex?.let { profileLabels.getOrNull(it + 1) } ?: "Sin perfil",
+                    options = profileLabels,
+                    onSelect = { idx -> profileIndex = if (idx == 0) null else idx - 1 }
+                )
+            }
+
+            OutlinedTextField(value = dosis, onValueChange = { dosis = it }, label = { Text("Dosis (g)") })
+            OutlinedTextField(value = rendimiento, onValueChange = { rendimiento = it }, label = { Text("Rendimiento (g)") })
+            Text(text = "Ratio: ${"%.2f".format(ratioValue)}", style = MaterialTheme.typography.bodyMedium)
+            OutlinedTextField(value = tiempoSeg, onValueChange = { tiempoSeg = it }, label = { Text("Tiempo (s)") })
+            OutlinedTextField(value = temperatura, onValueChange = { temperatura = it }, label = { Text("Temperatura (C)") })
+
+            AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
+
+            OutlinedTextField(value = notas, onValueChange = { notas = it }, label = { Text("Notas") })
+            OutlinedTextField(value = calificacion, onValueChange = { calificacion = it }, label = { Text("Calificacion (1-5)") })
         }
-
-        OutlinedTextField(value = dosis, onValueChange = { dosis = it }, label = { Text("Dosis (g)") })
-        OutlinedTextField(value = rendimiento, onValueChange = { rendimiento = it }, label = { Text("Rendimiento (g)") })
-        Text(text = "Ratio: ${"%.2f".format(ratioValue)}", style = MaterialTheme.typography.bodyMedium)
-        OutlinedTextField(value = tiempoSeg, onValueChange = { tiempoSeg = it }, label = { Text("Tiempo (s)") })
-        OutlinedTextField(value = temperatura, onValueChange = { temperatura = it }, label = { Text("Temperatura (C)") })
-
-        AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
-
-        OutlinedTextField(value = notas, onValueChange = { notas = it }, label = { Text("Notas") })
-        OutlinedTextField(value = calificacion, onValueChange = { calificacion = it }, label = { Text("Calificacion (1-5)") })
 
         if (error != null) {
             Text(text = error ?: "", color = MaterialTheme.colorScheme.error)

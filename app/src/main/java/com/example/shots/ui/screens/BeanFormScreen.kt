@@ -103,7 +103,8 @@ fun BeanFormScreen(
                         }
                         navController.navigateUp()
                     } catch (e: Exception) {
-                        if (e.message?.contains("UNIQUE") == true || e.message?.contains("unique") == true) {
+                        val msg = e.message ?: ""
+                        if (msg.contains("UNIQUE", ignoreCase = true) || msg.contains("constraint", ignoreCase = true)) {
                             error = "Ya existe un grano con ese tostador y café."
                         } else {
                             error = "Error al guardar: ${e.message}"

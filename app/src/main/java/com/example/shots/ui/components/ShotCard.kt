@@ -40,6 +40,10 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import com.example.shots.ui.components.getTimerStatus
+import com.example.shots.ui.components.getYieldStatus
+import com.example.shots.ui.components.StatusColor
+import com.example.shots.ui.components.StatusIndicator
 
 @Composable
 fun ShotCard(

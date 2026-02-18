@@ -106,16 +106,4 @@ class ShotsRepository(
     suspend fun getProfile(id: Long): ProfileEntity? = withContext(Dispatchers.IO) {
         profileDao.getById(id)
     }
-
-    suspend fun profileNameExists(nombre: String, excludeId: Long): Boolean = withContext(Dispatchers.IO) {
-        profileDao.findDuplicateByNombre(nombre, excludeId) != null
-    }
-
-    suspend fun beanCombinationExists(tostador: String, cafe: String, excludeId: Long): Boolean = withContext(Dispatchers.IO) {
-        beanDao.findDuplicateByTostadorAndCafe(tostador, cafe, excludeId) != null
-    }
-
-    suspend fun grinderNameExists(nombre: String, excludeId: Long): Boolean = withContext(Dispatchers.IO) {
-        grinderDao.findDuplicateByNombre(nombre, excludeId) != null
-    }
 }

@@ -75,37 +75,40 @@ fun BeanFormScreen(
                     return@Button
                 }
                 scope.launch {
-                    val exists = vm.beanCombinationExists(tostador.trim(), cafe.trim(), beanId ?: 0)
-                    if (exists) {
-                        error = "Ya existe un grano con ese tostador y café."
-                        return@launch
-                    }
-                    error = null
-                    if (beanId == null) {
-                        vm.saveBean(
-                            id = null,
-                            tostador = tostador.trim(),
-                            cafe = cafe.trim(),
-                            fechaTostado = fechaTostado,
-                            fechaCompra = fechaCompra,
-                            notas = notas.ifBlank { null }
-                        )
-                    } else {
-                        vm.updateBeanEntity(
-                            BeanEntity(
-                                id = beanId,
+                    try {
+                        error = null
+                        if (beanId == null) {
+                            vm.saveBean(
+                                id = null,
                                 tostador = tostador.trim(),
                                 cafe = cafe.trim(),
                                 fechaTostado = fechaTostado,
                                 fechaCompra = fechaCompra,
-                                notas = notas.ifBlank { null },
-                                activo = true,
-                                createdAt = createdAt ?: System.currentTimeMillis(),
-                                updatedAt = System.currentTimeMillis()
+                                notas = notas.ifBlank { null }
                             )
-                        )
+                        } else {
+                            vm.updateBeanEntity(
+                                BeanEntity(
+                                    id = beanId,
+                                    tostador = tostador.trim(),
+                                    cafe = cafe.trim(),
+                                    fechaTostado = fechaTostado,
+                                    fechaCompra = fechaCompra,
+                                    notas = notas.ifBlank { null },
+                                    activo = true,
+                                    createdAt = createdAt ?: System.currentTimeMillis(),
+                                    updatedAt = System.currentTimeMillis()
+                                )
+                            )
+                        }
+                        navController.navigateUp()
+                    } catch (e: Exception) {
+                        if (e.message?.contains("UNIQUE") == true || e.message?.contains("unique") == true) {
+                            error = "Ya existe un grano con ese tostador y café."
+                        } else {
+                            error = "Error al guardar: ${e.message}"
+                        }
                     }
-                    navController.navigateUp()
                 }
             },
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(

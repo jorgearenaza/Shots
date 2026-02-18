@@ -26,7 +26,4 @@ interface GrinderDao {
 
     @Query("UPDATE grinders SET activo = 0, updatedAt = :updatedAt WHERE id = :id")
     fun deactivate(id: Long, updatedAt: Long)
-
-    @Query("SELECT * FROM grinders WHERE nombre = :nombre AND id != :excludeId AND activo = 1 LIMIT 1")
-    suspend fun findDuplicateByNombre(nombre: String, excludeId: Long): GrinderEntity?
 }

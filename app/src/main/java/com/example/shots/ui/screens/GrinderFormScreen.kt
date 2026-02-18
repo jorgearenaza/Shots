@@ -68,33 +68,36 @@ fun GrinderFormScreen(
                     return@Button
                 }
                 scope.launch {
-                    val exists = vm.grinderNameExists(nombre.trim(), grinderId ?: 0)
-                    if (exists) {
-                        error = "Ya existe un molino con ese nombre."
-                        return@launch
-                    }
-                    error = null
-                    if (grinderId == null) {
-                        vm.saveGrinder(
-                            id = null,
-                            nombre = nombre.trim(),
-                            ajusteDefault = ajusteDefault.ifBlank { null },
-                            notas = notas.ifBlank { null }
-                        )
-                    } else {
-                        vm.updateGrinderEntity(
-                            GrinderEntity(
-                                id = grinderId,
+                    try {
+                        error = null
+                        if (grinderId == null) {
+                            vm.saveGrinder(
+                                id = null,
                                 nombre = nombre.trim(),
                                 ajusteDefault = ajusteDefault.ifBlank { null },
-                                notas = notas.ifBlank { null },
-                                activo = true,
-                                createdAt = createdAt ?: System.currentTimeMillis(),
-                                updatedAt = System.currentTimeMillis()
+                                notas = notas.ifBlank { null }
                             )
-                        )
+                        } else {
+                            vm.updateGrinderEntity(
+                                GrinderEntity(
+                                    id = grinderId,
+                                    nombre = nombre.trim(),
+                                    ajusteDefault = ajusteDefault.ifBlank { null },
+                                    notas = notas.ifBlank { null },
+                                    activo = true,
+                                    createdAt = createdAt ?: System.currentTimeMillis(),
+                                    updatedAt = System.currentTimeMillis()
+                                )
+                            )
+                        }
+                        navController.navigateUp()
+                    } catch (e: Exception) {
+                        if (e.message?.contains("UNIQUE") == true || e.message?.contains("unique") == true) {
+                            error = "Ya existe un molino con ese nombre."
+                        } else {
+                            error = "Error al guardar: ${e.message}"
+                        }
                     }
-                    navController.navigateUp()
                 }
             },
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(

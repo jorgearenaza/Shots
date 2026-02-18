@@ -68,33 +68,36 @@ fun ProfileFormScreen(
                     return@Button
                 }
                 scope.launch {
-                    val exists = vm.profileNameExists(nombre.trim(), profileId ?: 0)
-                    if (exists) {
-                        error = "Ya existe un perfil con ese nombre."
-                        return@launch
-                    }
-                    error = null
-                    if (profileId == null) {
-                        vm.saveProfile(
-                            id = null,
-                            nombre = nombre.trim(),
-                            descripcion = descripcion.ifBlank { null },
-                            parametros = parametros.ifBlank { null }
-                        )
-                    } else {
-                        vm.updateProfileEntity(
-                            ProfileEntity(
-                                id = profileId,
+                    try {
+                        error = null
+                        if (profileId == null) {
+                            vm.saveProfile(
+                                id = null,
                                 nombre = nombre.trim(),
                                 descripcion = descripcion.ifBlank { null },
-                                parametros = parametros.ifBlank { null },
-                                activo = true,
-                                createdAt = createdAt ?: System.currentTimeMillis(),
-                                updatedAt = System.currentTimeMillis()
+                                parametros = parametros.ifBlank { null }
                             )
-                        )
+                        } else {
+                            vm.updateProfileEntity(
+                                ProfileEntity(
+                                    id = profileId,
+                                    nombre = nombre.trim(),
+                                    descripcion = descripcion.ifBlank { null },
+                                    parametros = parametros.ifBlank { null },
+                                    activo = true,
+                                    createdAt = createdAt ?: System.currentTimeMillis(),
+                                    updatedAt = System.currentTimeMillis()
+                                )
+                            )
+                        }
+                        navController.navigateUp()
+                    } catch (e: Exception) {
+                        if (e.message?.contains("UNIQUE") == true || e.message?.contains("unique") == true) {
+                            error = "Ya existe un perfil con ese nombre."
+                        } else {
+                            error = "Error al guardar: ${e.message}"
+                        }
                     }
-                    navController.navigateUp()
                 }
             },
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(

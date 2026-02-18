@@ -26,7 +26,4 @@ interface BeanDao {
 
     @Query("UPDATE beans SET activo = 0, updatedAt = :updatedAt WHERE id = :id")
     fun deactivate(id: Long, updatedAt: Long)
-
-    @Query("SELECT * FROM beans WHERE tostador = :tostador AND cafe = :cafe AND id != :excludeId AND activo = 1 LIMIT 1")
-    suspend fun findDuplicateByTostadorAndCafe(tostador: String, cafe: String, excludeId: Long): BeanEntity?
 }

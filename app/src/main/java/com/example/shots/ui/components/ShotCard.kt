@@ -108,7 +108,7 @@ fun ShotCard(
                             )
                         }
                     )
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                    .padding(horizontal = 8.dp, vertical = 6.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -118,7 +118,7 @@ fun ShotCard(
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = beanLabel,
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary,
                             maxLines = 1,
@@ -127,24 +127,25 @@ fun ShotCard(
                         Text(
                             text = date.format(dateFormatter),
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.9f
                         )
                     }
                     
                     // Rating compacto
                     if (rating > 0) {
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(1.dp),
+                            horizontalArrangement = Arrangement.spacedBy(0.5.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
                                 text = "★",
-                                style = MaterialTheme.typography.labelLarge,
+                                style = MaterialTheme.typography.labelMedium,
                                 color = ratingGradient[0]
                             )
                             Text(
                                 text = rating.toString(),
-                                style = MaterialTheme.typography.labelLarge,
+                                style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = ratingGradient[0]
                             )
@@ -156,13 +157,13 @@ fun ShotCard(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                    .padding(6.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                // ▼ SECCIÓN 1: MÉTRICAS PRINCIPALES (Grid 2x2)
+                // ▼ SECCIÓN 1: MÉTRICAS PRINCIPALES (Fila compacta)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     CompactMetricBadge(
                         emoji = "☕",
@@ -176,12 +177,6 @@ fun ShotCard(
                         label = "Yield",
                         modifier = Modifier.weight(1f)
                     )
-                }
-                
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
                     CompactMetricBadge(
                         emoji = "⚖️",
                         value = ratio,
@@ -207,10 +202,10 @@ fun ShotCard(
                             .fillMaxWidth()
                             .background(
                                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                shape = RoundedCornerShape(8.dp)
+                                shape = RoundedCornerShape(6.dp)
                             )
-                            .padding(horizontal = 8.dp, vertical = 6.dp),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            .padding(horizontal = 6.dp, vertical = 3.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         if (shot.shot.tiempoSeg != null) {
                             StatusIndicator(
@@ -239,8 +234,8 @@ fun ShotCard(
                                 color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
                                 shape = RoundedCornerShape(6.dp)
                             )
-                            .padding(horizontal = 8.dp, vertical = 4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            .padding(horizontal = 6.dp, vertical = 3.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         if (shot.shot.temperaturaC != null) {
@@ -267,33 +262,35 @@ fun ShotCard(
                                 color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f),
                                 shape = RoundedCornerShape(6.dp)
                             )
-                            .padding(8.dp)
+                            .padding(6.dp)
                     ) {
                         Text(
-                            text = "⏱️ Pre-Inf",
+                            text = "⏱️ Inf",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.9f
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
                         )
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.padding(top = 2.dp)
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            modifier = Modifier.padding(top = 1.dp)
                         ) {
                             if (shot.shot.preinfusionTiempoSeg != null) {
                                 Text(
                                     text = "${shot.shot.preinfusionTiempoSeg}s",
-                                    style = MaterialTheme.typography.labelMedium,
+                                    style = MaterialTheme.typography.labelSmall,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.8f
                                 )
                             }
                             if (shot.shot.preinfusionPresionBar != null) {
                                 Text(
-                                    text = "${String.format("%.1f", shot.shot.preinfusionPresionBar)} bar",
-                                    style = MaterialTheme.typography.labelMedium,
+                                    text = "${String.format("%.1f", shot.shot.preinfusionPresionBar)}bar",
+                                    style = MaterialTheme.typography.labelSmall,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.8f
                                 )
                             }
                         }
@@ -310,20 +307,20 @@ fun ShotCard(
                                 color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.15f),
                                 shape = RoundedCornerShape(6.dp)
                             )
-                            .padding(8.dp)
+                            .padding(6.dp)
                     ) {
                         Text(
                             text = "👃 Tasting",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.9f
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
                         )
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 3.dp),
-                            verticalArrangement = Arrangement.spacedBy(3.dp)
+                                .padding(top = 2.dp),
+                            verticalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
                             // Fila 1: Aroma y Sabor
                             if (!shot.shot.aromaNotes.isNullOrBlank() || !shot.shot.saborNotes.isNullOrBlank()) {
@@ -460,29 +457,30 @@ fun CompactMetricBadge(
         modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(6.dp)
             )
-            .padding(vertical = 6.dp, horizontal = 6.dp),
+            .padding(vertical = 4.dp, horizontal = 4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(1.dp)
+        verticalArrangement = Arrangement.spacedBy(0.5.dp)
     ) {
         Text(
             text = emoji,
-            style = MaterialTheme.typography.labelSmall
+            style = MaterialTheme.typography.labelSmall,
+            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.9f
         )
         Text(
             text = value,
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
-            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.95f
+            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
         )
         if (label != null) {
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.75f
+                fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.65f
             )
         }
     }
@@ -499,9 +497,9 @@ fun TastingNoteBadge(
         modifier = modifier
             .background(
                 color = color.copy(alpha = 0.15f),
-                shape = RoundedCornerShape(6.dp)
+                shape = RoundedCornerShape(5.dp)
             )
-            .padding(horizontal = 6.dp, vertical = 4.dp),
+            .padding(horizontal = 4.dp, vertical = 3.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
@@ -510,7 +508,7 @@ fun TastingNoteBadge(
             style = MaterialTheme.typography.labelSmall,
             color = color,
             fontWeight = FontWeight.SemiBold,
-            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
+            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.75f
         )
         Text(
             text = value,
@@ -518,7 +516,7 @@ fun TastingNoteBadge(
             color = MaterialTheme.colorScheme.onSurface,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.8f
+            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.7f
         )
     }
 }
@@ -533,16 +531,16 @@ fun CompactInfoChip(
         modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.surfaceContainerHighest,
-                shape = RoundedCornerShape(6.dp)
+                shape = RoundedCornerShape(5.dp)
             )
-            .padding(horizontal = 6.dp, vertical = 3.dp),
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
+            .padding(horizontal = 4.dp, vertical = 2.dp),
+        horizontalArrangement = Arrangement.spacedBy(1.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = icon,
             style = MaterialTheme.typography.labelSmall,
-            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.9f
+            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.8f
         )
         Text(
             text = text,
@@ -551,7 +549,7 @@ fun CompactInfoChip(
             color = MaterialTheme.colorScheme.onSurface,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
+            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.75f
         )
     }
 }

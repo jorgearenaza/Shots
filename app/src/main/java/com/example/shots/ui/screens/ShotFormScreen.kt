@@ -179,112 +179,200 @@ fun ShotFormScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(padding)
-            .padding(AppSpacing.large)
+            .padding(horizontal = AppSpacing.medium, vertical = AppSpacing.small)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(AppSpacing.medium)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // ========== SECCIÓN SETUP ==========
-        SectionCard(title = "Setup", icon = "⚙️") {
-            DateField(label = "Fecha", valueMillis = fechaMillis, onValueChange = { fechaMillis = it })
+        // ========== ROW 1: SETUP & MOLIENDA ==========
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            SectionCard(
+                title = "Setup",
+                icon = "⚙️",
+                modifier = Modifier.weight(1f)
+            ) {
+                DateField(label = "Fecha", valueMillis = fechaMillis, onValueChange = { fechaMillis = it })
 
-            DropdownField(
-                label = "Grano",
-                value = beanLabels.getOrElse(beanIndex) { "" },
-                options = beanLabels,
-                onSelect = { beanIndex = it }
-            )
-
-            if (grinders.value.isEmpty()) {
-                Text("No hay molinos. Agrega uno desde Molinos.")
-                Button(
-                    onClick = { navController.navigate("grinders/new") },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Agregar molino")
-                }
-            } else {
                 DropdownField(
-                    label = "Molino (opcional)",
-                    value = grinderIndex?.let { grinderLabels.getOrNull(it + 1) } ?: "Sin molino",
-                    options = grinderLabels,
-                    onSelect = { idx -> grinderIndex = if (idx == 0) null else idx - 1 }
+                    label = "Grano",
+                    value = beanLabels.getOrElse(beanIndex) { "" },
+                    options = beanLabels,
+                    onSelect = { beanIndex = it }
                 )
             }
 
-            if (profiles.value.isEmpty()) {
-                Text("No hay perfiles. Agrega uno desde Perfiles.")
-                Button(
-                    onClick = { navController.navigate("profiles/new") },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Agregar perfil")
-                }
-            } else {
-                DropdownField(
-                    label = "Perfil (opcional)",
-                    value = profileIndex?.let { profileLabels.getOrNull(it + 1) } ?: "Sin perfil",
-                    options = profileLabels,
-                    onSelect = { idx -> profileIndex = if (idx == 0) null else idx - 1 }
-                )
+            SectionCard(
+                title = "Molienda",
+                icon = "🌾",
+                modifier = Modifier.weight(1f)
+            ) {
+                AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
             }
         }
 
-        // ========== SECCIÓN MOLIENDA ==========
-        SectionCard(title = "Molienda", icon = "🌾") {
-            AjusteMoliendaControl(value = ajuste, onValueChange = { ajuste = it })
-        }
-
-        // ========== SECCIÓN DOSIS Y RENDIMIENTO ==========
-        SectionCard(title = "Dosis y Rendimiento", icon = "⚖️") {
-            Row(
+        // ========== MOLINO Y PERFIL ==========
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = AppSpacing.small),
-                horizontalArrangement = Arrangement.spacedBy(AppSpacing.medium)
+                    .weight(1f)
+                    .fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                )
             ) {
-                OutlinedTextField(
-                    value = dosis,
-                    onValueChange = { dosis = it },
-                    label = { Text("Dosis (g)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    modifier = Modifier.weight(1f)
-                )
-                OutlinedTextField(
-                    value = rendimiento,
-                    onValueChange = { rendimiento = it },
-                    label = { Text("Rendimiento (g)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    modifier = Modifier.weight(1f)
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text("🔌 Molino", style = MaterialTheme.typography.labelLarge)
+                    if (grinders.value.isEmpty()) {
+                        Text("Sin molinos", style = MaterialTheme.typography.bodySmall)
+                    } else {
+                        DropdownField(
+                            label = "Molino",
+                            value = grinderIndex?.let { grinderLabels.getOrNull(it + 1) } ?: "Sin molino",
+                            options = grinderLabels,
+                            onSelect = { idx -> grinderIndex = if (idx == 0) null else idx - 1 }
+                        )
+                    }
+                }
             }
-            Text(
-                text = "Ratio: ${"%.2f".format(ratioValue)}x",
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(top = AppSpacing.small)
-            )
+
+            Card(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text("📋 Perfil", style = MaterialTheme.typography.labelLarge)
+                    if (profiles.value.isEmpty()) {
+                        Text("Sin perfiles", style = MaterialTheme.typography.bodySmall)
+                    } else {
+                        DropdownField(
+                            label = "Perfil",
+                            value = profileIndex?.let { profileLabels.getOrNull(it + 1) } ?: "Sin perfil",
+                            options = profileLabels,
+                            onSelect = { idx -> profileIndex = if (idx == 0) null else idx - 1 }
+                        )
+                    }
+                }
+            }
         }
 
-        // ========== SECCIÓN EXTRACCIÓN ==========
-        SectionCard(title = "Extracción", icon = "☕") {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(AppSpacing.medium)
+        // ========== ROW 2: DOSIS, RENDIMIENTO, EXTRACCIÓN ==========
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Card(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                )
             ) {
-                OutlinedTextField(
-                    value = tiempoSeg,
-                    onValueChange = { tiempoSeg = it },
-                    label = { Text("Tiempo (s)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.weight(1f)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text("⚖️ Dosis", style = MaterialTheme.typography.labelLarge)
+                    OutlinedTextField(
+                        value = dosis,
+                        onValueChange = { dosis = it },
+                        label = { Text("g") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true
+                    )
+                }
+            }
+
+            Card(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
                 )
-                OutlinedTextField(
-                    value = temperatura,
-                    onValueChange = { temperatura = it },
-                    label = { Text("Temp (°C)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    modifier = Modifier.weight(1f)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text("📊 Ratio", style = MaterialTheme.typography.labelLarge)
+                    OutlinedTextField(
+                        value = rendimiento,
+                        onValueChange = { rendimiento = it },
+                        label = { Text("g") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true
+                    )
+                    Text(
+                        text = "${"%.2f".format(ratioValue)}x",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            Card(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
                 )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text("☕ Tiempo", style = MaterialTheme.typography.labelLarge)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = tiempoSeg,
+                            onValueChange = { tiempoSeg = it },
+                            label = { Text("s") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            modifier = Modifier.weight(1f),
+                            singleLine = true
+                        )
+                        OutlinedTextField(
+                            value = temperatura,
+                            onValueChange = { temperatura = it },
+                            label = { Text("°C") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                            modifier = Modifier.weight(1f),
+                            singleLine = true
+                        )
+                    }
+                }
             }
         }
 
@@ -297,21 +385,23 @@ fun ShotFormScreen(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(AppSpacing.medium)
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedTextField(
                     value = preinfusionTiempo,
                     onValueChange = { preinfusionTiempo = it },
                     label = { Text("Tiempo (s)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    singleLine = true
                 )
                 OutlinedTextField(
                     value = preinfusionPresion,
                     onValueChange = { preinfusionPresion = it },
                     label = { Text("Presión (bar)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    singleLine = true
                 )
             }
         }
@@ -325,32 +415,46 @@ fun ShotFormScreen(
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(AppSpacing.small)
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                DropdownField(
-                    label = "Aroma",
-                    value = aromaDisplay,
-                    options = aromaOptions,
-                    onSelect = { idx -> aromaNotes = if (idx == 0) "" else aromaOptions[idx] }
-                )
-                DropdownField(
-                    label = "Sabor",
-                    value = saborDisplay,
-                    options = saborOptions,
-                    onSelect = { idx -> saborNotes = if (idx == 0) "" else saborOptions[idx] }
-                )
-                DropdownField(
-                    label = "Cuerpo",
-                    value = cuerpoDisplay,
-                    options = cuerpoOptions,
-                    onSelect = { idx -> cuerpo = if (idx == 0) "" else cuerpoOptions[idx] }
-                )
-                DropdownField(
-                    label = "Acidez",
-                    value = acidezDisplay,
-                    options = acidezOptions,
-                    onSelect = { idx -> acidez = if (idx == 0) "" else acidezOptions[idx] }
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    DropdownField(
+                        label = "Aroma",
+                        value = aromaDisplay,
+                        options = aromaOptions,
+                        onSelect = { idx -> aromaNotes = if (idx == 0) "" else aromaOptions[idx] },
+                        modifier = Modifier.weight(1f)
+                    )
+                    DropdownField(
+                        label = "Sabor",
+                        value = saborDisplay,
+                        options = saborOptions,
+                        onSelect = { idx -> saborNotes = if (idx == 0) "" else saborOptions[idx] },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    DropdownField(
+                        label = "Cuerpo",
+                        value = cuerpoDisplay,
+                        options = cuerpoOptions,
+                        onSelect = { idx -> cuerpo = if (idx == 0) "" else cuerpoOptions[idx] },
+                        modifier = Modifier.weight(1f)
+                    )
+                    DropdownField(
+                        label = "Acidez",
+                        value = acidezDisplay,
+                        options = acidezOptions,
+                        onSelect = { idx -> acidez = if (idx == 0) "" else acidezOptions[idx] },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
                 DropdownField(
                     label = "Finish",
                     value = finishDisplay,
@@ -360,26 +464,64 @@ fun ShotFormScreen(
             }
         }
 
-        // ========== SECCIÓN NOTAS Y CALIFICACIÓN ==========
-        SectionCard(title = "Notas y Calificación", icon = "📝") {
-            OutlinedTextField(
-                value = notas,
-                onValueChange = { notas = it },
-                label = { Text("Notas generales") },
-                modifier = Modifier.fillMaxWidth(),
-                minLines = 3
-            )
-            
-            RatingStars(
-                rating = calificacion.toIntOrNull() ?: 0,
-                max = 10,
-                onRatingChange = { calificacion = it.toString() }
-            )
+        // ========== ROW 3: NOTAS Y CALIFICACIÓN ==========
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Card(
+                modifier = Modifier
+                    .weight(2f)
+                    .fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text("📝 Notas", style = MaterialTheme.typography.labelLarge)
+                    OutlinedTextField(
+                        value = notas,
+                        onValueChange = { notas = it },
+                        label = { Text("Notas") },
+                        modifier = Modifier.fillMaxWidth(),
+                        minLines = 2
+                    )
+                }
+            }
+
+            Card(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                ) {
+                    Text("⭐ Rating", style = MaterialTheme.typography.labelLarge)
+                    RatingStars(
+                        rating = calificacion.toIntOrNull() ?: 0,
+                        max = 10,
+                        onRatingChange = { calificacion = it.toString() }
+                    )
+                }
+            }
         }
 
         // ========== SECCIÓN COLAPSABLE SIGUIENTE SHOT ==========
         ExpandableSection(
-            title = "Para Siguiente Shot",
+            title = "Siguiente Shot",
             icon = "💡",
             expanded = expandNextShot,
             onExpandChange = { expandNextShot = it }
@@ -396,15 +538,14 @@ fun ShotFormScreen(
 
         if (error != null) {
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(AppSpacing.small),
+                modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
             ) {
                 Text(
                     text = error ?: "",
                     color = MaterialTheme.colorScheme.onErrorContainer,
-                    modifier = Modifier.padding(AppSpacing.medium)
+                    modifier = Modifier.padding(8.dp),
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
         }
@@ -483,13 +624,13 @@ fun ShotFormScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = AppSpacing.medium),
+                .padding(vertical = 8.dp),
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             )
         ) {
-            Text(if (shotId == null) "Registrar Shot" else "Actualizar Shot", modifier = Modifier.padding(AppSpacing.small))
+            Text(if (shotId == null) "Registrar" else "Actualizar", modifier = Modifier.padding(4.dp), style = MaterialTheme.typography.labelMedium)
         }
     }
 }
@@ -498,10 +639,11 @@ fun ShotFormScreen(
 private fun SectionCard(
     title: String,
     icon: String,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
         )
@@ -509,17 +651,10 @@ private fun SectionCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(AppSpacing.medium),
-            verticalArrangement = Arrangement.spacedBy(AppSpacing.small)
+                .padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(AppSpacing.small)
-            ) {
-                Text(icon, style = MaterialTheme.typography.headlineSmall)
-                Text(title, style = MaterialTheme.typography.titleMedium)
-            }
+            Text("$icon $title", style = MaterialTheme.typography.labelLarge)
             content()
         }
     }

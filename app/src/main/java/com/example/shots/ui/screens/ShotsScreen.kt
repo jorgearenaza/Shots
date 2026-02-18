@@ -81,6 +81,7 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
 
     // Filtrar shots por búsqueda y filtros
     val filteredShots = remember(shots.value, searchQuery, filterRating, filterRecent) {
+        val currentFilterRating = filterRating  // Extraer a variable local para evitar smart cast issues
         var result = shots.value.filter { shot ->
             val beanLabel = "${shot.beanTostador} - ${shot.beanCafe}".lowercase()
             val notes = (shot.shot.notas ?: "").lowercase()
@@ -94,8 +95,8 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
         }
         
         // Aplicar filtro de rating
-        if (filterRating != null) {
-            result = result.filter { (it.shot.calificacion ?: 0) >= filterRating }
+        if (currentFilterRating != null) {
+            result = result.filter { (it.shot.calificacion ?: 0) >= currentFilterRating }
         }
         
         // Aplicar filtro de recientes (últimos 7 días)

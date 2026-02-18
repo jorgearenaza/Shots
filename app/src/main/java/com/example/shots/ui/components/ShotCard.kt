@@ -89,9 +89,10 @@ fun ShotCard(
                 MaterialTheme.colorScheme.tertiaryContainer
             )
             else -> listOf(
-            MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
-            MaterialTheme.colorScheme.errorContainer
-        )
+                MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
+                MaterialTheme.colorScheme.errorContainer
+            )
+        }
     }
 
     Card(

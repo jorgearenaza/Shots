@@ -53,8 +53,6 @@ fun ProfilesScreen(navController: NavController, vm: MainViewModel, padding: Pad
             val searchLower = searchQuery.lowercase()
             label.contains(searchLower) || desc.contains(searchLower)
         }
-            label.contains(searchLower) || desc.contains(searchLower)
-        }
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(padding)) {

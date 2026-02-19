@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -205,7 +206,7 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                placeholder = { Text("Buscar...", style = MaterialTheme.typography.labelSmall) },
+                placeholder = { Text("Buscar...", style = MaterialTheme.typography.labelSmall, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center) },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(18.dp)) },
                 trailingIcon = {
                     if (searchQuery.isNotEmpty()) {
@@ -218,7 +219,7 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
                     .weight(1f)
                     .height(40.dp),
                 singleLine = true,
-                textStyle = MaterialTheme.typography.labelSmall
+                textStyle = MaterialTheme.typography.labelSmall.copy(textAlign = TextAlign.Center)
             )
             
             // Botón para expandir/contraer filtros

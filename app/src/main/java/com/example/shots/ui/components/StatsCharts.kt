@@ -778,8 +778,8 @@ fun GrinderPerformanceCard(shots: List<ShotDetails>, modifier: Modifier = Modifi
     if (shots.isEmpty()) return
 
     val grinderStats = shots
-        .filter { it.molinoNombre != null && (it.shot.calificacion ?: 0) > 0 }
-        .groupBy { it.molinoNombre ?: "Sin molino" }
+        .filter { it.grinderNombre != null && (it.shot.calificacion ?: 0) > 0 }
+        .groupBy { it.grinderNombre ?: "Sin molino" }
         .mapValues { (_, shotsOfGrinder) ->
             val avgRating = shotsOfGrinder.mapNotNull { it.shot.calificacion }.average()
             val count = shotsOfGrinder.size
@@ -916,11 +916,11 @@ fun WinningCombinationCard(shots: List<ShotDetails>, modifier: Modifier = Modifi
                 )
             }
 
-            if (bestShot.molinoNombre != null) {
+            if (bestShot.grinderNombre != null) {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text("⚙️ Molino", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Text(
-                        text = bestShot.molinoNombre,
+                        text = bestShot.grinderNombre,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )

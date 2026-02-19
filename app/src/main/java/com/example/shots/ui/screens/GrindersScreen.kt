@@ -26,7 +26,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import com.example.shots.R
+import com.example.shots.ui.components.EmptyState
 import com.example.shots.ui.components.GrinderCard
 import com.example.shots.ui.theme.AppSpacing
 import com.example.shots.viewmodel.MainViewModel

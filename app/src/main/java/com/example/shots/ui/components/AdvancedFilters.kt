@@ -9,34 +9,29 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.ExposedDropdownMenu
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.ExperimentalMaterial3Api
 
 data class ShotFilters(
-    val minRating: Int? = null,           // 1-10
-    val maxRating: Int? = null,           // 1-10
+    val minRating: Int? = null,
+    val maxRating: Int? = null,
     val selectedBeamId: Long? = null,
     val selectedGrinderId: Long? = null,
     val startDate: Long? = null,
     val endDate: Long? = null
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdvancedFiltersPanel(
     filters: ShotFilters,
@@ -56,6 +51,7 @@ fun AdvancedFiltersPanel(
             )
             .padding(12.dp)
     ) {
+        // Header
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -66,16 +62,13 @@ fun AdvancedFiltersPanel(
                 modifier = Modifier.weight(1f)
             )
             IconButton(
-                onClick = { onExpandChange(!expanded) },
-                modifier = Modifier.padding(0.dp)
+                onClick = { onExpandChange(!expanded) }
             ) {
-                Icon(
-                    imageVector = if (expanded) Icons.Default.Close else Icons.Default.Close,
-                    contentDescription = "Toggle filters"
-                )
+                Text(text = if (expanded) "▼" else "▶")
             }
         }
 
+        // Expanded content
         if (expanded) {
             Column(
                 modifier = Modifier
@@ -83,7 +76,7 @@ fun AdvancedFiltersPanel(
                     .padding(top = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                // Rating filter
+                // Rating filters
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -95,7 +88,7 @@ fun AdvancedFiltersPanel(
                                 filters.copy(minRating = value.toIntOrNull()?.coerceIn(1, 10))
                             )
                         },
-                        label = { Text("Rating mín") },
+                        label = { Text("Min Rating") },
                         modifier = Modifier.weight(1f),
                         singleLine = true
                     )
@@ -106,101 +99,55 @@ fun AdvancedFiltersPanel(
                                 filters.copy(maxRating = value.toIntOrNull()?.coerceIn(1, 10))
                             )
                         },
-                        label = { Text("Rating máx") },
+                        label = { Text("Max Rating") },
                         modifier = Modifier.weight(1f),
                         singleLine = true
                     )
                 }
 
-                // Bean filter
+                // Bean selector
                 if (beans.isNotEmpty()) {
-                    var beanExpanded by androidx.compose.runtime.mutableStateOf(false)
-                    ExposedDropdownMenuBox(
-                        expanded = beanExpanded,
-                        onExpandedChange = { beanExpanded = it }
-                    ) {
-                        OutlinedTextField(
-                            value = beans.find { it.first == filters.selectedBeamId }?.second ?: "Todos los granos",
-                            onValueChange = {},
-                            readOnly = true,
-                            label = { Text("Grano") },
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = beanExpanded) },
-                            modifier = Modifier
-                                .menuAnchor()
-                                .fillMaxWidth()
-                        )
-                        ExposedDropdownMenu(
-                            expanded = beanExpanded,
-                            onDismissRequest = { beanExpanded = false }
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text("Todos los granos") },
-                                onClick = {
-                                    onFiltersChange(filters.copy(selectedBeamId = null))
-                                    beanExpanded = false
+                    OutlinedTextField(
+                        value = beans.find { it.first == filters.selectedBeamId }?.second ?: "All Beans",
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Bean") },
+                        modifier = Modifier.fillMaxWidth(),
+                        trailingIcon = {
+                            if (filters.selectedBeamId != null) {
+                                IconButton(onClick = { onFiltersChange(filters.copy(selectedBeamId = null)) }) {
+                                    Icon(Icons.Default.Close, contentDescription = null)
                                 }
-                            )
-                            beans.forEach { (id, name) ->
-                                DropdownMenuItem(
-                                    text = { Text(name) },
-                                    onClick = {
-                                        onFiltersChange(filters.copy(selectedBeamId = id))
-                                        beanExpanded = false
-                                    }
-                                )
                             }
                         }
-                    }
+                    )
                 }
 
-                // Grinder filter
+                // Grinder selector
                 if (grinders.isNotEmpty()) {
-                    var grinderExpanded by androidx.compose.runtime.mutableStateOf(false)
-                    ExposedDropdownMenuBox(
-                        expanded = grinderExpanded,
-                        onExpandedChange = { grinderExpanded = it }
-                    ) {
-                        OutlinedTextField(
-                            value = grinders.find { it.first == filters.selectedGrinderId }?.second ?: "Todos los molinos",
-                            onValueChange = {},
-                            readOnly = true,
-                            label = { Text("Molino") },
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = grinderExpanded) },
-                            modifier = Modifier
-                                .menuAnchor()
-                                .fillMaxWidth()
-                        )
-                        ExposedDropdownMenu(
-                            expanded = grinderExpanded,
-                            onDismissRequest = { grinderExpanded = false }
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text("Todos los molinos") },
-                                onClick = {
-                                    onFiltersChange(filters.copy(selectedGrinderId = null))
-                                    grinderExpanded = false
+                    OutlinedTextField(
+                        value = grinders.find { it.first == filters.selectedGrinderId }?.second ?: "All Grinders",
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Grinder") },
+                        modifier = Modifier.fillMaxWidth(),
+                        trailingIcon = {
+                            if (filters.selectedGrinderId != null) {
+                                IconButton(onClick = { onFiltersChange(filters.copy(selectedGrinderId = null)) }) {
+                                    Icon(Icons.Default.Close, contentDescription = null)
                                 }
-                            )
-                            grinders.forEach { (id, name) ->
-                                DropdownMenuItem(
-                                    text = { Text(name) },
-                                    onClick = {
-                                        onFiltersChange(filters.copy(selectedGrinderId = id))
-                                        grinderExpanded = false
-                                    }
-                                )
                             }
                         }
-                    }
+                    )
                 }
 
-                // Clear filters button
+                // Clear button
                 if (filters != ShotFilters()) {
-                    IconButton(
+                    Button(
                         onClick = { onFiltersChange(ShotFilters()) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Limpiar filtros")
+                        Text("Clear Filters")
                     }
                 }
             }

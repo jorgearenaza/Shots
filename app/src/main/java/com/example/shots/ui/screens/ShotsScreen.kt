@@ -206,8 +206,8 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                placeholder = { Text("Buscar...", style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp), textAlign = TextAlign.Center) },
-                leadingIcon = { Text("🔍", fontSize = 14.sp) },
+                placeholder = { Text("Buscar...", style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp), textAlign = TextAlign.Center) },
+                leadingIcon = { Text("🔍", fontSize = 13.sp) },
                 trailingIcon = {
                     if (searchQuery.isNotEmpty()) {
                         IconButton(onClick = { searchQuery = "" }, modifier = Modifier.size(28.dp)) {
@@ -219,7 +219,7 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
                     .weight(1f)
                     .height(40.dp),
                 singleLine = true,
-                textStyle = MaterialTheme.typography.labelSmall.copy(textAlign = TextAlign.Center, fontSize = 12.sp)
+                textStyle = MaterialTheme.typography.labelSmall.copy(textAlign = TextAlign.Center, fontSize = 11.sp)
             )
             
             // Botón para expandir/contraer filtros

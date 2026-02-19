@@ -10,12 +10,20 @@ import com.example.shots.data.model.ProfileEntity
 import com.example.shots.data.model.ShotDetails
 import com.example.shots.data.model.ShotEntity
 import com.example.shots.ui.components.ShotFilters
+import com.example.shots.ui.components.TrendingData
+import com.example.shots.ui.components.BeanRecommendation
+import com.example.shots.ui.components.GrinderRecommendation
+import com.example.shots.ui.components.BestCombination
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlin.math.abs
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
     val shots: StateFlow<List<ShotDetails>> = repo.observeShots()
@@ -362,5 +370,79 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
             endDate = filters.endDate
         ).stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
     }
+
+    // Trending data for last 7 days
+    val trendingData: StateFlow<TrendingData?> = shots.map { allShots ->
+        val today = LocalDate.now()
+        val weekAgo = today.minusDays(6)
+        
+        val lastWeekShots = allShots.filter { shot ->
+            val shotDate = Instant.ofEpochMilli(shot.shot.fecha)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+            shotDate.isAfter(weekAgo) || shotDate.isEqual(weekAgo)
+        }.sortedBy { it.shot.fecha }
+
+        if (lastWeekShots.isEmpty()) {
+            null
+        } else {
+            val dateFormatter = DateTimeFormatter.ofPattern("MMM dd")
+            val dates = mutableListOf<String>()
+            val ratings = mutableListOf<Float>()
+            val ratios = mutableListOf<Float>()
+
+            lastWeekShots.forEach { shot ->
+                val shotDate = Instant.ofEpochMilli(shot.shot.fecha)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate()
+                dates.add(shotDate.format(dateFormatter))
+                ratings.add((shot.shot.calificacion ?: 0).toFloat())
+                ratios.add(shot.shot.ratio.toFloat())
+            }
+
+            TrendingData(dates, ratings, ratios)
+        }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    // Best recommendations insights
+    val bestBeansRecommendations: StateFlow<List<BeanRecommendation>> = shots.map { allShots ->
+        allShots
+            .filter { (it.shot.calificacion ?: 0) > 0 }
+            .groupBy { "${it.beanTostador} - ${it.beanCafe}" }
+            .map { (name, shotsOfBean) ->
+                val avgRating = shotsOfBean.mapNotNull { it.shot.calificacion }.average().toFloat()
+                BeanRecommendation(name, avgRating, shotsOfBean.size)
+            }
+            .sortedByDescending { it.avgRating }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    val bestGrindersRecommendations: StateFlow<List<GrinderRecommendation>> = shots.map { allShots ->
+        allShots
+            .filter { it.grinderNombre != null && (it.shot.calificacion ?: 0) > 0 }
+            .groupBy { it.grinderNombre }
+            .map { (name, shotsOfGrinder) ->
+                val avgRating = shotsOfGrinder.mapNotNull { it.shot.calificacion }.average().toFloat()
+                GrinderRecommendation(name ?: "Unknown", avgRating, shotsOfGrinder.size)
+            }
+            .sortedByDescending { it.avgRating }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    val bestCombinationRecommendation: StateFlow<BestCombination?> = shots.map { allShots ->
+        val topShot = allShots
+            .filter { (it.shot.calificacion ?: 0) >= 7 }
+            .maxByOrNull { it.shot.calificacion ?: 0 }
+        
+        if (topShot != null) {
+            BestCombination(
+                beanName = "${topShot.beanTostador} - ${topShot.beanCafe}",
+                grinderName = topShot.grinderNombre ?: "Desconocido",
+                rating = (topShot.shot.calificacion ?: 0).toFloat(),
+                ratio = topShot.shot.ratio.toFloat(),
+                timezone = "Local"
+            )
+        } else {
+            null
+        }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
 }

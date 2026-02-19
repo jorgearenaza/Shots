@@ -26,6 +26,9 @@ import com.example.shots.ui.components.BeanRatingsAnalysis
 import com.example.shots.ui.components.GrinderPerformanceCard
 import com.example.shots.ui.components.WinningCombinationCard
 import com.example.shots.ui.components.TimeDistributionCard
+import com.example.shots.ui.components.RatingTrendingChart
+import com.example.shots.ui.components.RatioTrendingChart
+import com.example.shots.ui.components.InsightsPanel
 import com.example.shots.viewmodel.MainViewModel
 
 @Composable
@@ -36,6 +39,10 @@ fun StatsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
     val winningCombo = vm.winningCombination.collectAsState()
     val timeStats = vm.timeDistributionStats.collectAsState()
     val insights = vm.statsInsights.collectAsState()
+    val trendingData = vm.trendingData.collectAsState()
+    val bestBeans = vm.bestBeansRecommendations.collectAsState()
+    val bestGrinders = vm.bestGrindersRecommendations.collectAsState()
+    val bestCombination = vm.bestCombinationRecommendation.collectAsState()
 
     if (shots.value.isEmpty()) {
         EmptyState(
@@ -99,6 +106,22 @@ fun StatsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
         
         item {
             InsightsCard(insights.value)
+        }
+
+        item {
+            RatingTrendingChart(trendingData.value)
+        }
+
+        item {
+            RatioTrendingChart(trendingData.value)
+        }
+
+        item {
+            InsightsPanel(
+                bestBeans = bestBeans.value,
+                bestGrinders = bestGrinders.value,
+                bestCombination = bestCombination.value
+            )
         }
     }
 }

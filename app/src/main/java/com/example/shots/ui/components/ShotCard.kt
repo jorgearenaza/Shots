@@ -172,9 +172,10 @@ fun ShotCard(
                                         .size(8.dp)
                                         .background(
                                             color = when (timerStatus) {
-                                                "GOOD" -> Color(0xFF4CAF50)
-                                                "WARNING" -> Color(0xFFFFC107)
-                                                else -> Color(0xFFF44336)
+                                                StatusColor.GREEN -> Color(0xFF4CAF50)
+                                                StatusColor.YELLOW -> Color(0xFFFFC107)
+                                                StatusColor.RED -> Color(0xFFF44336)
+                                                StatusColor.NEUTRAL -> Color(0xFFBBBBBB)
                                             },
                                             shape = CircleShape
                                         )

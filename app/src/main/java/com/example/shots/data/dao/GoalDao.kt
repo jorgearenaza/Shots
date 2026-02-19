@@ -15,10 +15,10 @@ interface GoalDao {
     suspend fun insertGoal(goal: GoalEntity): Long
     
     @Update
-    suspend fun updateGoal(goal: GoalEntity)
+    suspend fun updateGoal(goal: GoalEntity): Int
     
     @Delete
-    suspend fun deleteGoal(goal: GoalEntity)
+    suspend fun deleteGoal(goal: GoalEntity): Int
     
     @Query("SELECT * FROM goals ORDER BY fechaCreacion DESC")
     fun observeGoals(): Flow<List<GoalEntity>>

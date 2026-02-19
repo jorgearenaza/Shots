@@ -29,6 +29,16 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
     val profiles: StateFlow<List<ProfileEntity>> = repo.observeProfiles()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
+    // Search methods that return Flow for reactive updates
+    fun searchBeans(query: String) = repo.searchBeans(query)
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    fun searchGrinders(query: String) = repo.searchGrinders(query)
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    fun searchProfiles(query: String) = repo.searchProfiles(query)
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
     val settings: StateFlow<SettingsState> = repo.dataStore.settings
         .stateIn(viewModelScope, SharingStarted.Lazily, SettingsState())
 

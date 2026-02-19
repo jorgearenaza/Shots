@@ -7,7 +7,9 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "beans",
     indices = [
-        Index(value = ["tostador", "cafe", "fechaTostado"], unique = true)
+        Index(value = ["tostador", "cafe", "fechaTostado"], unique = true),
+        Index("activo"),
+        Index("fechaTostado")
     ]
 )
 data class BeanEntity(

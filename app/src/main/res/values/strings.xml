@@ -1,3 +1,48 @@
 <resources>
     <string name="app_name">EspressoShots</string>
+    
+    <!-- Common Actions -->
+    <string name="action_add">Agregar</string>
+    <string name="action_edit">Editar</string>
+    <string name="action_delete">Eliminar</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_search">Buscar</string>
+    <string name="action_clear">Limpiar</string>
+    
+    <!-- Beans Screen -->
+    <string name="empty_beans_message">No hay granos. Agrega uno para empezar.</string>
+    <string name="empty_beans_action">Agregar grano</string>
+    <string name="search_beans_hint">Buscar grano...</string>
+    <string name="no_beans_found">No se encontraron granos con esa búsqueda.</string>
+    <string name="clear_beans_search">Limpiar búsqueda</string>
+    
+    <!-- Grinders Screen -->
+    <string name="empty_grinders_message">No hay molinos. Agrega uno para empezar.</string>
+    <string name="empty_grinders_action">Agregar molino</string>
+    <string name="search_grinders_hint">Buscar molino...</string>
+    <string name="no_grinders_found">No se encontraron molinos con esa búsqueda.</string>
+    <string name="clear_grinders_search">Limpiar búsqueda</string>
+    
+    <!-- Profiles Screen -->
+    <string name="empty_profiles_message">No hay perfiles. Agrega uno para empezar.</string>
+    <string name="empty_profiles_action">Agregar perfil</string>
+    <string name="search_profiles_hint">Buscar perfil...</string>
+    <string name="no_profiles_found">No se encontraron perfiles con esa búsqueda.</string>
+    <string name="clear_profiles_search">Limpiar búsqueda</string>
+    
+    <!-- Shots Screen -->
+    <string name="empty_shots_message">No hay shots. Registra uno para empezar.</string>
+    <string name="shots_count_format">%d shots</string>
+    
+    <!-- Stats Screen -->
+    <string name="empty_stats_message">No hay datos de shots para mostrar estadísticas.</string>
+    <string name="no_stats_action">Ir a Shots</string>
+    
+    <!-- ShotFormScreen -->
+    <string name="shot_form_title">Registrar Shot</string>
+    <string name="shot_form_edit_title">Editar Shot</string>
+    <string name="empty_form_beans_message">No hay granos. Agrega un grano antes de registrar un shot.</string>
+    <string name="empty_form_beans_action">Agregar grano</string>
+    
 </resources>

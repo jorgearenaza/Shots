@@ -26,4 +26,22 @@ interface BeanDao {
 
     @Query("UPDATE beans SET activo = 0, updatedAt = :updatedAt WHERE id = :id")
     fun deactivate(id: Long, updatedAt: Long)
+
+    @Query("""
+        SELECT * FROM beans 
+        WHERE activo = 1 AND (
+            LOWER(tostador) LIKE '%' || LOWER(:query) || '%' 
+            OR LOWER(cafe) LIKE '%' || LOWER(:query) || '%'
+        )
+        ORDER BY fechaTostado DESC
+    """)
+    fun searchActive(query: String): Flow<List<BeanEntity>>
+
+    @Query("""
+        SELECT * FROM beans 
+        WHERE LOWER(tostador) LIKE '%' || LOWER(:query) || '%' 
+        OR LOWER(cafe) LIKE '%' || LOWER(:query) || '%'
+        ORDER BY fechaTostado DESC
+    """)
+    fun search(query: String): Flow<List<BeanEntity>>
 }

@@ -25,6 +25,11 @@ class ShotsRepository(
     fun observeGrinders(): Flow<List<GrinderEntity>> = grinderDao.observeActive()
     fun observeProfiles(): Flow<List<ProfileEntity>> = profileDao.observeActive()
 
+    // Search methods
+    fun searchBeans(query: String): Flow<List<BeanEntity>> = beanDao.searchActive(query)
+    fun searchGrinders(query: String): Flow<List<GrinderEntity>> = grinderDao.searchActive(query)
+    fun searchProfiles(query: String): Flow<List<ProfileEntity>> = profileDao.searchActive(query)
+
     suspend fun insertShot(shot: ShotEntity): Long {
         return withContext(Dispatchers.IO) {
             shotDao.insert(shot)

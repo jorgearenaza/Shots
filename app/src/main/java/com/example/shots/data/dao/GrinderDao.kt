@@ -26,4 +26,18 @@ interface GrinderDao {
 
     @Query("UPDATE grinders SET activo = 0, updatedAt = :updatedAt WHERE id = :id")
     fun deactivate(id: Long, updatedAt: Long)
+
+    @Query("""
+        SELECT * FROM grinders 
+        WHERE activo = 1 AND LOWER(nombre) LIKE '%' || LOWER(:query) || '%'
+        ORDER BY nombre ASC
+    """)
+    fun searchActive(query: String): Flow<List<GrinderEntity>>
+
+    @Query("""
+        SELECT * FROM grinders 
+        WHERE LOWER(nombre) LIKE '%' || LOWER(:query) || '%'
+        ORDER BY nombre ASC
+    """)
+    fun search(query: String): Flow<List<GrinderEntity>>
 }

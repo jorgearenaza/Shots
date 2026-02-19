@@ -28,8 +28,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.example.shots.ui.components.BeanCard
+import androidx.compose.ui.res.stringResource
+import com.example.shots.R
 import com.example.shots.ui.components.EmptyState
 import com.example.shots.ui.theme.AppSpacing
 import com.example.shots.viewmodel.MainViewModel
@@ -45,22 +45,18 @@ fun BeansScreen(navController: NavController, vm: MainViewModel, padding: Paddin
 
     if (beans.value.isEmpty()) {
         EmptyState(
-            message = "No hay granos. Agrega uno para empezar.",
-            actionLabel = "Agregar grano",
+            message = stringResource(R.string.empty_beans_message),
+            actionLabel = stringResource(R.string.empty_beans_action),
             onAction = { navController.navigate("beans/new") }
         )
         return
     }
 
-    // Filtrar beans por búsqueda
-    val filteredBeans = remember(beans.value, searchQuery) {
-        beans.value.filter { bean ->
-            val label = "${bean.tostador} - ${bean.cafe}".lowercase()
-            val notes = (bean.notas ?: "").lowercase()
-            val searchLower = searchQuery.lowercase()
-            
-            label.contains(searchLower) || notes.contains(searchLower)
-        }
+    // Usar búsqueda en BD si hay query, si no mostrar todos
+    val filteredBeans = if (searchQuery.isNotEmpty()) {
+        vm.searchBeans(searchQuery).collectAsState(emptyList()).value
+    } else {
+        beans.value
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(padding)) {
@@ -70,7 +66,7 @@ fun BeansScreen(navController: NavController, vm: MainViewModel, padding: Paddin
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
-            label = { Text("Buscar grano...") },
+            label = { Text(stringResource(R.string.search_beans_hint)) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             trailingIcon = {
                 if (searchQuery.isNotEmpty()) {
@@ -88,8 +84,8 @@ fun BeansScreen(navController: NavController, vm: MainViewModel, padding: Paddin
         // Lista de granos
         if (filteredBeans.isEmpty()) {
             EmptyState(
-                message = "No se encontraron granos con esa búsqueda.",
-                actionLabel = "Limpiar búsqueda",
+                message = stringResource(R.string.no_beans_found),
+                actionLabel = stringResource(R.string.clear_beans_search),
                 onAction = { searchQuery = "" }
             )
         } else {

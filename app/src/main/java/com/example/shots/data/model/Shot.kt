@@ -31,7 +31,11 @@ import androidx.room.PrimaryKey
     indices = [
         Index("bean_id"),
         Index("grinder_id"),
-        Index("profile_id")
+        Index("profile_id"),
+        Index("fecha"),
+        Index("calificacion"),
+        Index(value = ["bean_id", "fecha"]),
+        Index(value = ["fecha", "calificacion"])
     ]
 )
 data class ShotEntity(

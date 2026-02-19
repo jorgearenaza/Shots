@@ -25,8 +25,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.example.shots.ui.components.EmptyState
+import androidx.compose.ui.res.stringResource
+import com.example.shots.R
 import com.example.shots.ui.components.GrinderCard
 import com.example.shots.ui.theme.AppSpacing
 import com.example.shots.viewmodel.MainViewModel
@@ -39,27 +39,25 @@ fun GrindersScreen(navController: NavController, vm: MainViewModel, padding: Pad
 
     if (grinders.value.isEmpty()) {
         EmptyState(
-            message = "No hay molinos. Agrega uno para empezar.",
-            actionLabel = "Agregar molino",
+            message = stringResource(R.string.empty_grinders_message),
+            actionLabel = stringResource(R.string.empty_grinders_action),
             onAction = { navController.navigate("grinders/new") }
         )
         return
     }
 
-    val filteredGrinders = remember(grinders.value, searchQuery) {
-        grinders.value.filter { grinder ->
-            val label = grinder.nombre.lowercase()
-            val notes = (grinder.notas ?: "").lowercase()
-            val searchLower = searchQuery.lowercase()
-            label.contains(searchLower) || notes.contains(searchLower)
-        }
+    // Usar búsqueda en BD si hay query, si no mostrar todos
+    val filteredGrinders = if (searchQuery.isNotEmpty()) {
+        vm.searchGrinders(searchQuery).collectAsState(emptyList()).value
+    } else {
+        grinders.value
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(padding)) {
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
-            label = { Text("Buscar molino...") },
+            label = { Text(stringResource(R.string.search_grinders_hint)) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             trailingIcon = {
                 if (searchQuery.isNotEmpty()) {
@@ -76,8 +74,8 @@ fun GrindersScreen(navController: NavController, vm: MainViewModel, padding: Pad
 
         if (filteredGrinders.isEmpty()) {
             EmptyState(
-                message = "No se encontraron molinos con esa búsqueda.",
-                actionLabel = "Limpiar búsqueda",
+                message = stringResource(R.string.no_grinders_found),
+                actionLabel = stringResource(R.string.clear_grinders_search),
                 onAction = { searchQuery = "" }
             )
         } else {

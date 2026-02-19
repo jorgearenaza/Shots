@@ -25,8 +25,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.example.shots.ui.components.EmptyState
+import androidx.compose.ui.res.stringResource
+import com.example.shots.R
 import com.example.shots.ui.components.ProfileCard
 import com.example.shots.ui.theme.AppSpacing
 import com.example.shots.viewmodel.MainViewModel
@@ -39,27 +39,25 @@ fun ProfilesScreen(navController: NavController, vm: MainViewModel, padding: Pad
 
     if (profiles.value.isEmpty()) {
         EmptyState(
-            message = "No hay perfiles. Agrega uno para empezar.",
-            actionLabel = "Agregar perfil",
+            message = stringResource(R.string.empty_profiles_message),
+            actionLabel = stringResource(R.string.empty_profiles_action),
             onAction = { navController.navigate("profiles/new") }
         )
         return
     }
 
-    val filteredProfiles = remember(profiles.value, searchQuery) {
-        profiles.value.filter { profile ->
-            val label = profile.nombre.lowercase()
-            val desc = (profile.descripcion ?: "").lowercase()
-            val searchLower = searchQuery.lowercase()
-            label.contains(searchLower) || desc.contains(searchLower)
-        }
+    // Usar búsqueda en BD si hay query, si no mostrar todos
+    val filteredProfiles = if (searchQuery.isNotEmpty()) {
+        vm.searchProfiles(searchQuery).collectAsState(emptyList()).value
+    } else {
+        profiles.value
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(padding)) {
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
-            label = { Text("Buscar perfil...") },
+            label = { Text(stringResource(R.string.search_profiles_hint)) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             trailingIcon = {
                 if (searchQuery.isNotEmpty()) {
@@ -76,8 +74,8 @@ fun ProfilesScreen(navController: NavController, vm: MainViewModel, padding: Pad
 
         if (filteredProfiles.isEmpty()) {
             EmptyState(
-                message = "No se encontraron perfiles con esa búsqueda.",
-                actionLabel = "Limpiar búsqueda",
+                message = stringResource(R.string.no_profiles_found),
+                actionLabel = stringResource(R.string.clear_profiles_search),
                 onAction = { searchQuery = "" }
             )
         } else {

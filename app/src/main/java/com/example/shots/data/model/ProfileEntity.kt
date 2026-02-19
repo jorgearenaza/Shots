@@ -7,7 +7,8 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "profiles",
     indices = [
-        Index(value = ["nombre"], unique = true)
+        Index(value = ["nombre"], unique = true),
+        Index("activo")
     ]
 )
 data class ProfileEntity(

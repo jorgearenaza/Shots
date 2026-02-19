@@ -1,5 +1,6 @@
 package com.example.shots.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,11 +18,8 @@ import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
-import com.patrykandpatrick.vico.compose.common.shader.color
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
-import com.patrykandpatrick.vico.core.common.shader.DynamicShader
-import com.patrykandpatrick.vico.core.common.shader.DynamicShaders
 
 data class TrendingData(
     val dates: List<String>,
@@ -64,23 +62,14 @@ fun RatingTrendingChart(
 
                 CartesianChartHost(
                     modelProducer = modelProducer,
-                    chart = rememberCartesianChart(
-                        rememberLineCartesianLayer(
-                            lines = listOf(
-                                com.patrykandpatrick.vico.compose.cartesian.layer.lineSpec(
-                                    shader = DynamicShaders.color(MaterialTheme.colorScheme.primary),
-                                    backgroundShader = DynamicShaders.color(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f))
-                                )
-                            )
-                        )
-                    ),
+                    chart = rememberCartesianChart(rememberLineCartesianLayer()),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(140.dp)
                 )
 
                 Text(
-                    text = "Promedio: ${trendingData.ratings.average().toFloat()} ⭐",
+                    text = "Promedio: ${String.format("%.1f", trendingData.ratings.average())} ⭐",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -131,16 +120,7 @@ fun RatioTrendingChart(
 
                 CartesianChartHost(
                     modelProducer = modelProducer,
-                    chart = rememberCartesianChart(
-                        rememberLineCartesianLayer(
-                            lines = listOf(
-                                com.patrykandpatrick.vico.compose.cartesian.layer.lineSpec(
-                                    shader = DynamicShaders.color(MaterialTheme.colorScheme.secondary),
-                                    backgroundShader = DynamicShaders.color(MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f))
-                                )
-                            )
-                        )
-                    ),
+                    chart = rememberCartesianChart(rememberLineCartesianLayer()),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(140.dp)

@@ -670,3 +670,416 @@ fun InsightsCard(shots: List<ShotDetails>, modifier: Modifier = Modifier) {
         }
     }
 }
+@Composable
+fun BeanRatingsAnalysis(shots: List<ShotDetails>, modifier: Modifier = Modifier) {
+    if (shots.isEmpty()) return
+
+    // Agrupar por grano y calcular rating promedio
+    val beanStats = shots
+        .filter { (it.shot.calificacion ?: 0) > 0 }
+        .groupBy { "${it.beanTostador} - ${it.beanCafe}" }
+        .mapValues { (_, shotsOfBean) ->
+            val avgRating = shotsOfBean.mapNotNull { it.shot.calificacion }.average()
+            val count = shotsOfBean.size
+            Pair(avgRating, count)
+        }
+        .toList()
+        .sortedByDescending { it.second.first }
+        .take(6)
+
+    if (beanStats.isEmpty()) return
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primaryContainer),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("🏅", style = MaterialTheme.typography.titleMedium)
+                }
+                Text(
+                    text = "Rating por Grano",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            beanStats.forEachIndexed { index, (bean, stats) ->
+                val (avgRating, count) = stats
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = bean,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            text = "$count shots",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "⭐ ${String.format("%.1f", avgRating)}",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = when {
+                                avgRating >= 8.5 -> MaterialTheme.colorScheme.primary
+                                avgRating >= 7.0 -> MaterialTheme.colorScheme.secondary
+                                else -> MaterialTheme.colorScheme.tertiary
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun GrinderPerformanceCard(shots: List<ShotDetails>, modifier: Modifier = Modifier) {
+    if (shots.isEmpty()) return
+
+    val grinderStats = shots
+        .filter { it.molinoNombre != null && (it.shot.calificacion ?: 0) > 0 }
+        .groupBy { it.molinoNombre ?: "Sin molino" }
+        .mapValues { (_, shotsOfGrinder) ->
+            val avgRating = shotsOfGrinder.mapNotNull { it.shot.calificacion }.average()
+            val count = shotsOfGrinder.size
+            Pair(avgRating, count)
+        }
+        .toList()
+        .sortedByDescending { it.second.first }
+        .take(5)
+
+    if (grinderStats.isEmpty()) return
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.secondaryContainer),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("⚙️", style = MaterialTheme.typography.titleMedium)
+                }
+                Text(
+                    text = "Molinos - Rendimiento",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            grinderStats.forEach { (grinder, stats) ->
+                val (avgRating, count) = stats
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = grinder,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            text = "$count usos",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Text(
+                        text = "⭐ ${String.format("%.1f", avgRating)}",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = when {
+                            avgRating >= 8.5 -> MaterialTheme.colorScheme.primary
+                            avgRating >= 7.0 -> MaterialTheme.colorScheme.secondary
+                            else -> MaterialTheme.colorScheme.tertiary
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun WinningCombinationCard(shots: List<ShotDetails>, modifier: Modifier = Modifier) {
+    if (shots.isEmpty()) return
+
+    val ratedShots = shots.filter { (it.shot.calificacion ?: 0) >= 8 }
+    if (ratedShots.isEmpty()) return
+
+    val bestShot = ratedShots.maxByOrNull { it.shot.calificacion ?: 0 } ?: return
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text("✨", style = MaterialTheme.typography.displayMedium)
+                Text(
+                    text = "Combo Ganador",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text("☕ Grano", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    text = "${bestShot.beanTostador} - ${bestShot.beanCafe}",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            if (bestShot.molinoNombre != null) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text("⚙️ Molino", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(
+                        text = bestShot.molinoNombre,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("Rating", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(
+                        text = "⭐ ${bestShot.shot.calificacion}/10",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("Ratio", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(
+                        text = String.format("%.2f", bestShot.shot.ratio),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("Tiempo", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(
+                        text = "${bestShot.shot.tiempoSeg ?: "-"}s",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun TimeDistributionCard(shots: List<ShotDetails>, modifier: Modifier = Modifier) {
+    if (shots.isEmpty()) return
+
+    val timesWithRating = shots
+        .filter { it.shot.tiempoSeg != null && (it.shot.calificacion ?: 0) > 0 }
+    
+    if (timesWithRating.isEmpty()) return
+
+    // Agrupar en rangos
+    val ranges = mapOf(
+        "20-30s" to timesWithRating.filter { it.shot.tiempoSeg!! in 20..30 },
+        "30-40s" to timesWithRating.filter { it.shot.tiempoSeg!! in 31..40 },
+        "40-50s" to timesWithRating.filter { it.shot.tiempoSeg!! in 41..50 },
+        "50-60s" to timesWithRating.filter { it.shot.tiempoSeg!! in 51..60 },
+        "60s+" to timesWithRating.filter { it.shot.tiempoSeg!! > 60 }
+    ).filterValues { it.isNotEmpty() }
+
+    if (ranges.isEmpty()) return
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.tertiaryContainer),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("⏱️", style = MaterialTheme.typography.titleMedium)
+                }
+                Text(
+                    text = "Distribución de Tiempos",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            ranges.entries.forEach { (range, shotsInRange) ->
+                val avgRating = shotsInRange.mapNotNull { it.shot.calificacion }.average()
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 6.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = range,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = "${shotsInRange.size} shots",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(24.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.surfaceVariant,
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(0.9f)
+                                .height(24.dp)
+                                .background(
+                                    brush = Brush.horizontalGradient(
+                                        colors = listOf(
+                                            when {
+                                                avgRating >= 8 -> MaterialTheme.colorScheme.primary
+                                                avgRating >= 7 -> MaterialTheme.colorScheme.secondary
+                                                else -> MaterialTheme.colorScheme.tertiary
+                                            },
+                                            when {
+                                                avgRating >= 8 -> MaterialTheme.colorScheme.primary
+                                                avgRating >= 7 -> MaterialTheme.colorScheme.secondary
+                                                else -> MaterialTheme.colorScheme.tertiary
+                                            }.copy(alpha = 0.5f)
+                                        )
+                                    ),
+                                    shape = RoundedCornerShape(4.dp)
+                                )
+                        )
+                        Text(
+                            text = "⭐ ${String.format("%.1f", avgRating)}",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp)
+                                .align(Alignment.CenterStart)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}

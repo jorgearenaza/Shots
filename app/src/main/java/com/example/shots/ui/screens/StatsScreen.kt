@@ -22,6 +22,10 @@ import com.example.shots.ui.components.EmptyState
 import com.example.shots.ui.components.InsightsCard
 import com.example.shots.ui.components.RatingsStatsCard
 import com.example.shots.ui.components.ShotsPerBeanChart
+import com.example.shots.ui.components.BeanRatingsAnalysis
+import com.example.shots.ui.components.GrinderPerformanceCard
+import com.example.shots.ui.components.WinningCombinationCard
+import com.example.shots.ui.components.TimeDistributionCard
 import com.example.shots.viewmodel.MainViewModel
 
 @Composable
@@ -67,7 +71,23 @@ fun StatsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
         }
 
         item {
+            WinningCombinationCard(shots.value)
+        }
+
+        item {
             ShotsPerBeanChart(shots.value)
+        }
+
+        item {
+            BeanRatingsAnalysis(shots.value)
+        }
+
+        item {
+            GrinderPerformanceCard(shots.value)
+        }
+
+        item {
+            TimeDistributionCard(shots.value)
         }
         
         item {

@@ -453,11 +453,9 @@ fun ShotsPerBeanChart(shots: List<ShotDetails>, modifier: Modifier = Modifier) {
                             horizontalArrangement = Arrangement.spacedBy(6.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = "${index + 1}",
-                                style = MaterialTheme.typography.labelSmall,
+                            Box(
                                 modifier = Modifier
-                                    .size(20.dp)
+                                    .size(24.dp)
                                     .background(
                                         color = when (index) {
                                             0 -> MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
@@ -466,11 +464,16 @@ fun ShotsPerBeanChart(shots: List<ShotDetails>, modifier: Modifier = Modifier) {
                                             else -> MaterialTheme.colorScheme.surfaceVariant
                                         },
                                         shape = CircleShape
-                                    )
-                                    .padding(2.dp),
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "${index + 1}",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
                             Text(
                                 text = bean,
                                 style = MaterialTheme.typography.bodyMedium,

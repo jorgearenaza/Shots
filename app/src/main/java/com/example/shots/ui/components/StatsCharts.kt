@@ -550,63 +550,7 @@ fun ShotsPerBeanChart(shots: List<ShotDetails>, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun InsightsCard(shots: List<ShotDetails>, modifier: Modifier = Modifier) {
-    if (shots.isEmpty()) return
-    
-    val insights = mutableListOf<Pair<String, String>>()
-    
-    // Calcular insights
-    val avgRating = shots.mapNotNull { it.shot.calificacion }.let {
-        if (it.isEmpty()) 0.0 else it.average()
-    }
-    
-    val ratioRange = shots.map { it.shot.ratio }
-    val avgRatio = ratioRange.average()
-    val consistentRatio = ratioRange.map { kotlin.math.abs(it - avgRatio) }.average() < 0.3
-    
-    val last7Shots = shots.sortedByDescending { it.shot.fecha }.take(7)
-    val last7Avg = last7Shots.mapNotNull { it.shot.calificacion }.let {
-        if (it.isEmpty()) 0.0 else it.average()
-    }
-    
-    // Generar insights
-    if (avgRating >= 8.0) {
-        insights.add("🎯" to "Excelente consistencia con rating promedio de ${String.format("%.1f", avgRating)}")
-    } else if (avgRating < 6.0 && shots.size > 5) {
-        insights.add("💡" to "Hay espacio para mejorar. Experimenta con diferentes ajustes")
-    }
-    
-    if (consistentRatio) {
-        insights.add("⚖️" to "Ratio muy consistente alrededor de ${String.format("%.2f", avgRatio)}")
-    }
-    
-    if (last7Shots.size >= 7 && last7Avg > avgRating + 0.5) {
-        insights.add("📈" to "Mejorando! Tus últimos shots tienen mejor rating")
-    } else if (last7Shots.size >= 7 && last7Avg < avgRating - 0.5) {
-        insights.add("📉" to "Últimos shots por debajo del promedio. Revisa tu técnica")
-    }
-    
-    val mostUsedBean = shots.groupingBy { "${it.beanTostador} - ${it.beanCafe}" }
-        .eachCount()
-        .maxByOrNull { it.value }
-    
-    if (mostUsedBean != null && mostUsedBean.value > shots.size * 0.3) {
-        insights.add("☕" to "Tu grano favorito es ${mostUsedBean.key}")
-    }
-    
-    if (shots.size >= 10) {
-        val highRatedShots = shots.filter { (it.shot.calificacion ?: 0) >= 8 }
-        val avgHighRatio = highRatedShots.map { it.shot.ratio }.let {
-            if (it.isEmpty()) 0.0 else it.average()
-        }
-        if (highRatedShots.isNotEmpty()) {
-            insights.add("✨" to "Tus mejores shots tienen ratio de ${String.format("%.2f", avgHighRatio)}")
-        }
-    }
-    
-    if (insights.isEmpty()) {
-        insights.add("📊" to "Sigue registrando shots para obtener insights personalizados")
-    }
+fun InsightsCard(insights: List<Pair<String, String>>, modifier: Modifier = Modifier) {
     
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -674,22 +618,7 @@ fun InsightsCard(shots: List<ShotDetails>, modifier: Modifier = Modifier) {
     }
 }
 @Composable
-fun BeanRatingsAnalysis(shots: List<ShotDetails>, modifier: Modifier = Modifier) {
-    if (shots.isEmpty()) return
-
-    // Agrupar por grano y calcular rating promedio
-    val beanStats = shots
-        .filter { (it.shot.calificacion ?: 0) > 0 }
-        .groupBy { "${it.beanTostador} - ${it.beanCafe}" }
-        .mapValues { (_, shotsOfBean) ->
-            val avgRating = shotsOfBean.mapNotNull { it.shot.calificacion }.average()
-            val count = shotsOfBean.size
-            Pair(avgRating, count)
-        }
-        .toList()
-        .sortedByDescending { it.second.first }
-        .take(6)
-
+fun BeanRatingsAnalysis(beanStats: List<Pair<String, Pair<Double, Int>>>, modifier: Modifier = Modifier) {
     if (beanStats.isEmpty()) return
 
     Card(
@@ -777,21 +706,7 @@ fun BeanRatingsAnalysis(shots: List<ShotDetails>, modifier: Modifier = Modifier)
 }
 
 @Composable
-fun GrinderPerformanceCard(shots: List<ShotDetails>, modifier: Modifier = Modifier) {
-    if (shots.isEmpty()) return
-
-    val grinderStats = shots
-        .filter { it.grinderNombre != null && (it.shot.calificacion ?: 0) > 0 }
-        .groupBy { it.grinderNombre ?: "Sin molino" }
-        .mapValues { (_, shotsOfGrinder) ->
-            val avgRating = shotsOfGrinder.mapNotNull { it.shot.calificacion }.average()
-            val count = shotsOfGrinder.size
-            Pair(avgRating, count)
-        }
-        .toList()
-        .sortedByDescending { it.second.first }
-        .take(5)
-
+fun GrinderPerformanceCard(grinderStats: List<Pair<String?, Pair<Double, Int>>>, modifier: Modifier = Modifier) {
     if (grinderStats.isEmpty()) return
 
     Card(
@@ -874,13 +789,7 @@ fun GrinderPerformanceCard(shots: List<ShotDetails>, modifier: Modifier = Modifi
 }
 
 @Composable
-fun WinningCombinationCard(shots: List<ShotDetails>, modifier: Modifier = Modifier) {
-    if (shots.isEmpty()) return
-
-    val ratedShots = shots.filter { (it.shot.calificacion ?: 0) >= 8 }
-    if (ratedShots.isEmpty()) return
-
-    val bestShot = ratedShots.maxByOrNull { it.shot.calificacion ?: 0 } ?: return
+fun WinningCombinationCard(bestShot: ShotDetails, modifier: Modifier = Modifier) {
 
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -964,24 +873,8 @@ fun WinningCombinationCard(shots: List<ShotDetails>, modifier: Modifier = Modifi
 }
 
 @Composable
-fun TimeDistributionCard(shots: List<ShotDetails>, modifier: Modifier = Modifier) {
-    if (shots.isEmpty()) return
-
-    val timesWithRating = shots
-        .filter { it.shot.tiempoSeg != null && (it.shot.calificacion ?: 0) > 0 }
-    
-    if (timesWithRating.isEmpty()) return
-
-    // Agrupar en rangos
-    val ranges = mapOf(
-        "20-30s" to timesWithRating.filter { it.shot.tiempoSeg!! in 20..30 },
-        "30-40s" to timesWithRating.filter { it.shot.tiempoSeg!! in 31..40 },
-        "40-50s" to timesWithRating.filter { it.shot.tiempoSeg!! in 41..50 },
-        "50-60s" to timesWithRating.filter { it.shot.tiempoSeg!! in 51..60 },
-        "60s+" to timesWithRating.filter { it.shot.tiempoSeg!! > 60 }
-    ).filterValues { it.isNotEmpty() }
-
-    if (ranges.isEmpty()) return
+fun TimeDistributionCard(timeStats: Map<String, Pair<Int, Double>>, modifier: Modifier = Modifier) {
+    if (timeStats.isEmpty()) return
 
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -1019,8 +912,8 @@ fun TimeDistributionCard(shots: List<ShotDetails>, modifier: Modifier = Modifier
                 )
             }
 
-            ranges.entries.forEach { (range, shotsInRange) ->
-                val avgRating = shotsInRange.mapNotNull { it.shot.calificacion }.average()
+            timeStats.entries.forEach { (range, stats) ->
+                val (shotCount, avgRating) = stats
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Row(
                         modifier = Modifier
@@ -1035,7 +928,7 @@ fun TimeDistributionCard(shots: List<ShotDetails>, modifier: Modifier = Modifier
                             fontWeight = FontWeight.Medium
                         )
                         Text(
-                            text = "${shotsInRange.size} shots",
+                            text = "$shotCount shots",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

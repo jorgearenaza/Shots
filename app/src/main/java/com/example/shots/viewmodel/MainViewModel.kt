@@ -11,8 +11,10 @@ import com.example.shots.data.model.ShotDetails
 import com.example.shots.data.model.ShotEntity
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
     val shots: StateFlow<List<ShotDetails>> = repo.observeShots()
@@ -29,6 +31,118 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
 
     val settings: StateFlow<SettingsState> = repo.dataStore.settings
         .stateIn(viewModelScope, SharingStarted.Lazily, SettingsState())
+
+    // Computed Stats - Cached and only recalculated when shots change
+    
+    val beanRatingsStats: StateFlow<List<Pair<String, Pair<Double, Int>>>> = shots.map { allShots ->
+        allShots
+            .filter { (it.shot.calificacion ?: 0) > 0 }
+            .groupBy { "${it.beanTostador} - ${it.beanCafe}" }
+            .mapValues { (_, shotsOfBean) ->
+                val avgRating = shotsOfBean.mapNotNull { it.shot.calificacion }.average()
+                val count = shotsOfBean.size
+                Pair(avgRating, count)
+            }
+            .toList()
+            .sortedByDescending { it.second.first }
+            .take(6)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    val grinderPerformanceStats: StateFlow<List<Pair<String?, Pair<Double, Int>>>> = shots.map { allShots ->
+        allShots
+            .filter { it.grinderNombre != null && (it.shot.calificacion ?: 0) > 0 }
+            .groupBy { it.grinderNombre }
+            .mapValues { (_, shotsOfGrinder) ->
+                val avgRating = shotsOfGrinder.mapNotNull { it.shot.calificacion }.average()
+                val count = shotsOfGrinder.size
+                Pair(avgRating, count)
+            }
+            .toList()
+            .sortedByDescending { it.second.first }
+            .take(5)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    val winningCombination: StateFlow<ShotDetails?> = shots.map { allShots ->
+        val ratedShots = allShots.filter { (it.shot.calificacion ?: 0) >= 8 }
+        ratedShots.maxByOrNull { it.shot.calificacion ?: 0 }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    val timeDistributionStats: StateFlow<Map<String, Pair<Int, Double>>> = shots.map { allShots ->
+        val timesWithRating = allShots
+            .filter { it.shot.tiempoSeg != null && (it.shot.calificacion ?: 0) > 0 }
+        
+        val ranges = mapOf(
+            "20-30s" to timesWithRating.filter { it.shot.tiempoSeg!! in 20..30 },
+            "30-40s" to timesWithRating.filter { it.shot.tiempoSeg!! in 31..40 },
+            "40-50s" to timesWithRating.filter { it.shot.tiempoSeg!! in 41..50 },
+            "50-60s" to timesWithRating.filter { it.shot.tiempoSeg!! in 51..60 },
+            "60s+" to timesWithRating.filter { it.shot.tiempoSeg!! > 60 }
+        ).filterValues { it.isNotEmpty() }
+
+        ranges.mapValues { (_, shotsInRange) ->
+            val avgRating = shotsInRange.mapNotNull { it.shot.calificacion }.average()
+            Pair(shotsInRange.size, avgRating)
+        }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
+
+    val statsInsights: StateFlow<List<Pair<String, String>>> = shots.map { allShots ->
+        val insights = mutableListOf<Pair<String, String>>()
+        
+        val avgRating = allShots.mapNotNull { it.shot.calificacion }.let {
+            if (it.isEmpty()) 0.0 else it.average()
+        }
+        
+        val ratioRange = allShots.map { it.shot.ratio }
+        val avgRatio = ratioRange.average()
+        val consistentRatio = if (ratioRange.isNotEmpty()) {
+            ratioRange.map { abs(it - avgRatio) }.average() < 0.3
+        } else false
+        
+        val last7Shots = allShots.sortedByDescending { it.shot.fecha }.take(7)
+        val last7Avg = last7Shots.mapNotNull { it.shot.calificacion }.let {
+            if (it.isEmpty()) 0.0 else it.average()
+        }
+        
+        if (avgRating >= 8.0) {
+            insights.add("🎯" to "Excelente consistencia con rating promedio de ${String.format("%.1f", avgRating)}")
+        } else if (avgRating < 6.0 && allShots.size > 5) {
+            insights.add("💡" to "Hay espacio para mejorar. Experimenta con diferentes ajustes")
+        }
+        
+        if (consistentRatio) {
+            insights.add("⚖️" to "Ratio muy consistente alrededor de ${String.format("%.2f", avgRatio)}")
+        }
+        
+        if (last7Shots.size >= 7 && last7Avg > avgRating + 0.5) {
+            insights.add("📈" to "Mejorando! Tus últimos shots tienen mejor rating")
+        } else if (last7Shots.size >= 7 && last7Avg < avgRating - 0.5) {
+            insights.add("📉" to "Últimos shots por debajo del promedio. Revisa tu técnica")
+        }
+        
+        val mostUsedBean = allShots.groupingBy { "${it.beanTostador} - ${it.beanCafe}" }
+            .eachCount()
+            .maxByOrNull { it.value }
+        
+        if (mostUsedBean != null && mostUsedBean.value > allShots.size * 0.3) {
+            insights.add("☕" to "Tu grano favorito es ${mostUsedBean.key}")
+        }
+        
+        if (allShots.size >= 10) {
+            val highRatedShots = allShots.filter { (it.shot.calificacion ?: 0) >= 8 }
+            val avgHighRatio = highRatedShots.map { it.shot.ratio }.let {
+                if (it.isEmpty()) 0.0 else it.average()
+            }
+            if (highRatedShots.isNotEmpty()) {
+                insights.add("✨" to "Tus mejores shots tienen ratio de ${String.format("%.2f", avgHighRatio)}")
+            }
+        }
+        
+        if (insights.isEmpty()) {
+            insights.add("📊" to "Sigue registrando shots para obtener insights personalizados")
+        }
+        
+        insights
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     fun addShot(
         fecha: Long,

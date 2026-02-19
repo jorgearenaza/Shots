@@ -31,6 +31,11 @@ import com.example.shots.viewmodel.MainViewModel
 @Composable
 fun StatsScreen(navController: NavController, vm: MainViewModel, padding: PaddingValues) {
     val shots = vm.shots.collectAsState()
+    val beanStats = vm.beanRatingsStats.collectAsState()
+    val grinderStats = vm.grinderPerformanceStats.collectAsState()
+    val winningCombo = vm.winningCombination.collectAsState()
+    val timeStats = vm.timeDistributionStats.collectAsState()
+    val insights = vm.statsInsights.collectAsState()
 
     if (shots.value.isEmpty()) {
         EmptyState(
@@ -70,8 +75,10 @@ fun StatsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
             RatingsStatsCard(shots.value)
         }
 
-        item {
-            WinningCombinationCard(shots.value)
+        if (winningCombo.value != null) {
+            item {
+                WinningCombinationCard(winningCombo.value!!)
+            }
         }
 
         item {
@@ -79,19 +86,19 @@ fun StatsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
         }
 
         item {
-            BeanRatingsAnalysis(shots.value)
+            BeanRatingsAnalysis(beanStats.value)
         }
 
         item {
-            GrinderPerformanceCard(shots.value)
+            GrinderPerformanceCard(grinderStats.value)
         }
 
         item {
-            TimeDistributionCard(shots.value)
+            TimeDistributionCard(timeStats.value)
         }
         
         item {
-            InsightsCard(shots.value)
+            InsightsCard(insights.value)
         }
     }
 }

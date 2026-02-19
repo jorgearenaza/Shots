@@ -760,7 +760,7 @@ fun GrinderPerformanceCard(grinderStats: List<Pair<String?, Pair<Double, Int>>>,
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = grinder,
+                            text = grinder ?: "Sin molino",
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             maxLines = 1,

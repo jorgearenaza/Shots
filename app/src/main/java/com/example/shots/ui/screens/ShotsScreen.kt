@@ -201,14 +201,15 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
             expanded = expandAdvancedFilters,
             onExpandChange = { expandAdvancedFilters = it },
             beans = beans.value.map { it.id to "${it.tostador} - ${it.cafe}" },
-            grinders = vm.grinders.collectAsState().value.map { it.id to it.nombre }
+            grinders = vm.grinders.collectAsState().value.map { it.id to it.nombre },
+            modifier = Modifier.padding(horizontal = AppSpacing.large)
         )
         
         // Chips de filtrado
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = AppSpacing.large),
+                .padding(horizontal = AppSpacing.large, vertical = AppSpacing.small),
             horizontalArrangement = Arrangement.spacedBy(AppSpacing.small)
         ) {
             item {
@@ -256,7 +257,7 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
             }
         }
 
-        // Lista de shots
+        // Lista de shots - ocupa el espacio restante con scroll
         if (filteredShots.isEmpty()) {
             EmptyState(
                 message = "No se encontraron shots con esos filtros.",
@@ -270,7 +271,8 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
         } else {
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
+                    .weight(1f)
                     .padding(horizontal = AppSpacing.large),
                 contentPadding = PaddingValues(top = AppSpacing.small, bottom = 88.dp),
                 verticalArrangement = Arrangement.spacedBy(AppSpacing.medium)

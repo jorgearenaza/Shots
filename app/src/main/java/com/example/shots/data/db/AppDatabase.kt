@@ -15,7 +15,7 @@ import com.example.shots.data.model.ShotEntity
 
 @Database(
     entities = [ShotEntity::class, BeanEntity::class, GrinderEntity::class, ProfileEntity::class],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

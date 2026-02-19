@@ -123,30 +123,47 @@ fun AdvancedFiltersPanel(
 
                 // Bean selector - ultra compact
                 if (beans.isNotEmpty()) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(0.dp),
-                        horizontalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
+                    var showBeanMenu by remember { mutableStateOf(false) }
+                    Column(modifier = Modifier.fillMaxWidth()) {
                         OutlinedTextField(
                             value = beans.find { it.first == filters.selectedBeamId }?.second ?: "",
                             onValueChange = {},
                             placeholder = { Text("Grano", style = TextStyle(fontSize = 9.sp)) },
                             readOnly = true,
                             textStyle = TextStyle(fontSize = 10.sp),
+                            trailingIcon = {
+                                if (filters.selectedBeamId != null) {
+                                    IconButton(
+                                        onClick = { onFiltersChange(filters.copy(selectedBeamId = null)) }
+                                    ) {
+                                        Icon(Icons.Default.Close, contentDescription = null)
+                                    }
+                                } else {
+                                    Text("▼", modifier = Modifier.padding(end = 4.dp))
+                                }
+                            },
                             modifier = Modifier
-                                .weight(1f)
+                                .fillMaxWidth()
                                 .padding(0.dp),
                             singleLine = true
                         )
-                        if (filters.selectedBeamId != null) {
-                            IconButton(
-                                onClick = { onFiltersChange(filters.copy(selectedBeamId = null)) },
+                        if (showBeanMenu) {
+                            Column(
                                 modifier = Modifier
-                                    .padding(0.dp)
+                                    .fillMaxWidth()
+                                    .background(MaterialTheme.colorScheme.surface)
+                                    .padding(4.dp),
+                                verticalArrangement = Arrangement.spacedBy(2.dp)
                             ) {
-                                Icon(Icons.Default.Close, contentDescription = null, modifier = Modifier.then(Modifier))
+                                beans.forEach { (id, name) ->
+                                    Text(
+                                        text = name,
+                                        style = TextStyle(fontSize = 9.sp),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(4.dp)
+                                    )
+                                }
                             }
                         }
                     }
@@ -154,29 +171,47 @@ fun AdvancedFiltersPanel(
 
                 // Grinder selector - ultra compact
                 if (grinders.isNotEmpty()) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(0.dp),
-                        horizontalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
+                    var showGrinderMenu by remember { mutableStateOf(false) }
+                    Column(modifier = Modifier.fillMaxWidth()) {
                         OutlinedTextField(
                             value = grinders.find { it.first == filters.selectedGrinderId }?.second ?: "",
                             onValueChange = {},
                             placeholder = { Text("Molino", style = TextStyle(fontSize = 9.sp)) },
                             readOnly = true,
                             textStyle = TextStyle(fontSize = 10.sp),
+                            trailingIcon = {
+                                if (filters.selectedGrinderId != null) {
+                                    IconButton(
+                                        onClick = { onFiltersChange(filters.copy(selectedGrinderId = null)) }
+                                    ) {
+                                        Icon(Icons.Default.Close, contentDescription = null)
+                                    }
+                                } else {
+                                    Text("▼", modifier = Modifier.padding(end = 4.dp))
+                                }
+                            },
                             modifier = Modifier
-                                .weight(1f)
+                                .fillMaxWidth()
                                 .padding(0.dp),
                             singleLine = true
                         )
-                        if (filters.selectedGrinderId != null) {
-                            IconButton(
-                                onClick = { onFiltersChange(filters.copy(selectedGrinderId = null)) },
-                                modifier = Modifier.padding(0.dp)
+                        if (showGrinderMenu) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(MaterialTheme.colorScheme.surface)
+                                    .padding(4.dp),
+                                verticalArrangement = Arrangement.spacedBy(2.dp)
                             ) {
-                                Icon(Icons.Default.Close, contentDescription = null)
+                                grinders.forEach { (id, name) ->
+                                    Text(
+                                        text = name,
+                                        style = TextStyle(fontSize = 9.sp),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(4.dp)
+                                    )
+                                }
                             }
                         }
                     }

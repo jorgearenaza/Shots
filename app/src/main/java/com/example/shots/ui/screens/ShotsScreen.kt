@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +43,7 @@ import com.example.shots.ui.components.EmptyState
 import com.example.shots.ui.components.ShotCard
 import com.example.shots.ui.components.AdvancedFiltersPanel
 import com.example.shots.ui.components.ShotFilters
+import com.example.shots.ui.components.SkeletonShotsScreen
 import com.example.shots.ui.theme.AppSpacing
 import com.example.shots.viewmodel.MainViewModel
 import java.time.Instant
@@ -53,14 +55,22 @@ import java.time.temporal.ChronoUnit
 fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: PaddingValues) {
     val shots = vm.shots.collectAsState()
     val beans = vm.beans.collectAsState()
+    val isLoading = vm.isLoadingShots.collectAsState()
+    val persistedFilters = vm.persistedFilters.collectAsState()
+    
     var searchQuery by remember { mutableStateOf("") }
     var shotToDelete by remember { mutableStateOf<Long?>(null) }
     var filterRating by remember { mutableStateOf<Int?>(null) }
     var filterRecent by remember { mutableStateOf(false) }
     
-    // Advanced filters state
-    var advancedFilters by remember { mutableStateOf(ShotFilters()) }
+    // Advanced filters state - initialized from persisted filters
+    var advancedFilters by remember { mutableStateOf(persistedFilters.value) }
     var expandAdvancedFilters by remember { mutableStateOf(false) }
+    
+    // Save filters whenever they change
+    LaunchedEffect(advancedFilters) {
+        vm.saveFilters(advancedFilters)
+    }
     
     // Use filtered shots if advanced filters are active
     val shotsToDisplay = if (
@@ -72,6 +82,12 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
         vm.getFilteredShots(advancedFilters).collectAsState()
     } else {
         shots
+    }
+
+    // Show loading skeleton while fetching initial data
+    if (isLoading.value && shots.value.isEmpty()) {
+        SkeletonShotsScreen()
+        return
     }
 
     if (shots.value.isEmpty()) {

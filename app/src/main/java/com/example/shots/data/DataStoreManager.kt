@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.shots.ui.components.ShotFilters
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -19,6 +21,14 @@ class DataStoreManager private constructor(private val context: Context) {
         private val DEFAULT_GRINDER_ID = longPreferencesKey("default_grinder_id")
         private val DEFAULT_PROFILE_ID = longPreferencesKey("default_profile_id")
         private val AUTOFILL_SHOTS = booleanPreferencesKey("autofill_shots")
+        
+        // Filter persistence keys
+        private val FILTER_MIN_RATING = intPreferencesKey("filter_min_rating")
+        private val FILTER_MAX_RATING = intPreferencesKey("filter_max_rating")
+        private val FILTER_BEAN_ID = longPreferencesKey("filter_bean_id")
+        private val FILTER_GRINDER_ID = longPreferencesKey("filter_grinder_id")
+        private val FILTER_START_DATE = longPreferencesKey("filter_start_date")
+        private val FILTER_END_DATE = longPreferencesKey("filter_end_date")
 
         fun create(context: Context): DataStoreManager = DataStoreManager(context)
     }
@@ -53,6 +63,52 @@ class DataStoreManager private constructor(private val context: Context) {
                 prefs[DEFAULT_PROFILE_ID] = state.defaultPerfilId
             }
             prefs[AUTOFILL_SHOTS] = state.autofillShots
+        }
+    }
+
+    val filters: Flow<ShotFilters> = context.dataStore.data.map { prefs ->
+        ShotFilters(
+            minRating = prefs[FILTER_MIN_RATING],
+            maxRating = prefs[FILTER_MAX_RATING],
+            selectedBeamId = prefs[FILTER_BEAN_ID],
+            selectedGrinderId = prefs[FILTER_GRINDER_ID],
+            startDate = prefs[FILTER_START_DATE],
+            endDate = prefs[FILTER_END_DATE]
+        )
+    }
+
+    suspend fun setFilters(filters: ShotFilters) {
+        context.dataStore.edit { prefs ->
+            if (filters.minRating == null) {
+                prefs.remove(FILTER_MIN_RATING)
+            } else {
+                prefs[FILTER_MIN_RATING] = filters.minRating
+            }
+            if (filters.maxRating == null) {
+                prefs.remove(FILTER_MAX_RATING)
+            } else {
+                prefs[FILTER_MAX_RATING] = filters.maxRating
+            }
+            if (filters.selectedBeamId == null) {
+                prefs.remove(FILTER_BEAN_ID)
+            } else {
+                prefs[FILTER_BEAN_ID] = filters.selectedBeamId
+            }
+            if (filters.selectedGrinderId == null) {
+                prefs.remove(FILTER_GRINDER_ID)
+            } else {
+                prefs[FILTER_GRINDER_ID] = filters.selectedGrinderId
+            }
+            if (filters.startDate == null) {
+                prefs.remove(FILTER_START_DATE)
+            } else {
+                prefs[FILTER_START_DATE] = filters.startDate
+            }
+            if (filters.endDate == null) {
+                prefs.remove(FILTER_END_DATE)
+            } else {
+                prefs[FILTER_END_DATE] = filters.endDate
+            }
         }
     }
 }

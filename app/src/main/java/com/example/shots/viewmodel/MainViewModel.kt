@@ -30,6 +30,13 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
     val profiles: StateFlow<List<ProfileEntity>> = repo.observeProfiles()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
+    // Loading states
+    val isLoadingShots: StateFlow<Boolean> = shots.map { it.isEmpty() }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
+    val isLoadingStats: StateFlow<Boolean> = shots.map { it.isEmpty() }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
     // Search methods that return Flow for reactive updates
     fun searchBeans(query: String) = repo.searchBeans(query)
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
@@ -42,6 +49,10 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
 
     val settings: StateFlow<SettingsState> = repo.dataStore.settings
         .stateIn(viewModelScope, SharingStarted.Lazily, SettingsState())
+
+    // Persistent filters from DataStore
+    val persistedFilters: StateFlow<ShotFilters> = repo.dataStore.filters
+        .stateIn(viewModelScope, SharingStarted.Lazily, ShotFilters())
 
     // Computed Stats - Cached and only recalculated when shots change
     
@@ -331,6 +342,12 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
     fun saveSettings(state: SettingsState) {
         viewModelScope.launch {
             repo.dataStore.setSettings(state)
+        }
+    }
+
+    fun saveFilters(filters: ShotFilters) {
+        viewModelScope.launch {
+            repo.dataStore.setFilters(filters)
         }
     }
 

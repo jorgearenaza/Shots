@@ -30,6 +30,23 @@ class ShotsRepository(
     fun searchGrinders(query: String): Flow<List<GrinderEntity>> = grinderDao.searchActive(query)
     fun searchProfiles(query: String): Flow<List<ProfileEntity>> = profileDao.searchActive(query)
 
+    // Filtered query method
+    fun queryFilteredShots(
+        minRating: Int,
+        maxRating: Int,
+        beanId: Long?,
+        grinderId: Long?,
+        startDate: Long?,
+        endDate: Long?
+    ): Flow<List<ShotDetails>> = shotDao.queryFiltered(
+        minRating = minRating,
+        maxRating = maxRating,
+        beanId = beanId,
+        grinderId = grinderId,
+        startDate = startDate,
+        endDate = endDate
+    )
+
     suspend fun insertShot(shot: ShotEntity): Long {
         return withContext(Dispatchers.IO) {
             shotDao.insert(shot)

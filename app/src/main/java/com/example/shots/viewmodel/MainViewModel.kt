@@ -9,6 +9,7 @@ import com.example.shots.data.model.GrinderEntity
 import com.example.shots.data.model.ProfileEntity
 import com.example.shots.data.model.ShotDetails
 import com.example.shots.data.model.ShotEntity
+import com.example.shots.ui.components.ShotFilters
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -331,6 +332,18 @@ class MainViewModel(private val repo: ShotsRepository) : ViewModel() {
         viewModelScope.launch {
             repo.dataStore.setSettings(state)
         }
+    }
+
+    // Filtered shots - accepts ShotFilters data class with optional parameters
+    fun getFilteredShots(filters: ShotFilters): StateFlow<List<ShotDetails>> {
+        return repo.queryFilteredShots(
+            minRating = filters.minRating ?: 1,
+            maxRating = filters.maxRating ?: 10,
+            beanId = filters.selectedBeamId,
+            grinderId = filters.selectedGrinderId,
+            startDate = filters.startDate,
+            endDate = filters.endDate
+        ).stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
     }
 
 }

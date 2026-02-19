@@ -40,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.shots.ui.components.EmptyState
 import com.example.shots.ui.components.ShotCard
+import com.example.shots.ui.components.AdvancedFiltersPanel
+import com.example.shots.ui.components.ShotFilters
 import com.example.shots.ui.theme.AppSpacing
 import com.example.shots.viewmodel.MainViewModel
 import java.time.Instant
@@ -55,6 +57,22 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
     var shotToDelete by remember { mutableStateOf<Long?>(null) }
     var filterRating by remember { mutableStateOf<Int?>(null) }
     var filterRecent by remember { mutableStateOf(false) }
+    
+    // Advanced filters state
+    var advancedFilters by remember { mutableStateOf(ShotFilters()) }
+    var expandAdvancedFilters by remember { mutableStateOf(false) }
+    
+    // Use filtered shots if advanced filters are active
+    val shotsToDisplay = if (
+        advancedFilters.minRating != null || 
+        advancedFilters.maxRating != null || 
+        advancedFilters.selectedBeamId != null || 
+        advancedFilters.selectedGrinderId != null
+    ) {
+        vm.getFilteredShots(advancedFilters).collectAsState()
+    } else {
+        shots
+    }
 
     if (shots.value.isEmpty()) {
         EmptyState(
@@ -80,9 +98,8 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
     }
 
     // Filtrar shots por búsqueda y filtros
-    val filteredShots = remember(shots.value, searchQuery, filterRating, filterRecent) {
-        val currentFilterRating = filterRating  // Extraer a variable local para evitar smart cast issues
-        var result = shots.value.filter { shot ->
+    val filteredShots = remember(shotsToDisplay.value, searchQuery, filterRating, filterRecent) {
+        var result = shotsToDisplay.value.filter { shot ->
             val beanLabel = "${shot.beanTostador} - ${shot.beanCafe}".lowercase()
             val notes = (shot.shot.notas ?: "").lowercase()
             val nextShot = (shot.shot.nextShotNotes ?: "").lowercase()
@@ -174,6 +191,16 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
                 .fillMaxWidth()
                 .padding(AppSpacing.large),
             singleLine = true
+        )
+        
+        // Panel de filtros avanzados
+        AdvancedFiltersPanel(
+            filters = advancedFilters,
+            onFiltersChange = { advancedFilters = it },
+            expanded = expandAdvancedFilters,
+            onExpandChange = { expandAdvancedFilters = it },
+            beans = beans.value.map { it.id to "${it.tostador} - ${it.cafe}" },
+            grinders = vm.grinders.collectAsState().value.map { it.id to it.nombre }
         )
         
         // Chips de filtrado

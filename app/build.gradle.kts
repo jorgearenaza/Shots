@@ -38,6 +38,19 @@ android {
     buildFeatures {
         compose = true
     }
+
+    packagingOptions {
+        resources {
+            // Excluir archivos PNG duplicados, mantener solo WEBP
+            excludes += setOf(
+                "**/mipmap-hdpi/ic_launcher.png",
+                "**/mipmap-mdpi/ic_launcher.png",
+                "**/mipmap-xhdpi/ic_launcher.png",
+                "**/mipmap-xxhdpi/ic_launcher.png",
+                "**/mipmap-xxxhdpi/ic_launcher.png"
+            )
+        }
+    }
 }
 
 dependencies {

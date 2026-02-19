@@ -45,29 +45,32 @@ fun AdvancedFiltersPanel(
     onExpandChange: (Boolean) -> Unit,
     beans: List<Pair<Long, String>>,
     grinders: List<Pair<Long, String>>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showHeader: Boolean = true
 ) {
     // Check if any filters are active
     val hasActiveFilters = filters != ShotFilters()
     
     Column(modifier = modifier.fillMaxWidth()) {
-        // Minimal header - just a chip button
-        FilterChip(
-            selected = expanded,
-            onClick = { onExpandChange(!expanded) },
-            label = {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.padding(vertical = 2.dp)
-                ) {
-                    Text(
-                        text = "⚙️ ${if (hasActiveFilters) "Filtros(${filters.minRating ?: "-"}-${filters.maxRating ?: "-"})" else "Filtros"}",
-                        style = TextStyle(fontSize = 11.sp)
-                    )
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
+        // Optional header - just a chip button
+        if (showHeader) {
+            FilterChip(
+                selected = expanded,
+                onClick = { onExpandChange(!expanded) },
+                label = {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier.padding(vertical = 2.dp)
+                    ) {
+                        Text(
+                            text = "⚙️ ${if (hasActiveFilters) "Filtros(${filters.minRating ?: "-"}-${filters.maxRating ?: "-"})" else "Filtros"}",
+                            style = TextStyle(fontSize = 11.sp)
+                        )
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
 
         // Expanded panel
         AnimatedVisibility(

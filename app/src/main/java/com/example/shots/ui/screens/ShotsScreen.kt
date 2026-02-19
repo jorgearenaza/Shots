@@ -191,26 +191,48 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
             }
         }
         
-        // Barra de búsqueda
-        OutlinedTextField(
-            value = searchQuery,
-            onValueChange = { searchQuery = it },
-            label = { Text("Buscar por grano, notas...") },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            trailingIcon = {
-                if (searchQuery.isNotEmpty()) {
-                    IconButton(onClick = { searchQuery = "" }) {
-                        Icon(Icons.Default.Close, contentDescription = null)
-                    }
-                }
-            },
+        // Barra de búsqueda + Filtros en la misma fila
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(AppSpacing.large),
-            singleLine = true
-        )
+                .padding(horizontal = AppSpacing.large, vertical = AppSpacing.small),
+            horizontalArrangement = Arrangement.spacedBy(AppSpacing.small),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                placeholder = { Text("Buscar...", style = MaterialTheme.typography.labelSmall) },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                trailingIcon = {
+                    if (searchQuery.isNotEmpty()) {
+                        IconButton(onClick = { searchQuery = "" }, modifier = Modifier.size(32.dp)) {
+                            Icon(Icons.Default.Close, contentDescription = null, modifier = Modifier.size(16.dp))
+                        }
+                    }
+                },
+                modifier = Modifier
+                    .weight(1f)
+                    .height(40.dp),
+                singleLine = true,
+                textStyle = MaterialTheme.typography.labelSmall
+            )
+            
+            // Botón para expandir/contraer filtros
+            FilterChip(
+                selected = expandAdvancedFilters,
+                onClick = { expandAdvancedFilters = !expandAdvancedFilters },
+                label = {
+                    Text(
+                        text = if (advancedFilters != ShotFilters()) "⚙️" else "⚙️",
+                        style = TextStyle(fontSize = 12.sp)
+                    )
+                },
+                modifier = Modifier.height(40.dp)
+            )
+        }
         
-        // Panel de filtros avanzados
+        // Panel de filtros avanzados (sin header redundante)
         AdvancedFiltersPanel(
             filters = advancedFilters,
             onFiltersChange = { advancedFilters = it },
@@ -218,61 +240,10 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
             onExpandChange = { expandAdvancedFilters = it },
             beans = beans.value.map { it.id to "${it.tostador} - ${it.cafe}" },
             grinders = vm.grinders.collectAsState().value.map { it.id to it.nombre },
-            modifier = Modifier.padding(horizontal = AppSpacing.large)
+            modifier = Modifier.padding(horizontal = AppSpacing.large),
+            showHeader = false
         )
         
-        // Chips de filtrado
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = AppSpacing.large, vertical = AppSpacing.small),
-            horizontalArrangement = Arrangement.spacedBy(AppSpacing.small)
-        ) {
-            item {
-                FilterChip(
-                    selected = filterRecent,
-                    onClick = { filterRecent = !filterRecent },
-                    label = { Text("Últimos 7 días") },
-                    leadingIcon = if (filterRecent) {
-                        { Text("📅", style = MaterialTheme.typography.labelMedium) }
-                    } else null
-                )
-            }
-            item {
-                FilterChip(
-                    selected = filterRating == 8,
-                    onClick = { filterRating = if (filterRating == 8) null else 8 },
-                    label = { Text("Rating ≥8") },
-                    leadingIcon = if (filterRating == 8) {
-                        { Text("⭐", style = MaterialTheme.typography.labelMedium) }
-                    } else null
-                )
-            }
-            item {
-                FilterChip(
-                    selected = filterRating == 6,
-                    onClick = { filterRating = if (filterRating == 6) null else 6 },
-                    label = { Text("Rating ≥6") },
-                    leadingIcon = if (filterRating == 6) {
-                        { Text("✨", style = MaterialTheme.typography.labelMedium) }
-                    } else null
-                )
-            }
-            if (filterRating != null || filterRecent) {
-                item {
-                    FilterChip(
-                        selected = false,
-                        onClick = {
-                            filterRating = null
-                            filterRecent = false
-                        },
-                        label = { Text("Limpiar filtros") },
-                        leadingIcon = { Text("🔄", style = MaterialTheme.typography.labelMedium) }
-                    )
-                }
-            }
-        }
-
         // Lista de shots - ocupa el espacio restante con scroll
         if (filteredShots.isEmpty()) {
             EmptyState(

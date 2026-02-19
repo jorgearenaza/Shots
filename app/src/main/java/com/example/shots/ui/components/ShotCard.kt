@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -153,19 +154,53 @@ fun ShotCard(
                         )
                     }
                     
-                    // Timer y Yield (centro)
-                    if (shot.shot.tiempoSeg != null || shot.shot.rendimientoG > 0) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            if (shot.shot.tiempoSeg != null) {
-                                StatusIndicator(
-                                    label = "Timer",
-                                    value = "${shot.shot.tiempoSeg}s",
-                                    status = timerStatus
+                    // Timer + Ratio + Yield (centro-derecha)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        // Tiempo con semáforo
+                        if (shot.shot.tiempoSeg != null) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                // Semáforo
+                                Box(
+                                    modifier = Modifier
+                                        .size(8.dp)
+                                        .background(
+                                            color = when (timerStatus) {
+                                                "GOOD" -> Color(0xFF4CAF50)
+                                                "WARNING" -> Color(0xFFFFC107)
+                                                else -> Color(0xFFF44336)
+                                            },
+                                            shape = CircleShape
+                                        )
+                                )
+                                Text(
+                                    text = "${shot.shot.tiempoSeg}s",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
+                        }
+                        
+                        // Ratio
+                        Text(
+                            text = "1:$ratio",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        
+                        // Yield
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(2.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             StatusIndicator(
                                 label = "Yield",
                                 value = "${shot.shot.rendimientoG}g",

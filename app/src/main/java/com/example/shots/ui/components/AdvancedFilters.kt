@@ -1,5 +1,8 @@
 package com.example.shots.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,7 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Button
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -21,7 +24,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 data class ShotFilters(
     val minRating: Int? = null,
@@ -42,51 +47,49 @@ fun AdvancedFiltersPanel(
     grinders: List<Pair<Long, String>>,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-                shape = RoundedCornerShape(8.dp)
-            )
-            .padding(8.dp)
-    ) {
-        // Header
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 4.dp, vertical = 2.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Filtros",
-                style = MaterialTheme.typography.labelSmall,
-                modifier = Modifier.weight(1f)
-            )
-            IconButton(
-                onClick = { onExpandChange(!expanded) },
-                modifier = Modifier.then(
-                    Modifier.then(
-                        if (expanded) Modifier else Modifier
+    // Check if any filters are active
+    val hasActiveFilters = filters != ShotFilters()
+    
+    Column(modifier = modifier.fillMaxWidth()) {
+        // Minimal header - just a chip button
+        FilterChip(
+            selected = expanded,
+            onClick = { onExpandChange(!expanded) },
+            label = {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier.padding(vertical = 2.dp)
+                ) {
+                    Text(
+                        text = "⚙️ ${if (hasActiveFilters) "Filtros(${filters.minRating ?: "-"}-${filters.maxRating ?: "-"})" else "Filtros"}",
+                        style = TextStyle(fontSize = 11.sp)
                     )
-                )
-            ) {
-                Text(text = if (expanded) "▼" else "▶", style = MaterialTheme.typography.labelSmall)
-            }
-        }
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
 
-        // Expanded content
-        if (expanded) {
+        // Expanded panel
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(),
+            exit = shrinkVertically()
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 6.dp),
-                verticalArrangement = Arrangement.spacedBy(5.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                        shape = RoundedCornerShape(6.dp)
+                    )
+                    .padding(6.dp)
+                    .padding(top = 4.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                // Rating filters - compact row
+                // Rating filters - very compact
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(3.dp)
                 ) {
                     OutlinedTextField(
                         value = filters.minRating?.toString() ?: "",
@@ -95,8 +98,8 @@ fun AdvancedFiltersPanel(
                                 filters.copy(minRating = value.toIntOrNull()?.coerceIn(1, 10))
                             )
                         },
-                        label = { Text("Min", style = MaterialTheme.typography.labelSmall) },
-                        textStyle = MaterialTheme.typography.labelSmall,
+                        label = { Text("Min", style = TextStyle(fontSize = 9.sp)) },
+                        textStyle = TextStyle(fontSize = 10.sp),
                         modifier = Modifier
                             .weight(1f)
                             .padding(0.dp),
@@ -109,8 +112,8 @@ fun AdvancedFiltersPanel(
                                 filters.copy(maxRating = value.toIntOrNull()?.coerceIn(1, 10))
                             )
                         },
-                        label = { Text("Max", style = MaterialTheme.typography.labelSmall) },
-                        textStyle = MaterialTheme.typography.labelSmall,
+                        label = { Text("Max", style = TextStyle(fontSize = 9.sp)) },
+                        textStyle = TextStyle(fontSize = 10.sp),
                         modifier = Modifier
                             .weight(1f)
                             .padding(0.dp),
@@ -118,64 +121,75 @@ fun AdvancedFiltersPanel(
                     )
                 }
 
-                // Bean selector - compact
+                // Bean selector - ultra compact
                 if (beans.isNotEmpty()) {
-                    OutlinedTextField(
-                        value = beans.find { it.first == filters.selectedBeamId }?.second ?: "Todo",
-                        onValueChange = {},
-                        readOnly = true,
-                        label = { Text("Grano", style = MaterialTheme.typography.labelSmall) },
-                        textStyle = MaterialTheme.typography.labelSmall,
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(0.dp),
-                        trailingIcon = {
-                            if (filters.selectedBeamId != null) {
-                                IconButton(
-                                    onClick = { onFiltersChange(filters.copy(selectedBeamId = null)) },
-                                    modifier = Modifier.padding(0.dp)
-                                ) {
-                                    Icon(Icons.Default.Close, contentDescription = null, modifier = Modifier.then(Modifier))
-                                }
-                            }
-                        }
-                    )
-                }
-
-                // Grinder selector - compact
-                if (grinders.isNotEmpty()) {
-                    OutlinedTextField(
-                        value = grinders.find { it.first == filters.selectedGrinderId }?.second ?: "Todo",
-                        onValueChange = {},
-                        readOnly = true,
-                        label = { Text("Molino", style = MaterialTheme.typography.labelSmall) },
-                        textStyle = MaterialTheme.typography.labelSmall,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(0.dp),
-                        trailingIcon = {
-                            if (filters.selectedGrinderId != null) {
-                                IconButton(
-                                    onClick = { onFiltersChange(filters.copy(selectedGrinderId = null)) },
-                                    modifier = Modifier.padding(0.dp)
-                                ) {
-                                    Icon(Icons.Default.Close, contentDescription = null)
-                                }
-                            }
-                        }
-                    )
-                }
-
-                // Clear button - small
-                if (filters != ShotFilters()) {
-                    Button(
-                        onClick = { onFiltersChange(ShotFilters()) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 2.dp)
+                        horizontalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
-                        Text("Limpiar", style = MaterialTheme.typography.labelSmall)
+                        OutlinedTextField(
+                            value = beans.find { it.first == filters.selectedBeamId }?.second ?: "",
+                            onValueChange = {},
+                            placeholder = { Text("Grano", style = TextStyle(fontSize = 9.sp)) },
+                            readOnly = true,
+                            textStyle = TextStyle(fontSize = 10.sp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(0.dp),
+                            singleLine = true
+                        )
+                        if (filters.selectedBeamId != null) {
+                            IconButton(
+                                onClick = { onFiltersChange(filters.copy(selectedBeamId = null)) },
+                                modifier = Modifier
+                                    .padding(0.dp)
+                            ) {
+                                Icon(Icons.Default.Close, contentDescription = null, modifier = Modifier.then(Modifier))
+                            }
+                        }
                     }
+                }
+
+                // Grinder selector - ultra compact
+                if (grinders.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(0.dp),
+                        horizontalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = grinders.find { it.first == filters.selectedGrinderId }?.second ?: "",
+                            onValueChange = {},
+                            placeholder = { Text("Molino", style = TextStyle(fontSize = 9.sp)) },
+                            readOnly = true,
+                            textStyle = TextStyle(fontSize = 10.sp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(0.dp),
+                            singleLine = true
+                        )
+                        if (filters.selectedGrinderId != null) {
+                            IconButton(
+                                onClick = { onFiltersChange(filters.copy(selectedGrinderId = null)) },
+                                modifier = Modifier.padding(0.dp)
+                            ) {
+                                Icon(Icons.Default.Close, contentDescription = null)
+                            }
+                        }
+                    }
+                }
+
+                // Clear button - appears only if filters active
+                if (hasActiveFilters) {
+                    FilterChip(
+                        selected = false,
+                        onClick = { onFiltersChange(ShotFilters()) },
+                        label = { Text("Limpiar", style = TextStyle(fontSize = 10.sp)) },
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
         }

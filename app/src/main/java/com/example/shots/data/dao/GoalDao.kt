@@ -33,8 +33,8 @@ interface GoalDao {
     suspend fun getGoal(goalId: Long): GoalEntity?
     
     @Query("UPDATE goals SET currentValue = :newValue WHERE id = :goalId")
-    suspend fun updateGoalProgress(goalId: Long, newValue: Float)
+    suspend fun updateGoalProgress(goalId: Long, newValue: Float): Int
     
     @Query("UPDATE goals SET completado = 1, fechaCompletado = :timestamp WHERE id = :goalId")
-    suspend fun completeGoal(goalId: Long, timestamp: Long)
+    suspend fun completeGoal(goalId: Long, timestamp: Long): Int
 }

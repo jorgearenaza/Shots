@@ -8,14 +8,16 @@ import com.example.shots.data.dao.BeanDao
 import com.example.shots.data.dao.GrinderDao
 import com.example.shots.data.dao.ProfileDao
 import com.example.shots.data.dao.ShotDao
+import com.example.shots.data.dao.GoalDao
 import com.example.shots.data.model.BeanEntity
 import com.example.shots.data.model.GrinderEntity
 import com.example.shots.data.model.ProfileEntity
 import com.example.shots.data.model.ShotEntity
+import com.example.shots.data.model.GoalEntity
 
 @Database(
-    entities = [ShotEntity::class, BeanEntity::class, GrinderEntity::class, ProfileEntity::class],
-    version = 5,
+    entities = [ShotEntity::class, BeanEntity::class, GrinderEntity::class, ProfileEntity::class, GoalEntity::class],
+    version = 6,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -23,6 +25,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun beanDao(): BeanDao
     abstract fun grinderDao(): GrinderDao
     abstract fun profileDao(): ProfileDao
+    abstract fun goalDao(): GoalDao
 
     companion object {
         @Volatile

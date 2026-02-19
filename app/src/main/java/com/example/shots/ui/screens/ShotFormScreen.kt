@@ -82,6 +82,7 @@ fun ShotFormScreen(
     // Pre-infusión
     var preinfusionTiempo by remember { mutableStateOf("") }
     var preinfusionPresion by remember { mutableStateOf("") }
+    var aguaMl by remember { mutableStateOf("") }
     // Tasting notes estructuradas
     var aromaNotes by remember { mutableStateOf("") }
     var saborNotes by remember { mutableStateOf("") }
@@ -106,6 +107,7 @@ fun ShotFormScreen(
                 ajuste = shot.ajusteMolienda ?: ""
                 preinfusionTiempo = shot.preinfusionTiempoSeg?.toString() ?: ""
                 preinfusionPresion = shot.preinfusionPresionBar?.toString() ?: ""
+                aguaMl = shot.aguaMlInfusion?.toString() ?: ""
                 aromaNotes = shot.aromaNotes ?: ""
                 saborNotes = shot.saborNotes ?: ""
                 cuerpo = shot.cuerpo ?: ""
@@ -399,6 +401,14 @@ fun ShotFormScreen(
                     singleLine = true
                 )
             }
+            OutlinedTextField(
+                value = aguaMl,
+                onValueChange = { aguaMl = it },
+                label = { Text("Agua (ml)") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
         }
 
         // ========== SECCIÓN COLAPSABLE TASTING NOTES ==========
@@ -580,6 +590,7 @@ fun ShotFormScreen(
                         calificacion = rating,
                         preinfusionTiempoSeg = preinfusionTiempo.toIntOrNull(),
                         preinfusionPresionBar = preinfusionPresion.toDoubleOrNull(),
+                        aguaMlInfusion = aguaMl.toIntOrNull(),
                         aromaNotes = aromaNotes.ifBlank { null },
                         saborNotes = saborNotes.ifBlank { null },
                         cuerpo = cuerpo.ifBlank { null },
@@ -605,6 +616,7 @@ fun ShotFormScreen(
                             calificacion = rating,
                             preinfusionTiempoSeg = preinfusionTiempo.toIntOrNull(),
                             preinfusionPresionBar = preinfusionPresion.toDoubleOrNull(),
+                            aguaMlInfusion = aguaMl.toIntOrNull(),
                             aromaNotes = aromaNotes.ifBlank { null },
                             saborNotes = saborNotes.ifBlank { null },
                             cuerpo = cuerpo.ifBlank { null },

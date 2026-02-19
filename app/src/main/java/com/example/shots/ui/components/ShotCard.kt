@@ -315,7 +315,7 @@ fun ShotCard(
                     }
 
                     // SECCIÓN 3: PRE-INFUSIÓN
-                    if (shot.shot.preinfusionTiempoSeg != null || shot.shot.preinfusionPresionBar != null) {
+                    if (shot.shot.preinfusionTiempoSeg != null || shot.shot.preinfusionPresionBar != null || shot.shot.aguaMlInfusion != null) {
                         Divider(modifier = Modifier.padding(vertical = 4.dp))
                         Column(
                             modifier = Modifier
@@ -369,6 +369,25 @@ fun ShotCard(
                                         )
                                         Text(
                                             text = "${String.format("%.1f", shot.shot.preinfusionPresionBar)}bar",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.primary,
+                                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
+                                        )
+                                    }
+                                }
+                                if (shot.shot.aguaMlInfusion != null) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                    ) {
+                                        Text(
+                                            text = "💧",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            fontSize = MaterialTheme.typography.labelSmall.fontSize * 0.85f
+                                        )
+                                        Text(
+                                            text = "${shot.shot.aguaMlInfusion}ml",
                                             style = MaterialTheme.typography.labelSmall,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.primary,

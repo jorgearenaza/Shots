@@ -47,24 +47,31 @@ fun AdvancedFiltersPanel(
             .fillMaxWidth()
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(8.dp)
             )
-            .padding(12.dp)
+            .padding(8.dp)
     ) {
         // Header
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp, vertical = 2.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Filtros Avanzados",
-                style = MaterialTheme.typography.titleSmall,
+                text = "Filtros",
+                style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.weight(1f)
             )
             IconButton(
-                onClick = { onExpandChange(!expanded) }
+                onClick = { onExpandChange(!expanded) },
+                modifier = Modifier.then(
+                    Modifier.then(
+                        if (expanded) Modifier else Modifier
+                    )
+                )
             ) {
-                Text(text = if (expanded) "▼" else "▶")
+                Text(text = if (expanded) "▼" else "▶", style = MaterialTheme.typography.labelSmall)
             }
         }
 
@@ -73,13 +80,13 @@ fun AdvancedFiltersPanel(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                    .padding(top = 6.dp),
+                verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                // Rating filters
+                // Rating filters - compact row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     OutlinedTextField(
                         value = filters.minRating?.toString() ?: "",
@@ -88,8 +95,11 @@ fun AdvancedFiltersPanel(
                                 filters.copy(minRating = value.toIntOrNull()?.coerceIn(1, 10))
                             )
                         },
-                        label = { Text("Min Rating") },
-                        modifier = Modifier.weight(1f),
+                        label = { Text("Min", style = MaterialTheme.typography.labelSmall) },
+                        textStyle = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(0.dp),
                         singleLine = true
                     )
                     OutlinedTextField(
@@ -99,41 +109,56 @@ fun AdvancedFiltersPanel(
                                 filters.copy(maxRating = value.toIntOrNull()?.coerceIn(1, 10))
                             )
                         },
-                        label = { Text("Max Rating") },
-                        modifier = Modifier.weight(1f),
+                        label = { Text("Max", style = MaterialTheme.typography.labelSmall) },
+                        textStyle = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(0.dp),
                         singleLine = true
                     )
                 }
 
-                // Bean selector
+                // Bean selector - compact
                 if (beans.isNotEmpty()) {
                     OutlinedTextField(
-                        value = beans.find { it.first == filters.selectedBeamId }?.second ?: "All Beans",
+                        value = beans.find { it.first == filters.selectedBeamId }?.second ?: "Todo",
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Bean") },
-                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("Grano", style = MaterialTheme.typography.labelSmall) },
+                        textStyle = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(0.dp),
                         trailingIcon = {
                             if (filters.selectedBeamId != null) {
-                                IconButton(onClick = { onFiltersChange(filters.copy(selectedBeamId = null)) }) {
-                                    Icon(Icons.Default.Close, contentDescription = null)
+                                IconButton(
+                                    onClick = { onFiltersChange(filters.copy(selectedBeamId = null)) },
+                                    modifier = Modifier.padding(0.dp)
+                                ) {
+                                    Icon(Icons.Default.Close, contentDescription = null, modifier = Modifier.then(Modifier))
                                 }
                             }
                         }
                     )
                 }
 
-                // Grinder selector
+                // Grinder selector - compact
                 if (grinders.isNotEmpty()) {
                     OutlinedTextField(
-                        value = grinders.find { it.first == filters.selectedGrinderId }?.second ?: "All Grinders",
+                        value = grinders.find { it.first == filters.selectedGrinderId }?.second ?: "Todo",
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Grinder") },
-                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("Molino", style = MaterialTheme.typography.labelSmall) },
+                        textStyle = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(0.dp),
                         trailingIcon = {
                             if (filters.selectedGrinderId != null) {
-                                IconButton(onClick = { onFiltersChange(filters.copy(selectedGrinderId = null)) }) {
+                                IconButton(
+                                    onClick = { onFiltersChange(filters.copy(selectedGrinderId = null)) },
+                                    modifier = Modifier.padding(0.dp)
+                                ) {
                                     Icon(Icons.Default.Close, contentDescription = null)
                                 }
                             }
@@ -141,13 +166,15 @@ fun AdvancedFiltersPanel(
                     )
                 }
 
-                // Clear button
+                // Clear button - small
                 if (filters != ShotFilters()) {
                     Button(
                         onClick = { onFiltersChange(ShotFilters()) },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 2.dp)
                     ) {
-                        Text("Clear Filters")
+                        Text("Limpiar", style = MaterialTheme.typography.labelSmall)
                     }
                 }
             }

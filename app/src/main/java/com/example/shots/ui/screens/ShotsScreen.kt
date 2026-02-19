@@ -206,7 +206,7 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                placeholder = { Text("🔍 B", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp), textAlign = TextAlign.Center) },
+                placeholder = { Text("🔍", style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp), textAlign = TextAlign.Center) },
                 trailingIcon = {
                     if (searchQuery.isNotEmpty()) {
                         IconButton(onClick = { searchQuery = "" }, modifier = Modifier.size(24.dp)) {

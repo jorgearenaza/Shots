@@ -209,8 +209,8 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
                 placeholder = { Text("🔍", style = MaterialTheme.typography.labelSmall.copy(fontSize = 14.sp), textAlign = TextAlign.Center) },
                 trailingIcon = {
                     if (searchQuery.isNotEmpty()) {
-                        IconButton(onClick = { searchQuery = "" }, modifier = Modifier.size(20.dp)) {
-                            Icon(Icons.Default.Close, contentDescription = null, modifier = Modifier.size(10.dp))
+                        IconButton(onClick = { searchQuery = "" }, modifier = Modifier.size(24.dp)) {
+                            Icon(Icons.Default.Close, contentDescription = null, modifier = Modifier.size(12.dp))
                         }
                     }
                 },
@@ -218,8 +218,7 @@ fun ShotsScreen(navController: NavController, vm: MainViewModel, padding: Paddin
                     .weight(1f)
                     .height(45.dp),
                 singleLine = true,
-                textStyle = MaterialTheme.typography.labelSmall.copy(textAlign = TextAlign.Center, fontSize = 10.sp),
-                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
+                textStyle = MaterialTheme.typography.labelSmall.copy(textAlign = TextAlign.Center, fontSize = 10.sp)
             )
             
             // Botón para expandir/contraer filtros
